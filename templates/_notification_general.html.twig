@@ -1,0 +1,14 @@
+{% if category == "example" %}
+    {% set header = 'example(s)' %}
+{% else %}
+    {% set header = category %}
+{% endif %}
+
+<span class="dropdown-item dropdown-header">{{ notifications|length }} {{ header }}</span>
+<div class="dropdown-divider"></div>
+{% for n in notifications %}
+    <a href="#" class="dropdown-item{% if n.cssClass %} bg-navbar-notification-{{ n.cssClass }}{% endif %}">
+        <i class="fas fa-envelope mr-2"></i> {{ n.title }}
+        <span class="float-right text-sm{% if n.cssClass %} navbar-notification-{{ n.cssClass }}{% else %} text-muted{% endif %}">{{ n.note }}</span>
+    </a>
+{% endfor %}

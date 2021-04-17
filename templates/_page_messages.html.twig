@@ -1,0 +1,28 @@
+<div id="toasts"></div>
+{% if error is defined and error %}
+    <div class="alert alert-danger">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+    </div>
+{% endif %}
+
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        {% if label == "notice" %}
+            <div class="alert alert-primary">
+                {{ message }}
+            </div>
+        {% elseif label == "success" %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% elseif label == "warning" %}
+            <div class="alert alert-warning">
+                {{ message }}
+            </div>
+        {% elseif label == "error" %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}

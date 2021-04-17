@@ -1,19 +1,124 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
+{% extends 'blank_admin-lte-3_original.html.twig' %}
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
-</html>
+
+{% block title %}
+    <title>{{ pageTitle }} - {{ sitename }}</title>
+{% endblock title %}
+
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+{% endblock stylesheets %}
+
+
+{% block body_tag %}
+<body class="hold-transition sidebar-mini text-sm">
+{% endblock body_tag %}
+
+
+{% block sidebar_logoX %}
+    <!-- Brand Logo -->
+    <a class="brand-link" href="/">
+        <div class="sidebar-brand-icon">
+            <div class="logo"></div>
+        </div>
+        <div class="sidebar-brand-text mx-3"><sup>{{ brandinitials }}</sup>{{ brandtext }}</div>
+    </a>
+{% endblock sidebar_logoX %}
+
+
+{% block sidebar_user %}
+{% endblock sidebar_user %}
+
+
+{% block sidebar_search %}
+{% endblock sidebar_search %}
+
+
+{% block sidebar_links %}
+    {% include '_sidebar_links.html.twig' %}
+{% endblock %}
+
+
+{% block sidebar_toggle %}
+{% endblock sidebar_toggle %}
+
+
+{% block navbar_left_items %}
+{% endblock navbar_left_items %}
+
+
+{% block navbar_search %}
+{% endblock navbar_search %}
+
+
+{% block navbar_page_title %}
+    <h1 class="page-title">{{ pageTitle }}</h1>
+{% endblock navbar_page_title %}
+
+
+{% block masquerade %}
+    {% if is_granted('IS_IMPERSONATOR') %}
+        <div style="color: red">
+            <i class="fas fa-exclamation-triangle"></i>
+            You are currently masqueraded as user "{{ app.user.username }}".
+            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ path('app_start', {'_switch_user': '_exit'}) }}">End</a>
+        </div>
+    {% endif %}
+{% endblock masquerade %}
+
+
+{% block navbar_notifications_dropdown %}
+    {{ include('_navbar_notifications.html.twig') }}
+{% endblock navbar_notifications_dropdown %}
+
+
+{% block navbar_messages_dropdown %}
+{% endblock navbar_messages_dropdown %}
+
+
+{% block navbar_control_sidebar_button %}
+{% endblock navbar_control_sidebar_button %}
+
+
+{% block logout_button %}
+    {% if is_granted('ROLE_USER') %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_logout') }}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </li>
+    {% endif %}
+{% endblock logout_button %}
+
+
+{% block content_page_title %}
+{% endblock content_page_title %}
+
+
+{% block page_breadcrumb %}
+{% endblock page_breadcrumb %}
+
+
+{% block page_messages %}
+    {{ include('_page_messages.html.twig') }}
+{% endblock page_messages %}
+
+
+{% block page_body %}
+    {% block page_header_buttons %}{% endblock %}
+    {% block page_content %}{% endblock %}
+{% endblock %}
+
+
+{% block footer %}
+{% endblock footer %}
+
+
+{% block modals %}
+{% endblock modals %}
+
+
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+{% endblock %}
