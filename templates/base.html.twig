@@ -53,7 +53,7 @@
 
 {% block masquerade %}
     {% if is_granted('IS_IMPERSONATOR') %}
-        <div style="color: red">
+        <div class="red text-red">
             <i class="fas fa-exclamation-triangle"></i>
             You are currently masqueraded as user "{{ app.user.username }}".
             <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ path('homepage', {'_switch_user': '_exit'}) }}">End</a>
