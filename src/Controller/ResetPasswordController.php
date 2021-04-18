@@ -57,10 +57,16 @@ class ResetPasswordController extends AbstractController
     #[Route('/check-email', name: 'app_check_email')]
     public function checkEmail(): Response
     {
-        // We prevent users from directly accessing this page
-        if (null === ($resetToken = $this->getTokenObjectFromSession())) {
-            return $this->redirectToRoute('app_forgot_password_request');
-        }
+        $resetToken = $this->getTokenObjectFromSession();
+
+        // TODO: This piece of upstream-code does not seem to work,
+        // because it requires at least one successfull reset request to put a token into the session.
+        // Disabled it to move on:
+
+//        // We prevent users from directly accessing this page
+//        if (null === $resetToken) {
+//            return $this->redirectToRoute('app_forgot_password_request');
+//        }
 
         return $this->render('reset_password/check_email.html.twig', [
             'resetToken' => $resetToken,
