@@ -18,12 +18,12 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    private string $trustedEmail;
+    private string $superAdminEmail;
     private $emailVerifier;
 
-    public function __construct(string $trustedEmail, EmailVerifier $emailVerifier)
+    public function __construct(string $superAdminEmail, EmailVerifier $emailVerifier)
     {
-        $this->trustedEmail = $trustedEmail;
+        $this->superAdminEmail = $superAdminEmail;
         $this->emailVerifier = $emailVerifier;
     }
 
@@ -43,7 +43,8 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            if(strtolower($user->getEmail()) === strtolower($this->trustedEmail)) {
+            if(strtolower($user->getEmail()) === strtolower($this->superAdminEmail)) {
+                $user->setRoles(['ROLE_SUPER_ADMIN']);
                 $user->setIsVerified(true);
             }
 

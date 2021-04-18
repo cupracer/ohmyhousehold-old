@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.site_name: '%env(SITE_NAME)%'
-    app.trusted_email: '%env(TRUSTED_EMAIL)%'
+    app.super_admin_email: '%env(SUPER_ADMIN_EMAIL)%'
 
 services:
     # default configuration for services in *this* file
@@ -38,4 +38,4 @@ services:
 
     App\Controller\RegistrationController:
         arguments:
-            $trustedEmail: '%app.trusted_email%'
+            $superAdminEmail: '%app.super_admin_email%'
