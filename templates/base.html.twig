@@ -15,15 +15,12 @@
 {% endblock body_tag %}
 
 
-{% block sidebar_logoX %}
+{% block sidebar_logo %}
     <!-- Brand Logo -->
-    <a class="brand-link" href="/">
-        <div class="sidebar-brand-icon">
-            <div class="logo"></div>
-        </div>
-        <div class="sidebar-brand-text mx-3"><sup>{{ brandinitials }}</sup>{{ brandtext }}</div>
+    <a href="{{ path('homepage') }}" class="brand-link">
+        <i class="brand-text font-weight-light fas fa-house-user"></i> OhMyHousehold!
     </a>
-{% endblock sidebar_logoX %}
+{% endblock sidebar_logo %}
 
 
 {% block sidebar_user %}
@@ -44,16 +41,14 @@
 
 
 {% block navbar_left_items %}
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{ path('homepage') }}" class="nav-link">Home</a>
+    </li>
 {% endblock navbar_left_items %}
 
 
 {% block navbar_search %}
 {% endblock navbar_search %}
-
-
-{% block navbar_page_title %}
-    <h1 class="page-title">{% if pageTitle is defined %}{{ pageTitle }}{% else %}{{ siteName }}{% endif %}</h1>
-{% endblock navbar_page_title %}
 
 
 {% block masquerade %}
@@ -70,6 +65,10 @@
 {% block navbar_notifications_dropdown %}
     {{ include('_navbar_notifications.html.twig') }}
 {% endblock navbar_notifications_dropdown %}
+
+
+{% block navbar_control_fullscreen_button %}
+{% endblock navbar_control_fullscreen_button %}
 
 
 {% block navbar_messages_dropdown %}
@@ -103,6 +102,7 @@
 
 
 {% block content_page_title %}
+    {% if pageTitle is defined %}<h1 class="page-title">{{ pageTitle }}</h1>{% endif %}
 {% endblock content_page_title %}
 
 
