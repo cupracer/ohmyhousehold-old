@@ -1,42 +1,101 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block page_body %}
+    {% block page_header_buttons %}{% endblock %}
+    {% block page_content %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-lg-5">
+                            <!-- /.login-logo -->
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1>{{ siteName }}</h1>
+                                </div>
+                                <div class="card-body">
+                                    {% if app.user %}
+                                        <div class="text-center">
+                                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                        </div>
+                                    {% else %}
+                                        <p class="login-box-msg">Sign in to start your session</p>
 
-{% block page_content %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+                                        <form method="post">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <span class="fas fa-user"></span>
+                                                    </div>
+                                                </div>
+                                                <label for="inputUsername"></label>
+                                                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <span class="fas fa-lock"></span>
+                                                    </div>
+                                                </div>
+                                                <label for="inputPassword"></label>
+                                                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" id="remember" name="_remember_me">
+                                                        <label for="remember">
+                                                            Remember Me
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <!-- /.col -->
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                                                <div class="col-4">
+                                                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                                                </div>
+                                                <!-- /.col -->
+                                            </div>
+                                        </form>
+
+                                        {#<div class="social-auth-links text-center mt-2 mb-3">
+                                            <a href="#" class="btn btn-block btn-primary">
+                                                <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+                                            </a>
+                                            <a href="#" class="btn btn-block btn-danger">
+                                                <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+                                            </a>
+                                        </div>#}
+                                        <!-- /.social-auth-links -->
+                                    {% endif %}
+                                </div>
+                                <!-- /.card-body -->
+
+                                {% if not app.user %}
+                                    <div class="card-footer">
+                                        <p class="mb-1">
+                                            <a href="#">I forgot my password</a>
+                                        </p>
+                                        <p class="mb-0">
+                                            <a href="{{ path('app_register') }}" class="text-center">Register a new membership</a>
+                                        </p>
+                                    </div>
+                                    <!-- /.card-footer -->
+                                {% endif %}
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
         </div>
-    {% endif %}
-
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputUsername">Username</label>
-    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" required>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-    #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+        <!-- /.container-fluid -->
+    {% endblock %}
 {% endblock %}
