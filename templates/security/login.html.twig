@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="card-body">
                                     {% if app.user %}
-                                        <div class="text-center">
+                                        <div class="mb-0 text-center">
                                             You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
                                         </div>
                                     {% else %}
