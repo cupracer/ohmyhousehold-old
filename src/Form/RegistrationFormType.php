@@ -61,14 +61,14 @@ class RegistrationFormType extends AbstractType
                     'attr' => [
                         'class' => 'form-control',
                         'placeholder' => 'Retype Password'
-                    ]
+                    ],
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'You need to agree to our terms.',
                     ]),
                 ],
             ])
