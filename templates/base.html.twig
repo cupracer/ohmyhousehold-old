@@ -56,7 +56,7 @@
         <div style="color: red">
             <i class="fas fa-exclamation-triangle"></i>
             You are currently masqueraded as user "{{ app.user.username }}".
-            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ path('app_start', {'_switch_user': '_exit'}) }}">End</a>
+            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ path('homepage', {'_switch_user': '_exit'}) }}">End</a>
         </div>
     {% endif %}
 {% endblock masquerade %}
@@ -94,7 +94,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ path('app_login') }}">
-                <i class="fas fa-sign-in-alt"></i> Login
+                <i class="fas fa-sign-in-alt"></i> Sign in
             </a>
         </li>
     {% endif %}
