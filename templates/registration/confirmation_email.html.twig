@@ -1,11 +1,20 @@
-<h1>Hi! Please confirm your email!</h1>
+<h2>Hi! Please confirm your e-mail address!</h2>
 
 <p>
-    Please confirm your email address by clicking the following link: <br><br>
-    <a href="{{ signedUrl|raw }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+    <strong>Oh my Household!</strong> has received a request to create a user account using your e-mail address.
+</p>
+<p>
+    To continue creating an account using this email address, visit the following link
+    within <strong>{{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}</strong>:
+    <br><br>
+    <a href="{{ signedUrl|raw }}">{{ signedUrl|raw }}</a>.
 </p>
 
 <p>
-    Cheers!
+    If you do not wish to create an account, or if this request was made in error you can do nothing or visit the following link:
+    <br><br>
+    TODO
+    <br><br>
+    If the above links do not work, or you have any other issues regarding
+    your account, please contact administration at TODO.
 </p>
