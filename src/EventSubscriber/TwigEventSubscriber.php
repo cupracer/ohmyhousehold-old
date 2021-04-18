@@ -17,7 +17,7 @@ class TwigEventSubscriber implements EventSubscriberInterface
         $this->twig = $twig;
     }
 
-    public function onKernelController(ControllerEvent $event)
+    public function onKernelController()
     {
         $this->twig->addGlobal('siteName', $this->siteName);
     }
