@@ -30,7 +30,7 @@
                                                     </div>
                                                 </div>
                                                 <label for="inputUsername"></label>
-                                                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="E-mail" required autofocus>
+                                                <input type="text" value="{% if last_username is defined %}{{ last_username }}{% endif %}" name="username" id="inputUsername" class="form-control" placeholder="E-mail" required autofocus>
                                             </div>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
