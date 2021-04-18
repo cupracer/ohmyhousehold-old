@@ -1,0 +1,60 @@
+{% extends 'theme/base.html.twig' %}
+
+{% block page_body %}
+    {% block page_header_buttons %}{% endblock %}
+    {% block page_content %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-lg-5">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h1>{{ siteName }}</h1>
+                                </div>
+                                <div class="card-body">
+                                    {% if app.user %}
+                                        <div class="mb-0 text-center">
+                                            You are logged in as <span class="font-weight-bold">{{ app.user.naturalName }}</span>. <a href="{{ path('app_logout') }}">Logout</a>
+                                        </div>
+                                    {% else %}
+                                        <p class="login-box-msg">Enter your e-mail address and we we will send you a link to reset your password:</p>
+
+                                        {{ form_start(requestForm) }}
+                                        <div class="input-group mb-3">
+                                            {{ form_errors(requestForm.email) }}
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span class="fas fa-envelope"></span>
+                                                </div>
+                                            </div>
+                                            {{ form_widget(requestForm.email) }}
+                                        </div>
+                                        <div class="row">
+                                            <div class="col"></div>
+                                            <!-- /.col -->
+
+                                            <div class="col-6">
+                                                <button type="submit" class="btn btn-primary btn-block">Send password reset e-mail</button>
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
+                                        {{ form_end(requestForm) }}
+                                    {% endif %}
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    {% endblock %}
+{% endblock %}
