@@ -20,17 +20,23 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class, [
+            ->add('firstName', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'autofocus' => true,
-                    'placeholder' => 'Choose a Username'
+                    'placeholder' => 'First name',
+                    'autofocus' => true
+                ]
+            ])
+            ->add('lastName', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Last name'
                 ]
             ])
             ->add('email', EmailType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Your E-Mail address'
+                    'placeholder' => 'E-Mail'
                 ]
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -71,6 +77,8 @@ class RegistrationFormType extends AbstractType
                         'message' => 'You need to agree to our terms.',
                     ]),
                 ],
+                'label' => 'I agree to the <a href="#">terms</a>',
+                'label_html' => true,
             ])
         ;
     }

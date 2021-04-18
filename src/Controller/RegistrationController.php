@@ -18,10 +18,12 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
+    private string $trustedEmail;
     private $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(string $trustedEmail, EmailVerifier $emailVerifier)
     {
+        $this->trustedEmail = $trustedEmail;
         $this->emailVerifier = $emailVerifier;
     }
 
@@ -41,29 +43,40 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            if(strtolower($user->getEmail()) === strtolower($this->trustedEmail)) {
+                $user->setIsVerified(true);
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('mailer@your-domain.com', 'Acme Mail Bot'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
+            if($user->isVerified()) {
+                $this->addFlash('success', 'Successfully registered.');
 
-            $this->addFlash('success',
-                'Successfully registered. An activation e-mail was sent to the provided address.');
+                // login automatically
+                return $guardHandler->authenticateUserAndHandleSuccess(
+                    $user,
+                    $request,
+                    $authenticator,
+                    'main' // firewall name in security.yaml
+                );
+            }else {
+                // generate a signed url and email it to the user
+                $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                    (new TemplatedEmail())
+                        ->from(new Address('mailer@your-domain.com', 'Acme Mail Bot'))
+                        ->to($user->getEmail())
+                        ->subject('Please Confirm your Email')
+                        ->htmlTemplate('registration/confirmation_email.html.twig')
+                );
+                // do anything else you need here, like send an email
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+                $this->addFlash('success',
+                    'Successfully registered. An activation e-mail was sent to the provided address.');
+
+                return $this->redirectToRoute('homepage');
+            }
         }
 
         return $this->render('registration/register.html.twig', [

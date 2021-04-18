@@ -17,21 +17,32 @@
                                 <div class="card-body">
                                     {% if app.user %}
                                         <div class="mb-0 text-center">
-                                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                            You are logged in as <span class="font-weight-bold">{{ app.user.naturalName }}</span>. <a href="{{ path('app_logout') }}">Logout</a>
                                         </div>
                                     {% else %}
                                         <p class="login-box-msg">Register a new membership</p>
 
                                         {{ form_start(registrationForm) }}
                                             <div class="input-group mb-3">
+                                                {{ form_errors(registrationForm.firstName) }}
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
                                                         <span class="fas fa-user"></span>
                                                     </div>
                                                 </div>
-                                                {{ form_widget(registrationForm.username) }}
+                                                {{ form_widget(registrationForm.firstName) }}
                                             </div>
                                             <div class="input-group mb-3">
+                                                {{ form_errors(registrationForm.lastName) }}
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <span class="fas fa-user"></span>
+                                                    </div>
+                                                </div>
+                                                {{ form_widget(registrationForm.lastName) }}
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                {{ form_errors(registrationForm.email) }}
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
                                                         <span class="fas fa-envelope"></span>
@@ -59,11 +70,9 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-8">
+                                                    {{ form_errors(registrationForm.agreeTerms) }}
                                                     <div class="icheck-primary">
                                                         {{ form_widget(registrationForm.agreeTerms) }}
-                                                        <label for="agreeTerms">
-                                                            I agree to the <a href="#">terms</a>
-                                                        </label>
                                                     </div>
                                                 </div>
                                                 <!-- /.col -->

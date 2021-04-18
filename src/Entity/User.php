@@ -6,10 +6,11 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this e-mail address")
  */
 class User implements UserInterface
 {
@@ -19,11 +20,6 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
-    private $username;
 
     /**
      * @ORM\Column(type="json")
@@ -37,14 +33,28 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private $email;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    #[Assert\NotBlank]
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    #[Assert\NotBlank]
+    private $lastName;
 
     public function getId(): ?int
     {
@@ -58,14 +68,12 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
 
-    public function setUsername(string $username): self
+    public function getNaturalName(): string
     {
-        $this->username = $username;
-
-        return $this;
+        return (string) $this->firstName . ' ' . (string) $this->lastName;
     }
 
     /**
@@ -142,6 +150,30 @@ class User implements UserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
 
         return $this;
     }

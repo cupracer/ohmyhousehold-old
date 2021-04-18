@@ -17,7 +17,7 @@
                                 <div class="card-body">
                                     {% if app.user %}
                                         <div class="mb-0 text-center">
-                                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                                            You are logged in as <span class="font-weight-bold">{{ app.user.naturalName }}</span>. <a href="{{ path('app_logout') }}">Logout</a>
                                         </div>
                                     {% else %}
                                         <p class="login-box-msg">Sign in to start your session</p>
@@ -26,11 +26,11 @@
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
-                                                        <span class="fas fa-user"></span>
+                                                        <span class="fas fa-envelope"></span>
                                                     </div>
                                                 </div>
                                                 <label for="inputUsername"></label>
-                                                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+                                                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="E-mail" required autofocus>
                                             </div>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
