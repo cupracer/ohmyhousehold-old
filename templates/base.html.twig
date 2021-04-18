@@ -102,7 +102,7 @@
 
 
 {% block content_page_title %}
-    <h1 class="page-title">{% if pageTitle is defined %}{{ pageTitle }}{% else %}&nbsp;{% endif %}</h1>
+{% if pageTitle is defined %}<h1 class="page-title">{{ pageTitle }}</h1>{% endif %}
 {% endblock content_page_title %}
 
 
