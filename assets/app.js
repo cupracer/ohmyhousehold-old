@@ -8,7 +8,6 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import 'source-sans-pro/source-sans-pro.css';
 import 'admin-lte/plugins/fontawesome-free/css/all.css';
-import 'admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css';
 import 'admin-lte/dist/css/adminlte.min.css';
 import './styles/app.scss';
 

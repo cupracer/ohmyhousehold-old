@@ -71,9 +71,8 @@
                                             <div class="row">
                                                 <div class="col-8">
                                                     {{ form_errors(registrationForm.agreeTerms) }}
-                                                    <div class="icheck-primary">
-                                                        {{ form_widget(registrationForm.agreeTerms) }}
-                                                    </div>
+                                                    {{ form_widget(registrationForm.agreeTerms) }}
+                                                    {{ form_label(registrationForm.agreeTerms) }}
                                                 </div>
                                                 <!-- /.col -->
 
