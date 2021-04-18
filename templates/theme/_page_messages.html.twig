@@ -1,4 +1,5 @@
 <div id="toasts"></div>
+
 {% if error is defined and error %}
     <div class="alert alert-danger">
         {{ error.messageKey|trans(error.messageData, 'security') }}
