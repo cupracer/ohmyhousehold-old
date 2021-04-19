@@ -15,76 +15,68 @@
                                     <h1>{{ siteName }}</h1>
                                 </div>
                                 <div class="card-body">
-                                    {% if app.user %}
-                                        <div class="mb-0 text-center">
-                                            You are logged in as <span class="font-weight-bold">{{ app.user.userProfile.naturalName }}</span>. <a href="{{ path('app_logout') }}">Logout</a>
+                                    <p class="login-box-msg">Sign in to start your session</p>
+
+                                    <form method="post">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span class="fas fa-envelope"></span>
+                                                </div>
+                                            </div>
+                                            <label for="inputUsername"></label>
+                                            <input type="text" value="{% if last_username is defined %}{{ last_username }}{% endif %}" name="username" id="inputUsername" class="form-control" placeholder="E-mail" required autofocus>
                                         </div>
-                                    {% else %}
-                                        <p class="login-box-msg">Sign in to start your session</p>
-
-                                        <form method="post">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <span class="fas fa-envelope"></span>
-                                                    </div>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <span class="fas fa-lock"></span>
                                                 </div>
-                                                <label for="inputUsername"></label>
-                                                <input type="text" value="{% if last_username is defined %}{{ last_username }}{% endif %}" name="username" id="inputUsername" class="form-control" placeholder="E-mail" required autofocus>
                                             </div>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <span class="fas fa-lock"></span>
-                                                    </div>
+                                            <label for="inputPassword"></label>
+                                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="remember" name="_remember_me" class="form-check-input">
+                                                    <label for="remember" class="form-check-label">
+                                                        Remember Me
+                                                    </label>
                                                 </div>
-                                                <label for="inputPassword"></label>
-                                                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-8">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" id="remember" name="_remember_me" class="form-check-input">
-                                                        <label for="remember" class="form-check-label">
-                                                            Remember Me
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <!-- /.col -->
+                                            <!-- /.col -->
 
-                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                                                <div class="col-4">
-                                                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                                                </div>
-                                                <!-- /.col -->
+                                            <div class="col-4">
+                                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                                             </div>
-                                        </form>
+                                            <!-- /.col -->
+                                        </div>
+                                    </form>
 
-                                        {#<div class="social-auth-links text-center mt-2 mb-3">
-                                            <a href="#" class="btn btn-block btn-primary">
-                                                <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-                                            </a>
-                                            <a href="#" class="btn btn-block btn-danger">
-                                                <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
-                                            </a>
-                                        </div>#}
-                                        <!-- /.social-auth-links -->
-                                    {% endif %}
+                                    {#<div class="social-auth-links text-center mt-2 mb-3">
+                                        <a href="#" class="btn btn-block btn-primary">
+                                            <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+                                        </a>
+                                        <a href="#" class="btn btn-block btn-danger">
+                                            <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+                                        </a>
+                                    </div>#}
+                                    <!-- /.social-auth-links -->
                                 </div>
                                 <!-- /.card-body -->
 
-                                {% if not app.user %}
-                                    <div class="card-footer">
-                                        <p class="mb-1">
-                                            <a href="{{ path('app_forgot_password_request') }}">I forgot my password</a>
-                                        </p>
-                                        <p class="mb-0">
-                                            <a href="{{ path('app_register') }}" class="text-center">Register a new membership</a>
-                                        </p>
-                                    </div>
-                                    <!-- /.card-footer -->
-                                {% endif %}
+                                <div class="card-footer">
+                                    <p class="mb-1">
+                                        <a href="{{ path('app_forgot_password_request') }}">I forgot my password</a>
+                                    </p>
+                                    <p class="mb-0">
+                                        <a href="{{ path('app_register') }}" class="text-center">Register a new membership</a>
+                                    </p>
+                                </div>
+                                <!-- /.card-footer -->
                             </div>
                             <!-- /.card -->
                         </div>
