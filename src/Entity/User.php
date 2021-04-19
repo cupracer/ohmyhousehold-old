@@ -38,11 +38,6 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @var string The plain password
-     */
-    private $plainPassword;
-
-    /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
     #[Assert\NotBlank]
@@ -55,16 +50,9 @@ class User implements UserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToOne(targetEntity=UserProfile::class, mappedBy="user", cascade={"persist", "remove"})
      */
-    #[Assert\NotBlank]
-    private $firstName;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Assert\NotBlank]
-    private $lastName;
+    private $userProfile;
 
     public function getId(): ?int
     {
@@ -79,11 +67,6 @@ class User implements UserInterface
     public function getUsername(): string
     {
         return (string) $this->email;
-    }
-
-    public function getNaturalName(): string
-    {
-        return (string) $this->firstName . ' ' . (string) $this->lastName;
     }
 
     /**
@@ -120,18 +103,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPlainPassword(): ?string
-    {
-        return $this->plainPassword;
-    }
-
-    public function setPlainPassword(string $plainPassword): self
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
@@ -149,7 +120,6 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        $this->plainPassword = null;
     }
 
     public function getEmail(): ?string
@@ -176,26 +146,19 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getFirstName(): ?string
+    public function getUserProfile(): ?UserProfile
     {
-        return $this->firstName;
+        return $this->userProfile;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setUserProfile(UserProfile $userProfile): self
     {
-        $this->firstName = $firstName;
+        // set the owning side of the relation if necessary
+        if ($userProfile->getUser() !== $this) {
+            $userProfile->setUser($this);
+        }
 
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName(string $lastName): self
-    {
-        $this->lastName = $lastName;
+        $this->userProfile = $userProfile;
 
         return $this;
     }
