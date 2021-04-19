@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class RegisterUserRequest
+class RegisterUser
 {
     /**
      * @Assert\Length(min="1", max="255")
@@ -50,9 +50,9 @@ class RegisterUserRequest
 
     /**
      * @param string $forenames
-     * @return RegisterUserRequest
+     * @return RegisterUser
      */
-    public function setForenames(string $forenames): RegisterUserRequest
+    public function setForenames(string $forenames): RegisterUser
     {
         $this->forenames = $forenames;
         return $this;
@@ -68,9 +68,9 @@ class RegisterUserRequest
 
     /**
      * @param string $surname
-     * @return RegisterUserRequest
+     * @return RegisterUser
      */
-    public function setSurname(string $surname): RegisterUserRequest
+    public function setSurname(string $surname): RegisterUser
     {
         $this->surname = $surname;
         return $this;
@@ -86,9 +86,9 @@ class RegisterUserRequest
 
     /**
      * @param string $email
-     * @return RegisterUserRequest
+     * @return RegisterUser
      */
-    public function setEmail(string $email): RegisterUserRequest
+    public function setEmail(string $email): RegisterUser
     {
         $this->email = $email;
         return $this;
@@ -104,9 +104,9 @@ class RegisterUserRequest
 
     /**
      * @param string $plainPassword
-     * @return RegisterUserRequest
+     * @return RegisterUser
      */
-    public function setPlainPassword(string $plainPassword): RegisterUserRequest
+    public function setPlainPassword(string $plainPassword): RegisterUser
     {
         $this->plainPassword = $plainPassword;
         return $this;
@@ -122,9 +122,9 @@ class RegisterUserRequest
 
     /**
      * @param bool $agreeTerms
-     * @return RegisterUserRequest
+     * @return RegisterUser
      */
-    public function setAgreeTerms(bool $agreeTerms): RegisterUserRequest
+    public function setAgreeTerms(bool $agreeTerms): RegisterUser
     {
         $this->agreeTerms = $agreeTerms;
         return $this;

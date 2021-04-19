@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\RegisterUserRequest;
+use App\Entity\DTO\RegisterUser;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Form\RegistrationFormType;
@@ -32,7 +32,7 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppAuthenticator $authenticator): Response
     {
-        $registerUserRequest = new RegisterUserRequest();
+        $registerUserRequest = new RegisterUser();
         $form = $this->createForm(RegistrationFormType::class, $registerUserRequest);
         $form->handleRequest($request);
 

@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\RegisterUserRequest;
+use App\Entity\DTO\RegisterUser;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -95,7 +95,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => RegisterUserRequest::class,
+            'data_class' => RegisterUser::class,
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
             'csrf_token_id'   => 'register',
