@@ -24,22 +24,22 @@
 
                                         {{ form_start(registrationForm) }}
                                             <div class="input-group mb-3">
-                                                {{ form_errors(registrationForm.firstName) }}
+                                                {{ form_errors(registrationForm.forenames) }}
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
                                                         <span class="fas fa-user"></span>
                                                     </div>
                                                 </div>
-                                                {{ form_widget(registrationForm.firstName) }}
+                                                {{ form_widget(registrationForm.forenames) }}
                                             </div>
                                             <div class="input-group mb-3">
-                                                {{ form_errors(registrationForm.lastName) }}
+                                                {{ form_errors(registrationForm.surname) }}
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
                                                         <span class="fas fa-user"></span>
                                                     </div>
                                                 </div>
-                                                {{ form_widget(registrationForm.lastName) }}
+                                                {{ form_widget(registrationForm.surname) }}
                                             </div>
                                             <div class="input-group mb-3">
                                                 {{ form_errors(registrationForm.email) }}
@@ -77,7 +77,7 @@
                                                 <!-- /.col -->
 
                                                 <div class="col-4">
-                                                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                                                    <button type="submit" class="btn btn-primary btn-block">Register</button>
                                                 </div>
                                                 <!-- /.col -->
                                             </div>

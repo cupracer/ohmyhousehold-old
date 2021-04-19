@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\RegisterUserRequest;
 use App\Entity\User;
+use App\Entity\UserProfile;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
@@ -30,16 +32,20 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppAuthenticator $authenticator): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $registerUserRequest = new RegisterUserRequest();
+        $form = $this->createForm(RegistrationFormType::class, $registerUserRequest);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = new User();
+
+            $user->setEmail($registerUserRequest->getEmail());
+
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
-                    $user->getPlainPassword()
+                    $registerUserRequest->getPlainPassword()
                 )
             );
 
@@ -48,7 +54,15 @@ class RegistrationController extends AbstractController
                 $user->setIsVerified(true);
             }
 
+            $userProfile = new UserProfile();
+
+            $userProfile->setForenames($registerUserRequest->getForenames());
+            $userProfile->setSurname($registerUserRequest->getSurname());
+
+            $user->setUserProfile($userProfile);
+
             $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($userProfile);
             $entityManager->persist($user);
             $entityManager->flush();
 

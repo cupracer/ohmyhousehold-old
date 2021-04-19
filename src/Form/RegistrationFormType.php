@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\RegisterUserRequest;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,17 +21,17 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName', TextType::class, [
+            ->add('forenames', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'First name',
+                    'placeholder' => 'forename(s)',
                     'autofocus' => true
                 ]
             ])
-            ->add('lastName', TextType::class, [
+            ->add('surname', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Last name'
+                    'placeholder' => 'Surname'
                 ]
             ])
             ->add('email', EmailType::class, [
@@ -85,7 +86,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => RegisterUserRequest::class,
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
             'csrf_token_id'   => 'register',
