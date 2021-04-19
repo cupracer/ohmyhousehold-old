@@ -35,6 +35,12 @@ class RegisterUserRequest
     private $plainPassword;
 
     /**
+     * @var bool
+     */
+    #[Assert\IsTrue(message: 'You need to agree to our terms.')]
+    private $agreeTerms;
+
+    /**
      * @return string
      */
     public function getForenames(): string
@@ -103,6 +109,24 @@ class RegisterUserRequest
     public function setPlainPassword(string $plainPassword): RegisterUserRequest
     {
         $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAgreeTerms(): bool
+    {
+        return $this->agreeTerms;
+    }
+
+    /**
+     * @param bool $agreeTerms
+     * @return RegisterUserRequest
+     */
+    public function setAgreeTerms(bool $agreeTerms): RegisterUserRequest
+    {
+        $this->agreeTerms = $agreeTerms;
         return $this;
     }
 }
