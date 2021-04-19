@@ -14,6 +14,7 @@
                                     <h1>{{ siteName }}</h1>
                                 </div>
                                 <div class="card-body">
+                                    <div class="row">
                                     {% if app.user %}
                                         <div class="mb-0 text-center">
                                             You are logged in as <span class="font-weight-bold">{{ app.user.userProfile.naturalName }}</span>. <a href="{{ path('app_logout') }}">Logout</a>
@@ -23,6 +24,20 @@
                                         <p>This link will expire in <strong>{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}</strong>.</p>
                                         <p>If you don't receive an e-mail please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
                                     {% endif %}
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12 text-right">
+                                            <a href="{{ path('homepage') }}" class="btn btn-primary btn-icon-split">
+                                                        <span class="icon text-white-50 mr-1">
+                                                            <i class="fas fa-arrow-alt-circle-left"></i>
+                                                        </span>
+                                                <span class="text">return to homepage</span>
+                                            </a>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
                                 </div>
                                 <!-- /.card-body -->
                             </div>
