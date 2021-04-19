@@ -39,7 +39,7 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = new User();
 
-            $user->setEmail($registerUserRequest->getEmail());
+            $user->setEmail(strtolower($registerUserRequest->getEmail()));
 
             // encode the plain password
             $user->setPassword(
@@ -49,7 +49,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            if(strtolower($user->getEmail()) === strtolower($this->superAdminEmail)) {
+            if($user->getEmail() === strtolower($this->superAdminEmail)) {
                 $user->setRoles(['ROLE_SUPER_ADMIN']);
                 $user->setIsVerified(true);
             }
