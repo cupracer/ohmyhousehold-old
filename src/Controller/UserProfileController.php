@@ -9,10 +9,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class UserProfileController extends AbstractController
 {
-    #[Route('/user/profile', name: 'user_profile')]
+    #[Route('/profile', name: 'user_profile')]
+    #[IsGranted("ROLE_USER")]
+    #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(Request $request): Response
     {
         /** @var User $user */
