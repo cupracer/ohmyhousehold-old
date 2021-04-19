@@ -80,11 +80,31 @@
 
 {% block login_logout_button %}
     {% if is_granted('ROLE_USER') %}
-        <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_logout') }}">
-                <i class="fas fa-sign-out-alt"></i> Logout
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="text-success far fa-user fa-2x"></i> {{ app.user.naturalName }}
             </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <a href="#" class="dropdown-item">
+                    <!-- Message Start -->
+                    <div class="media">
+                        <div class="media-body">
+{#                            <h3 class="dropdown-item-title">#}
+{#                                <span class="text-sm">User settings</span>#}
+{#                            </h3>#}
+                        </div>
+                    </div>
+                    <!-- Message End -->
+                </a>
+{#                <div class="dropdown-divider"></div>#}
+                <div class="dropdown-footer">
+                    <a  href="{{ path('user_profile') }}" class="btn btn-primary btn-sm mr-3">User profile</a>
+                    <a  href="{{ path('app_logout') }}" class="btn btn-danger btn-sm ml-3">Sign out</a>
+                </div>
+
+            </div>
         </li>
+
     {% else %}
         <li class="nav-item">
             <a class="nav-link" href="{{ path('app_register') }}">
