@@ -82,7 +82,7 @@
     {% if is_granted('ROLE_USER') %}
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="text-success far fa-user fa-2x"></i> {{ app.user.naturalName }}
+                <i class="text-success far fa-user fa-2x"></i> {{ app.user.userProfile.naturalName }}
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <a href="#" class="dropdown-item">
