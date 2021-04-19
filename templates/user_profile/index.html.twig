@@ -13,7 +13,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     {% if app.user %}
-                                        <p class="login-box-msg">Your user profile</p>
+                                        <p class="login-box-msg">View and update your user profile settings here</p>
 
                                         {{ form_start(userProfileForm, {'attr': {'class': 'form-horizontal'}}) }}
                                             <div class="form-group row">
@@ -34,8 +34,19 @@
                                                 <div class="col"></div>
                                                 <!-- /.col -->
 
-                                                <div class="col-4">
-                                                    <button type="submit" class="btn btn-primary btn-block">Update</button>
+                                                <div class="col-12 text-right">
+                                                    <a href="{{ path('homepage') }}" class="btn btn-warning btn-icon-split">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-arrow-alt-circle-left"></i>
+                                                        </span>
+                                                        <span class="text">Cancel</span>
+                                                    </a>
+                                                    <button type="submit" class="btn btn-primary btn-icon-split ml-3">
+                                                        <span class="icon text-white-50">
+                                                            <i class="far fa-save"></i>
+                                                        </span>
+                                                        <span class="text">{{ button_label|default('Update') }}</span>
+                                                    </button>
                                                 </div>
                                                 <!-- /.col -->
                                             </div>
