@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\RegisterUserRequest;
-use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -12,12 +12,22 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 
 class RegistrationFormType extends AbstractType
 {
+    private UserRepository $userRepository;
+
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -35,6 +45,11 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('email', EmailType::class, [
+                'constraints' => [
+                    new Callback([
+                        $this, 'validateUniqueEmail'
+                    ]),
+                ],
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'E-Mail'
@@ -71,12 +86,6 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You need to agree to our terms.',
-                    ]),
-                ],
                 'label' => 'I agree to the <a href="#">terms</a>',
                 'label_html' => true,
             ])
@@ -91,5 +100,14 @@ class RegistrationFormType extends AbstractType
             'csrf_field_name' => '_token',
             'csrf_token_id'   => 'register',
         ]);
+    }
+
+    public function validateUniqueEmail($value, ExecutionContextInterface $context)
+    {
+        $result = $this->userRepository->findBy(['email' => strtolower($value)]);
+
+        if($result) {
+            $context->addViolation('This e-mail address cannot be used.');
+        }
     }
 }
