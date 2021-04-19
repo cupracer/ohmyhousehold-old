@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RegisterUser
 {
     /**
-     * @Assert\Length(min="1", max="255")
      * @var string
      */
     #[Assert\NotBlank]
