@@ -9,7 +9,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=ApiTokenRepository::class)
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(fields={"token"}, message="This token is already in use")
+ * @UniqueEntity(fields={"token"}, message="This token is already in use.")
+ * @UniqueEntity(
+ *     fields={"user", "description"},
+ *     errorPath="description",
+ *     message="This description is already used for another token."
+ * )
  */
 class ApiToken
 {
