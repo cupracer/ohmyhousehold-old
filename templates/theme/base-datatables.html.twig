@@ -1,13 +1,13 @@
 {% extends 'theme/base.html.twig' %}
 
-{% block stylesheets %}
+{% block stylesheets_pre %}
     {{ parent() }}
 
     {{ encore_entry_link_tags('datatables') }}
-{% endblock stylesheets %}
+{% endblock stylesheets_pre %}
 
-{% block javascripts %}
+{% block javascripts_pre %}
     {{ parent() }}
 
     {{ encore_entry_script_tags('datatables') }}
-{% endblock %}
+{% endblock javascripts_pre %}
