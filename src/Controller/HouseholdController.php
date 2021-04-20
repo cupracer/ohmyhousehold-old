@@ -18,9 +18,9 @@ class HouseholdController extends AbstractController
         ]);
     }
 
-    #[Route('/api/check', name: 'api_check')]
+    #[Route('/api/authcheck', name: 'api_authcheck')]
     #[IsGranted("ROLE_USER")]
-    public function apiCheck(): Response
+    public function apiAuthCheck(): Response
     {
         return new JsonResponse([
             'success' => true
