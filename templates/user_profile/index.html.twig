@@ -11,8 +11,7 @@
 
 {% block page_content %}
     <div class="row">
-        <div class="col"></div>
-        <div class="col-lg-5">
+        <div class="col-lg-4">
             <div class="card card-primary">
                 <div class="card-header">
                     <h3 class="card-title">User profile settings</h3>
@@ -59,13 +58,13 @@
             </div>
             <!-- /.card -->
         </div>
-        <div class="col"></div>
+        <div class="col">
+            {{ render(controller(
+                'App\\Controller\\ApiTokenController::indexSnippet'
+            )) }}
+        </div>
     </div>
     <!-- /.row -->
-
-    {{ render(controller(
-        'App\\Controller\\ApiTokenController::indexSnippet'
-    )) }}
 {% endblock %}
 
 

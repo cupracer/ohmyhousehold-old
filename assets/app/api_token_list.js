@@ -5,7 +5,7 @@ $(document).ready(function () {
         "searching": false,
         "ordering": true,
         "info": true,
-        "autoWidth": true,
+        "autoWidth": false,
         "responsive": true,
         "columnDefs": [ {
             "targets": [ 3, ],

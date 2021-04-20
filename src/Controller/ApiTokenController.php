@@ -67,6 +67,7 @@ class ApiTokenController extends AbstractController
         return $this->render('api_token/new.html.twig', [
             'api_token' => $createApiToken,
             'form' => $form->createView(),
+            'pageTitle' => 'Generate API token'
         ]);
     }
 

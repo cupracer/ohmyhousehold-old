@@ -129,9 +129,7 @@
 {% endblock login_logout_button %}
 
 
-{% block content_page_title %}
-{% if pageTitle is defined %}<h1 class="page-title">{{ pageTitle }}</h1>{% endif %}
-{% endblock content_page_title %}
+{% block content_page_title %}{% endblock content_page_title %}
 
 
 {% block page_breadcrumb %}
@@ -144,72 +142,91 @@
 
 
 {% block page_body %}
-    {% block page_header_buttons %}{% endblock %}
-    {% block page_content %}
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's
-                                content.
-                            </p>
-
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-lg">
+                                <h3 class="card-title page-title">{% block page_header %}{{ pageTitle }}{% endblock page_header %}</h3>
+                            </div>
+                            <div class="col-lg text-right">
+                                {% block page_header_buttons %}{% endblock page_header_buttons %}
+                            </div>
                         </div>
-                    </div><!-- /.card -->
+                    </div>
+                    <div class="card-body">
+                        {% block page_content %}
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
 
-                    <div class="card card-primary card-outline">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">
+                                                Some quick example text to build on the card title and make up the bulk of the card's
+                                                content.
+                                            </p>
 
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's
-                                content.
-                            </p>
+                                            <a href="#" class="card-link">Card link</a>
+                                            <a href="#" class="card-link">Another link</a>
+                                        </div>
+                                    </div><!-- /.card -->
 
-                            <a href="#" class="card-link">Card link</a>
-                            <a href="#" class="card-link">Another link</a>
-                        </div>
-                    </div><!-- /.card -->
-                </div>
-                <!-- /.col-md-8 -->
+                                    <div class="card card-primary card-outline">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
 
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="m-0">Featured</h5>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title">Special title treatment</h6>
+                                            <p class="card-text">
+                                                Some quick example text to build on the card title and make up the bulk of the card's
+                                                content.
+                                            </p>
 
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div><!-- /.card -->
+                                            <a href="#" class="card-link">Card link</a>
+                                            <a href="#" class="card-link">Another link</a>
+                                        </div>
+                                    </div><!-- /.card -->
+                                </div>
+                                <!-- /.col-md-8 -->
 
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h5 class="m-0">Featured</h5>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="card-title">Special title treatment</h6>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="m-0">Featured</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class="card-title">Special title treatment</h6>
 
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div><!-- /.card -->
-                </div>
-                <!-- /.col-md-4 -->
+                                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                                        </div>
+                                    </div><!-- /.card -->
+
+                                    <div class="card card-primary card-outline">
+                                        <div class="card-header">
+                                            <h5 class="m-0">Featured</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class="card-title">Special title treatment</h6>
+
+                                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                                        </div>
+                                    </div><!-- /.card -->
+                                </div>
+                                <!-- /.col-md-4 -->
+                            </div>
+                            <!-- /.row -->
+                        {% endblock page_content %}
+                    </div>
+                </div><!-- /.card -->
             </div>
-            <!-- /.row -->
+            <!-- /.col-lg-12 -->
         </div>
-        <!-- /.container-fluid -->
-    {% endblock %}
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
 {% endblock %}
 
 
