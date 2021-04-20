@@ -29,7 +29,7 @@ class ApiToken
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $expiresAt;
 
@@ -81,19 +81,11 @@ class ApiToken
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(\DateTimeInterface $expiresAt): self
+    public function setExpiresAt(?\DateTimeInterface $expiresAt): self
     {
         $this->expiresAt = $expiresAt;
 
         return $this;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setExpiresAtValue()
-    {
-        $this->expiresAt = (new \DateTime())->modify('+1 year');
     }
 
     public function getUser(): ?User
