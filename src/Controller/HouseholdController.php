@@ -18,6 +18,15 @@ class HouseholdController extends AbstractController
         ]);
     }
 
+    #[Route('/api/ping', name: 'api_ping')]
+    public function apiPing(): Response
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => "pong"
+        ]);
+    }
+
     #[Route('/api/authcheck', name: 'api_authcheck')]
     #[IsGranted("ROLE_USER")]
     public function apiAuthCheck(): Response

@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -20,8 +21,12 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         $this->session = $session;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
+    public function start(Request $request, AuthenticationException $authException = null)
     {
+        if(str_starts_with($request->attributes->get('_route'), 'api_')) {
+            return new JsonResponse(["message" => "Authentication required."]);
+        }
+
         // add a custom flash message and redirect to the login page
         $this->session->getFlashBag()->add('info', 'You have to login in order to access this page.');
 

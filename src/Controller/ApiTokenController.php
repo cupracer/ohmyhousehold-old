@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/user/apitoken')]
 class ApiTokenController extends AbstractController
 {
-    #[Route('/', name: 'api_token_index', methods: ['GET'])]
+    #[Route('/', name: 'user_api_token_index', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(ApiTokenRepository $apiTokenRepository): Response
@@ -38,7 +38,7 @@ class ApiTokenController extends AbstractController
 
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
-    #[Route('/new', name: 'api_token_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'user_api_token_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $createApiToken = new CreateApiToken();
@@ -71,7 +71,7 @@ class ApiTokenController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'api_token_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'user_api_token_delete', methods: ['POST'])]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function delete(Request $request, ApiToken $apiToken): Response
