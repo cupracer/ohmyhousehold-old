@@ -24,7 +24,7 @@ Encore
     .addEntry('datatables', './assets/datatables.js')
     .addEntry('zzz', './assets/zzz.js')
 
-    .addEntry('app_api_token_list', './assets/app/api_token_list.js')
+    .addEntry('app_user_api_token_index', './assets/app/user/api_token/index.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

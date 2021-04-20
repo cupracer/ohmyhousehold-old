@@ -21,7 +21,7 @@ class ApiTokenController extends AbstractController
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(ApiTokenRepository $apiTokenRepository): Response
     {
-        return $this->render('api_token/index.html.twig', [
+        return $this->render('user/api_token/index.html.twig', [
             'api_tokens' => $apiTokenRepository->findAll(),
             'pageTitle' => 'API Tokens'
         ]);
@@ -31,7 +31,7 @@ class ApiTokenController extends AbstractController
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function indexSnippet(ApiTokenRepository $apiTokenRepository): Response
     {
-        return $this->render('api_token/_index.html.twig', [
+        return $this->render('user/api_token/_index.html.twig', [
             'api_tokens' => $apiTokenRepository->findBy(['user' => $this->getUser()]),
         ]);
     }
@@ -64,7 +64,7 @@ class ApiTokenController extends AbstractController
             return $this->redirectToRoute('user_profile');
         }
 
-        return $this->render('api_token/new.html.twig', [
+        return $this->render('user/api_token/new.html.twig', [
             'api_token' => $createApiToken,
             'form' => $form->createView(),
             'pageTitle' => 'Generate API token'

@@ -82,8 +82,8 @@ class RegistrationController extends AbstractController
                     (new TemplatedEmail())
                         ->to($user->getEmail())
                         ->subject('Please confirm your e-mail address')
-                        ->textTemplate('registration/confirmation_email.txt.twig')
-                        //->htmlTemplate('registration/confirmation_email.html.twig')
+                        ->textTemplate('user/registration/confirmation_email.txt.twig')
+                        //->htmlTemplate('user/registration/confirmation_email.html.twig')
                 );
                 // do anything else you need here, like send an email
 
@@ -94,7 +94,7 @@ class RegistrationController extends AbstractController
             }
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('user/registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
