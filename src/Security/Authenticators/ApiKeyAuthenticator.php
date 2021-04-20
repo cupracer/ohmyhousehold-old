@@ -34,7 +34,8 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('X-AUTH-TOKEN');
+        return $request->headers->has('X-AUTH-TOKEN') ||
+            str_starts_with($request->attributes->get('_route'), 'api_');
     }
 
     public function authenticate(Request $request): PassportInterface
