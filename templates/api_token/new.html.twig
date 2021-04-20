@@ -1,0 +1,83 @@
+{% extends 'theme/base-datatables.html.twig' %}
+
+{% block page_body %}
+    {% block page_header_buttons %}
+        <div class="card shadow mt-4 mb-4">
+            <!-- Page header buttons -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="{{ path('api_token_index') }}" class="btn btn-primary btn-sm btn-icon-split">
+                <span class="icon text-white-50 mr-1">
+                  <i class="fas fa-plus-circle"></i>
+                </span>
+                            <span class="text">Back to list</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4 text-center"></div>
+                    <div class="col-md-4 text-right"></div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block page_content %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                                    <div class="form-group row">
+                                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
+                                        <div class="col-lg">
+                                            {{ form_errors(form.description) }}
+                                            {{ form_widget(form.description) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col"></div>
+                                        <!-- /.col -->
+
+                                        <div class="col-12 text-right">
+                                            <a href="{{ path('api_token_index') }}" class="btn btn-warning btn-icon-split">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-arrow-alt-circle-left"></i>
+                                                        </span>
+                                                <span class="text">Cancel</span>
+                                            </a>
+                                            <button type="submit" class="btn btn-primary btn-icon-split ml-3">
+                                                        <span class="icon text-white-50">
+                                                            <i class="far fa-save"></i>
+                                                        </span>
+                                                <span class="text">{{ button_label|default('Generate') }}</span>
+                                            </button>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    {{ form_end(form) }}
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts  %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('app_api_token_list') }}
+{% endblock javascripts %}
