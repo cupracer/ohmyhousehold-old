@@ -21,6 +21,7 @@ security:
             provider: app_user_provider
             custom_authenticators:
                 - App\Security\Authenticators\FormAuthenticator
+                - App\Security\Authenticators\ApiKeyAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
