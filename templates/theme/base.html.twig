@@ -5,9 +5,18 @@
 {% endblock title %}
 
 
-{% block stylesheets %}
+{% block stylesheets_pre %}
     {{ encore_entry_link_tags('app') }}
+{% endblock stylesheets_pre %}
+
+
+{% block stylesheets %}
 {% endblock stylesheets %}
+
+
+{% block stylesheets_post %}
+    {{ encore_entry_link_tags('zzz') }}
+{% endblock stylesheets_post %}
 
 
 {% block body_tag %}
@@ -212,6 +221,14 @@
 {% endblock modals %}
 
 
-{% block javascripts %}
-{{ encore_entry_script_tags('app') }}
-{% endblock %}
+{% block javascripts_pre %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock javascripts_pre %}
+
+
+{% block javascripts %}{% endblock javascripts %}
+
+
+{% block javascripts_post %}
+    {{ encore_entry_script_tags('zzz') }}
+{% endblock javascripts_post %}
