@@ -49,7 +49,7 @@ class FormAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): PassportInterface
     {
         $credentials = [
-            'username' => $request->request->get('username'),
+            'username' => strtolower($request->request->get('username')),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
