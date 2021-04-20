@@ -7,6 +7,7 @@
   <title>AdminLTE 3 | Blank Page</title>
 {% endblock title %}
 
+{% block stylesheets_pre %}{% endblock stylesheets_pre %}
 {% block stylesheets %}
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -15,6 +16,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 {% endblock stylesheets %}
+{% block stylesheets_post %}{% endblock stylesheets_post %}
 </head>
 {% block body_tag %}
 <body class="hold-transition sidebar-mini">
@@ -939,6 +941,7 @@
 </div>
 <!-- ./wrapper -->
 
+{% block javascripts_pre %}{% endblock javascripts_pre %}
 {% block javascripts %}
 <!-- jQuery -->
 <script src="../../plugins/jquery/jquery.min.js"></script>
@@ -949,6 +952,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
 {% endblock javascripts %}
+{% block javascripts_post %}{% endblock javascripts_post %}
 {% block javascripts_inline %}{% endblock javascripts_inline %}
 </body>
 </html>
