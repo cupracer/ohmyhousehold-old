@@ -1,95 +1,73 @@
 {% extends 'theme/base-datatables.html.twig' %}
 
-{% block page_body %}
-    {% block page_header_buttons %}
-        <div class="card shadow mt-4 mb-4">
-            <!-- Page header buttons -->
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <a href="{{ path('api_token_new') }}" class="btn btn-primary btn-sm btn-icon-split">
-                <span class="icon text-white-50 mr-1">
-                  <i class="fas fa-plus-circle"></i>
-                </span>
-                            <span class="text">Generate API token...</span>
-                        </a>
-                    </div>
-                    <div class="col-md-4 text-center"></div>
-                    <div class="col-md-4 text-right"></div>
-                </div>
-            </div>
-        </div>
-
-    {% endblock %}
-    {% block page_content %}
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row">
-                        <div class="col"></div>
-                        <div class="col-lg-5">
-                            <div class="card">
-                                <div class="card-body">
-                                    {% if app.user %}
-                                        <p class="login-box-msg">View and update your user profile settings here</p>
-
-                                        {{ form_start(userProfileForm, {'attr': {'class': 'form-horizontal'}}) }}
-                                            <div class="form-group row">
-                                                {{ form_label(userProfileForm.forenames, 'Forename(s)', {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
-                                                <div class="col-lg">
-                                                    {{ form_errors(userProfileForm.forenames) }}
-                                                    {{ form_widget(userProfileForm.forenames) }}
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                {{ form_label(userProfileForm.surname, 'Surname', {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
-                                                <div class="col-lg">
-                                                    {{ form_errors(userProfileForm.surname) }}
-                                                    {{ form_widget(userProfileForm.surname) }}
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col"></div>
-                                                <!-- /.col -->
-
-                                                <div class="col-12 text-right">
-                                                    <a href="{{ path('homepage') }}" class="btn btn-warning btn-icon-split">
-                                                        <span class="icon text-white-50">
-                                                            <i class="fas fa-arrow-alt-circle-left"></i>
-                                                        </span>
-                                                        <span class="text">Cancel</span>
-                                                    </a>
-                                                    <button type="submit" class="btn btn-primary btn-icon-split ml-3">
-                                                        <span class="icon text-white-50">
-                                                            <i class="far fa-save"></i>
-                                                        </span>
-                                                        <span class="text">{{ button_label|default('Update') }}</span>
-                                                    </button>
-                                                </div>
-                                                <!-- /.col -->
-                                            </div>
-                                        {{ form_end(userProfileForm) }}
-                                    {% endif %}
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <div class="col"></div>
-                    </div>
-                    <!-- /.row -->
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
-
-        {{ render(controller(
-            'App\\Controller\\ApiTokenController::indexSnippet'
-        )) }}
-    {% endblock %}
+{% block page_header_buttons %}
+    <a href="{{ path('api_token_new') }}" class="btn btn-primary btn-sm btn-icon-split ml-3">
+        <span class="icon text-white-50 mr-1">
+          <i class="fas fa-plus-circle"></i>
+        </span>
+        <span class="text">Generate API token...</span>
+    </a>
 {% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-lg-5">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">User profile settings</h3>
+                </div>
+                <div class="card-body">
+                    {{ form_start(userProfileForm, {'attr': {'class': 'form-horizontal'}}) }}
+                        <div class="form-group row">
+                            {{ form_label(userProfileForm.forenames, 'Forename(s)', {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
+                            <div class="col-lg">
+                                {{ form_errors(userProfileForm.forenames) }}
+                                {{ form_widget(userProfileForm.forenames) }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            {{ form_label(userProfileForm.surname, 'Surname', {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
+                            <div class="col-lg">
+                                {{ form_errors(userProfileForm.surname) }}
+                                {{ form_widget(userProfileForm.surname) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col"></div>
+                            <!-- /.col -->
+
+                            <div class="col-12 text-right">
+                                <a href="{{ path('homepage') }}" class="btn btn-warning btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-arrow-alt-circle-left"></i>
+                                    </span>
+                                    <span class="text">Cancel</span>
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-icon-split ml-3">
+                                    <span class="icon text-white-50">
+                                        <i class="far fa-save"></i>
+                                    </span>
+                                    <span class="text">{{ button_label|default('Update') }}</span>
+                                </button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    {{ form_end(userProfileForm) }}
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <div class="col"></div>
+    </div>
+    <!-- /.row -->
+
+    {{ render(controller(
+        'App\\Controller\\ApiTokenController::indexSnippet'
+    )) }}
+{% endblock %}
+
 
 {% block javascripts  %}
     {{ parent() }}
