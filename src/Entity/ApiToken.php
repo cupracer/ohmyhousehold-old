@@ -51,6 +51,11 @@ class ApiToken
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastUsedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +125,18 @@ class ApiToken
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLastUsedAt(): ?\DateTimeInterface
+    {
+        return $this->lastUsedAt;
+    }
+
+    public function setLastUsedAt(?\DateTimeInterface $lastUsedAt): self
+    {
+        $this->lastUsedAt = $lastUsedAt;
 
         return $this;
     }

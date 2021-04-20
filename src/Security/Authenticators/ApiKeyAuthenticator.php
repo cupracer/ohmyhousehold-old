@@ -2,6 +2,7 @@
 
 namespace App\Security\Authenticators;
 
+use App\Entity\ApiToken;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +12,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
@@ -64,6 +64,18 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $token = $request->headers->get('X-AUTH_TOKEN');
+
+        if($token) {
+            /** @var ApiToken $apiToken */
+            $apiToken = $this->entityManager->getRepository(
+                ApiToken::class)->findOneBy(['token' => $token]);
+
+            $apiToken->setLastUsedAt(new \DateTime());
+            $this->entityManager->persist($apiToken);
+            $this->entityManager->flush();
+        }
+
         // on success, let the request continue
         return null;
     }
