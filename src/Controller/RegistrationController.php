@@ -8,14 +8,12 @@ use App\Entity\UserProfile;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
-use App\Security\AppAuthenticator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
@@ -30,7 +28,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppAuthenticator $authenticator): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $registerUserRequest = new RegisterUser();
         $form = $this->createForm(RegistrationFormType::class, $registerUserRequest);
@@ -68,14 +66,6 @@ class RegistrationController extends AbstractController
 
             if($user->isVerified()) {
                 $this->addFlash('success', 'Successfully registered.');
-
-                // login automatically
-                return $guardHandler->authenticateUserAndHandleSuccess(
-                    $user,
-                    $request,
-                    $authenticator,
-                    'main' // firewall name in security.yaml
-                );
             }else {
                 // generate a signed url and email it to the user
                 $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
@@ -85,13 +75,12 @@ class RegistrationController extends AbstractController
                         ->textTemplate('user/registration/confirmation_email.txt.twig')
                         //->htmlTemplate('user/registration/confirmation_email.html.twig')
                 );
-                // do anything else you need here, like send an email
 
                 $this->addFlash('success',
                     'Successfully registered. An activation e-mail was sent to the provided address.');
-
-                return $this->redirectToRoute('homepage');
             }
+
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('user/registration/register.html.twig', [
