@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 
-class ApiKeyAuthenticator extends AbstractAuthenticator
+class ApiTokenAuthenticator extends AbstractAuthenticator
 {
     private EntityManagerInterface $entityManager;
 
@@ -37,17 +37,60 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
         return $request->headers->has('X-AUTH-TOKEN');
     }
 
+    private function getHashedTokenVariants(string $token)
+    {
+        $hashedTokens = [];
+
+        foreach(['sha1',] as $hashAlgorithm) {
+            switch ($hashAlgorithm) {
+                case 'sha1':
+                    $hashedTokens[$hashAlgorithm] = sha1($token);
+                    break;
+            }
+        }
+
+        return $hashedTokens;
+    }
+
+    private function findUserByToken(string $token)
+    {
+        foreach (array_values($this->getHashedTokenVariants($token)) as $hashedToken) {
+            /** @var User $user */
+            $user = $this->entityManager->getRepository(User::class)->findOneByApiToken($hashedToken);
+
+            if($user) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    private function findApiTokenByToken(string $token)
+    {
+        foreach (array_values($this->getHashedTokenVariants($token)) as $hashedToken) {
+            /** @var ApiToken $apiToken */
+            $apiToken = $this->entityManager->getRepository(
+                ApiToken::class)->findOneBy(['token' => $hashedToken]);
+
+            if($apiToken) {
+                return $apiToken;
+            }
+        }
+
+        return null;
+    }
+
     public function authenticate(Request $request): PassportInterface
     {
-        $apiToken = $request->headers->get('X-AUTH-TOKEN');
-        if (null === $apiToken) {
+        $token = $request->headers->get('X-AUTH-TOKEN');
+        if (null === $token) {
             // The token header was empty, authentication fails with HTTP Status
             // Code 401 "Unauthorized"
             throw new CustomUserMessageAuthenticationException('No API token provided');
         }
 
-        /** @var User $user */
-        $user = $this->entityManager->getRepository(User::class)->findOneByApiToken($apiToken);
+        $user = $this->findUserByToken($token);
 
         if (!$user) {
             // fail authentication with a custom error
@@ -64,13 +107,10 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $token = $request->headers->get('X-AUTH_TOKEN');
+        $requestToken = $request->headers->get('X-AUTH_TOKEN');
 
-        if($token) {
-            /** @var ApiToken $apiToken */
-            $apiToken = $this->entityManager->getRepository(
-                ApiToken::class)->findOneBy(['token' => $token]);
-
+        if($requestToken) {
+            $apiToken = $this->findApiTokenByToken($requestToken);
             $apiToken->setLastUsedAt(new \DateTime());
             $this->entityManager->persist($apiToken);
             $this->entityManager->flush();

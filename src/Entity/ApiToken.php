@@ -56,6 +56,11 @@ class ApiToken
      */
     private $lastUsedAt;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $hashAlgorithm;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +142,18 @@ class ApiToken
     public function setLastUsedAt(?\DateTimeInterface $lastUsedAt): self
     {
         $this->lastUsedAt = $lastUsedAt;
+
+        return $this;
+    }
+
+    public function getHashAlgorithm(): ?string
+    {
+        return $this->hashAlgorithm;
+    }
+
+    public function setHashAlgorithm(string $hashAlgorithm): self
+    {
+        $this->hashAlgorithm = $hashAlgorithm;
 
         return $this;
     }

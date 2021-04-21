@@ -53,13 +53,16 @@ class ApiTokenController extends AbstractController
 
             $apiToken->setUser($user);
             $apiToken->setDescription($createApiToken->getDescription());
-            $apiToken->setToken($this->genRandomString(64));
+
+            $token = $this->genRandomString(64);
+            $apiToken->setToken(sha1($token));
+            $apiToken->setHashAlgorithm('sha1');
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($apiToken);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Your API token: ' . $apiToken->getToken());
+            $this->addFlash('success', 'Your API token: ' . $token);
 
             return $this->redirectToRoute('user_profile');
         }
