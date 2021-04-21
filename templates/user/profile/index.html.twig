@@ -5,7 +5,7 @@
         <span class="icon text-white-50 mr-1">
           <i class="fas fa-plus-circle"></i>
         </span>
-        <span class="text">Generate API token...</span>
+        <span class="text">{{ 'Generate API token...'|trans }}</span>
     </a>
 {% endblock %}
 
@@ -14,19 +14,19 @@
         <div class="col-lg-4">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">User profile settings</h3>
+                    <h3 class="card-title">{{ 'My profile settings'|trans }}</h3>
                 </div>
                 <div class="card-body">
                     {{ form_start(userProfileForm, {'attr': {'class': 'form-horizontal'}}) }}
                         <div class="form-group row">
-                            {{ form_label(userProfileForm.forenames, 'Forename(s)', {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
+                            {{ form_label(userProfileForm.forenames, 'Forename(s)'|trans, {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
                             <div class="col-lg">
                                 {{ form_errors(userProfileForm.forenames) }}
                                 {{ form_widget(userProfileForm.forenames) }}
                             </div>
                         </div>
                         <div class="form-group row">
-                            {{ form_label(userProfileForm.surname, 'Surname', {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
+                            {{ form_label(userProfileForm.surname, 'Surname'|trans, {'label_attr': {'class': 'col-form-label col-lg-3'}}) }}
                             <div class="col-lg">
                                 {{ form_errors(userProfileForm.surname) }}
                                 {{ form_widget(userProfileForm.surname) }}
@@ -38,10 +38,10 @@
 
                             <div class="col-12 text-right">
                                 <button type="submit" class="btn btn-primary btn-icon-split ml-3">
-                                    <span class="icon text-white-50">
+                                    <span class="icon text-white-50 mr-1">
                                         <i class="far fa-save"></i>
                                     </span>
-                                    <span class="text">{{ button_label|default('Update') }}</span>
+                                    <span class="text">{{ button_label|default('Update')|trans }}</span>
                                 </button>
                             </div>
                             <!-- /.col -->

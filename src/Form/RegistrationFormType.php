@@ -34,7 +34,7 @@ class RegistrationFormType extends AbstractType
             ->add('forenames', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'forename(s)',
+                    'placeholder' => 'Forename(s)',
                     'autofocus' => true
                 ]
             ])
@@ -81,7 +81,7 @@ class RegistrationFormType extends AbstractType
                     'label' => 'Repeat Password',
                     'attr' => [
                         'class' => 'form-control',
-                        'placeholder' => 'Retype Password'
+                        'placeholder' => 'Retype password'
                     ],
                 ],
             ])

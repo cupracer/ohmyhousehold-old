@@ -5,7 +5,7 @@
         <span class="icon text-white-50 mr-1">
           <i class="fas fa-plus-circle"></i>
         </span>
-        <span class="text">Back to user profile</span>
+        <span class="text">{{ 'Back to my profile'|trans }}</span>
     </a>
 {% endblock %}
 
@@ -15,7 +15,7 @@
         <div class="col-lg-6">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Set properties</h3>
+                    <h3 class="card-title">{{ 'Details'|trans }}</h3>
                 </div>
                 <div class="card-body">
                     {{ form_start(form) }}
@@ -29,16 +29,16 @@
 
                         <div class="col-12 text-right">
                             <a href="{{ path('app_user_profile') }}" class="btn btn-warning btn-icon-split">
-                                        <span class="icon text-white-50">
+                                        <span class="icon text-white-50 mr-1">
                                             <i class="fas fa-arrow-alt-circle-left"></i>
                                         </span>
-                                <span class="text">Cancel</span>
+                                <span class="text">{{ 'Cancel'|trans }}</span>
                             </a>
                             <button type="submit" class="btn btn-primary btn-icon-split ml-3">
-                                        <span class="icon text-white-50">
+                                        <span class="icon text-white-50 mr-1">
                                             <i class="far fa-save"></i>
                                         </span>
-                                <span class="text">{{ button_label|default('Generate') }}</span>
+                                <span class="text">{{ button_label|default('Generate')|trans }}</span>
                             </button>
                         </div>
                         <!-- /.col -->

@@ -1,7 +1,7 @@
 {% extends 'theme/blank_admin-lte-3_original.html.twig' %}
 
 {% block title %}
-    <title>{% if pageTitle is defined %}{{ pageTitle }} - {% endif %}{{ siteName }}</title>
+    <title>{% if pageTitle is defined %}{{ pageTitle|trans }} - {% endif %}{{ siteName }}</title>
 {% endblock title %}
 
 
@@ -64,8 +64,8 @@
     {% if is_granted('IS_IMPERSONATOR') %}
         <div class="red text-red">
             <i class="fas fa-exclamation-triangle"></i>
-            You are currently masqueraded as user "{{ app.user.username }}".
-            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ path('homepage', {'_switch_user': '_exit'}) }}">End</a>
+            {{ 'You are currently masqueraded as user'|trans }} "{{ app.user.username }}".
+            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ path('homepage', {'_switch_user': '_exit'}) }}">{{ 'End'|trans }}</a>
         </div>
     {% endif %}
 {% endblock masquerade %}
@@ -117,8 +117,8 @@
                 </a>
 {#                <div class="dropdown-divider"></div>#}
                 <div class="dropdown-footer">
-                    <a  href="{{ path('app_user_profile') }}" class="btn btn-primary btn-sm mr-3">User profile</a>
-                    <a  href="{{ path('app_user_logout') }}" class="btn btn-danger btn-sm ml-3">Sign out</a>
+                    <a  href="{{ path('app_user_profile') }}" class="btn btn-primary btn-sm mr-3">{{ 'My profile'|trans }}</a>
+                    <a  href="{{ path('app_user_logout') }}" class="btn btn-danger btn-sm ml-3">{{ 'Sign out'|trans }}</a>
                 </div>
 
             </div>
@@ -127,12 +127,12 @@
     {% else %}
         <li class="nav-item">
             <a class="nav-link" href="{{ path('app_user_register') }}">
-                <i class="fas fa-user-plus mr-1"></i> Register
+                <i class="fas fa-user-plus mr-1"></i> {{ 'Register'|trans }}
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ path('app_user_login') }}">
-                <i class="fas fa-sign-in-alt mr-1"></i> Sign in
+                <i class="fas fa-sign-in-alt mr-1"></i> {{ 'Sign in'|trans }}
             </a>
         </li>
     {% endif %}
@@ -159,7 +159,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-lg">
-                                <h3 class="card-title page-title">{% block page_header %}{{ pageTitle }}{% endblock page_header %}</h3>
+                                <h3 class="card-title page-title">{% block page_header %}{{ pageTitle|trans }}{% endblock page_header %}</h3>
                             </div>
                             <div class="col-lg text-right">
                                 {% block page_header_buttons %}{% endblock page_header_buttons %}

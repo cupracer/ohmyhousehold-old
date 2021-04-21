@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -28,12 +29,14 @@ class FormAuthenticator extends AbstractAuthenticator
     private EntityManagerInterface $entityManager;
     private CsrfTokenManagerInterface $csrfTokenManager;
     private Session $session;
+    private UrlGeneratorInterface $router;
 
-    public function __construct(EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager, SessionInterface $session)
+    public function __construct(EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager, SessionInterface $session, UrlGeneratorInterface $router)
     {
         $this->entityManager = $entityManager;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->session = $session;
+        $this->router = $router;
     }
 
     /**
@@ -78,7 +81,7 @@ class FormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new RedirectResponse('/');
+        return new RedirectResponse($this->router->generate('homepage'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
@@ -94,6 +97,6 @@ class FormAuthenticator extends AbstractAuthenticator
 //            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
 //        ];
 
-        return new RedirectResponse('/login');
+        return new RedirectResponse($this->router->generate('app_user_login'));
     }
 }
