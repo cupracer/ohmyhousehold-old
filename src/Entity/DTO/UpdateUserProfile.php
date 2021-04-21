@@ -11,14 +11,16 @@ class UpdateUserProfile
      * @var string
      */
     #[Assert\NotBlank]
-    #[Assert\Length(min:1, max:255)]
+    #[Assert\Length(min:2, max:255)]
+    #[Assert\Regex('/^[a-z][a-z\-\s]*[a-z]$/i')]
     private $forenames;
 
     /**
      * @var string
      */
     #[Assert\NotBlank]
-    #[Assert\Length(min:1, max:255)]
+    #[Assert\Length(min:2, max:255)]
+    #[Assert\Regex('/^[a-z][a-z\-\s]*[a-z]$/i')]
     private $surname;
 
     public function getForenames(): ?string

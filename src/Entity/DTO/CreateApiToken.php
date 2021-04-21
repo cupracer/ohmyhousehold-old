@@ -11,7 +11,8 @@ class CreateApiToken
      * @var string
      */
     #[Assert\NotBlank]
-    #[Assert\Length(min:1, max:255)]
+    #[Assert\Length(min:2, max:255)]
+    #[Assert\Regex('/^[a-z0-9][a-z0-9\.\-_\s]*[a-z0-9]$/i')]
     private $description;
 
     /**
