@@ -56,7 +56,7 @@
                                             </tr>
                                         {% else %}
                                             <tr>
-                                                <td colspan="5">{{ 'no records found'|trans }}</td>
+                                                <td colspan="4">{{ 'no records found'|trans }}</td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
@@ -81,5 +81,5 @@
 {% block javascripts  %}
     {{ parent() }}
 
-    {{ encore_entry_script_tags('app_user_apitoken_index') }}
+    {{ encore_entry_script_tags('user_apitoken_index') }}
 {% endblock javascripts %}

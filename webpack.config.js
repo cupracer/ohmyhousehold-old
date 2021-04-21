@@ -21,10 +21,10 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
-    .addEntry('datatables', './assets/datatables.js')
-    .addEntry('zzz', './assets/zzz.js')
+    .addEntry('datatables', './assets/js/theme/datatables.js')
+    .addEntry('zzz', './assets/js/theme/zzz.js')
 
-    .addEntry('app_user_apitoken_index', './assets/app/user/apitoken/index.js')
+    .addEntry('user_apitoken_index', './assets/js/user/apitoken/index.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
