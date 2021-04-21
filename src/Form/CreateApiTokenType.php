@@ -32,6 +32,9 @@ class CreateApiTokenType extends AbstractType
                         $this, 'validateUniqueDescription'
                     ]),
                 ],
+                'attr' => [
+                    'autofocus' => true
+                ]
             ])
         ;
     }
