@@ -169,6 +169,10 @@
         <source><![CDATA[I agree to the <a href="#">terms</a>]]></source>
         <target><![CDATA[Ich akzeptiere die <a href="#">Bestimmungen</a>]]></target>
       </trans-unit>
+      <trans-unit id="2">
+        <source>LastUsedAt</source>
+        <target>Zuletzt</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

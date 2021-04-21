@@ -8,7 +8,7 @@ $(document).ready(function () {
         "autoWidth": false,
         "responsive": true,
         "columnDefs": [ {
-            "targets": [ 3, ],
+            "targets": [ 4, ],
             "orderable": false,
             "searchable": false,
         } ]
