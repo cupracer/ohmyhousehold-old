@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+#[Route('/{_locale<%app.supported_locales%>}/user/profile')]
 class UserProfileController extends AbstractController
 {
-    #[Route('/profile', name: 'user_profile')]
+    #[Route('/', name: 'app_user_profile')]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(Request $request): Response
@@ -42,7 +43,7 @@ class UserProfileController extends AbstractController
                 $this->addFlash("error", "Couldn't update profile settings.");
             }
 
-            return $this->redirectToRoute('user_profile');
+            return $this->redirectToRoute('app_user_profile');
         }
 
         return $this->render('user/profile/index.html.twig', [

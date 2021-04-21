@@ -13,15 +13,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/user/apitoken')]
+#[Route('/{_locale<%app.supported_locales%>}/user/apitoken')]
 class ApiTokenController extends AbstractController
 {
-    #[Route('/', name: 'user_api_token_index', methods: ['GET'])]
+    #[Route('/', name: 'app_user_apitoken_index', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(ApiTokenRepository $apiTokenRepository): Response
     {
-        return $this->render('user/api_token/index.html.twig', [
+        return $this->render('user/apitoken/index.html.twig', [
             'api_tokens' => $apiTokenRepository->findAll(),
             'pageTitle' => 'API Tokens'
         ]);
@@ -31,14 +31,14 @@ class ApiTokenController extends AbstractController
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function indexSnippet(ApiTokenRepository $apiTokenRepository): Response
     {
-        return $this->render('user/api_token/_index.html.twig', [
+        return $this->render('user/apitoken/_index.html.twig', [
             'api_tokens' => $apiTokenRepository->findBy(['user' => $this->getUser()]),
         ]);
     }
 
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
-    #[Route('/new', name: 'user_api_token_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_user_apitoken_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $createApiToken = new CreateApiToken();
@@ -64,17 +64,17 @@ class ApiTokenController extends AbstractController
 
             $this->addFlash('success', 'Your API token: ' . $token);
 
-            return $this->redirectToRoute('user_profile');
+            return $this->redirectToRoute('app_user_profile');
         }
 
-        return $this->render('user/api_token/new.html.twig', [
+        return $this->render('user/apitoken/new.html.twig', [
             'api_token' => $createApiToken,
             'form' => $form->createView(),
             'pageTitle' => 'Generate API token'
         ]);
     }
 
-    #[Route('/{id}', name: 'user_api_token_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_user_apitoken_delete', methods: ['POST'])]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function delete(Request $request, ApiToken $apiToken): Response
@@ -88,7 +88,7 @@ class ApiTokenController extends AbstractController
             $this->addFlash("error", "Selected API token could not be deleted.");
         }
 
-        return $this->redirectToRoute('user_profile');
+        return $this->redirectToRoute('app_user_profile');
     }
 
     private function genRandomString($length = 1)

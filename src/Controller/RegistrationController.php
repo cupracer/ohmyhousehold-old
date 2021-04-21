@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
+#[Route('/{_locale<%app.supported_locales%>}/user/register')]
 class RegistrationController extends AbstractController
 {
     private string $superAdminEmail;
@@ -27,7 +28,7 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/', name: 'app_user_register')]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $registerUserRequest = new RegisterUser();
@@ -111,11 +112,11 @@ class RegistrationController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('error', $exception->getReason());
 
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_user_register');
         }
 
         $this->addFlash('success', 'Your email address has been verified and your account was activated successfully.');
 
-        return $this->redirectToRoute('app_login');
+        return $this->redirectToRoute('app_user_login');
     }
 }

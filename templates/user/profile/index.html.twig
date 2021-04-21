@@ -1,7 +1,7 @@
 {% extends 'theme/base-datatables.html.twig' %}
 
 {% block page_header_buttons %}
-    <a href="{{ path('user_api_token_new') }}" class="btn btn-primary btn-sm btn-icon-split ml-3">
+    <a href="{{ path('app_user_apitoken_new') }}" class="btn btn-primary btn-sm btn-icon-split ml-3">
         <span class="icon text-white-50 mr-1">
           <i class="fas fa-plus-circle"></i>
         </span>
@@ -69,5 +69,5 @@
 {% block javascripts  %}
     {{ parent() }}
 
-    {{ encore_entry_script_tags('app_user_api_token_index') }}
+    {{ encore_entry_script_tags('app_user_apitoken_index') }}
 {% endblock javascripts %}

@@ -17,12 +17,12 @@
                                     <div class="row">
                                     {% if app.user %}
                                         <div class="mb-0 text-center">
-                                            You are logged in as <span class="font-weight-bold">{{ app.user.userProfile.naturalName }}</span>. <a href="{{ path('app_logout') }}">Logout</a>
+                                            You are logged in as <span class="font-weight-bold">{{ app.user.userProfile.naturalName }}</span>. <a href="{{ path('app_user_logout') }}">Logout</a>
                                         </div>
                                     {% else %}
                                         <p>In case the provided address exists in our database, an e-mail has been sent which contains a link that you can click to reset your password.</p>
 {#                                        <p>This link will expire in <strong>{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}</strong>.</p>#}
-                                        <p>If you don't receive an e-mail please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+                                        <p>If you don't receive an e-mail please check your spam folder or <a href="{{ path('app_user_password_request_reset') }}">try again</a>.</p>
                                     {% endif %}
                                     </div>
 

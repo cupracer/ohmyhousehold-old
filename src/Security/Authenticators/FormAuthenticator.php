@@ -23,7 +23,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class FormAuthenticator extends AbstractAuthenticator
 {
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'app_user_login';
 
     private EntityManagerInterface $entityManager;
     private CsrfTokenManagerInterface $csrfTokenManager;

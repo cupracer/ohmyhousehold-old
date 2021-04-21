@@ -10,7 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HouseholdController extends AbstractController
 {
-    #[Route('/', name: 'homepage')]
+    #[Route('/')]
+    public function indexNoLocale(): Response
+    {
+        return $this->redirectToRoute('homepage', ['_locale' => 'en']);
+    }
+
+    #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]
     public function index(): Response
     {
         return $this->render('homepage.html.twig', [
