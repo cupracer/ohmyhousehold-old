@@ -92,14 +92,9 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
         $user = $this->findUserByToken($token);
 
-        if (!$user) {
+        if (!$user || !$user->isVerified()) {
             // fail authentication with a custom error
             throw new AuthenticationCredentialsNotFoundException();
-        }
-
-        if (!$user->isVerified()) {
-            // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Account is not verified yet.');
         }
 
         return new SelfValidatingPassport(new UserBadge($user->getEmail()));
