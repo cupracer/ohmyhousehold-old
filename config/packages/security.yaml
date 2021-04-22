@@ -22,9 +22,6 @@ security:
             custom_authenticators:
                 - App\Security\Authenticators\FormAuthenticator
                 - App\Security\Authenticators\ApiTokenAuthenticator
-#            form_login:
-#                login_path: /(%app.supported_locales%)/login
-#                check_path: /(%app.supported_locales%)/login
             logout:
                 path: app_user_logout
                 # where to redirect after logout
