@@ -19,6 +19,8 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
@@ -76,7 +78,10 @@ class FormAuthenticator extends AbstractAuthenticator
             throw new CustomUserMessageAuthenticationException('Account is not verified yet.');
         }
 
-        return new SelfValidatingPassport(new UserBadge($user->getEmail()));
+        return new Passport(
+            new UserBadge($user->getEmail()),
+            new PasswordCredentials($credentials['password'])
+        );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
