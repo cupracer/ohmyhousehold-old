@@ -26,6 +26,7 @@ class UserProfileController extends AbstractController
         $updateUserProfile = new UpdateUserProfile();
         $updateUserProfile->setForenames($userProfile->getForenames());
         $updateUserProfile->setSurname($userProfile->getSurname());
+//        $updateUserProfile->setLocale($userProfile->getLocale());
 
         $form = $this->createForm(UserProfileFormType::class, $updateUserProfile);
         $form->handleRequest($request);
@@ -33,6 +34,7 @@ class UserProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $userProfile->setForenames($updateUserProfile->getForenames());
             $userProfile->setSurname($updateUserProfile->getSurname());
+//            $userProfile->setLocale($updateUserProfile->getLocale());
 
             try {
                 $entityManager = $this->getDoctrine()->getManager();
