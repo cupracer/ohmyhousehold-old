@@ -40,3 +40,7 @@ services:
     App\Controller\RegistrationController:
         arguments:
             $superAdminEmail: '%app.super_admin_email%'
+
+    App\Service\LocaleService:
+        arguments:
+            $supportedLocales: '%app.supported_locales%'

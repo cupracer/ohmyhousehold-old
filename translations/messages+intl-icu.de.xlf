@@ -161,17 +161,29 @@
         <source>I am already signed up</source>
         <target>Ich habe bereits ein Konto</target>
       </trans-unit>
-      <trans-unit id="0" resname="Retype password">
+      <trans-unit id="Hc15EiJ" resname="Retype password">
         <source>Retype password</source>
         <target>Passwort wiederholen</target>
       </trans-unit>
-      <trans-unit id="1">
-        <source><![CDATA[I agree to the <a href="#">terms</a>]]></source>
+      <trans-unit id="VE4EKiz" resname="I agree to the &lt;a href=&quot;#&quot;&gt;terms&lt;/a&gt;">
+        <source>I agree to the &lt;a href="#"&gt;terms&lt;/a&gt;</source>
         <target><![CDATA[Ich akzeptiere die <a href="#">Bestimmungen</a>]]></target>
       </trans-unit>
-      <trans-unit id="2">
+      <trans-unit id="093KeeZ" resname="LastUsedAt">
         <source>LastUsedAt</source>
         <target>Zuletzt</target>
+      </trans-unit>
+      <trans-unit id="yj3GEvR" resname="Locale">
+        <source>Locale</source>
+        <target>Gebietsschema</target>
+      </trans-unit>
+      <trans-unit id="0" resname="de">
+        <source>de</source>
+        <target>Deutsch</target>
+      </trans-unit>
+      <trans-unit id="1" resname="en">
+        <source>en</source>
+        <target>English</target>
       </trans-unit>
     </body>
   </file>

@@ -23,13 +23,13 @@ class UpdateUserProfile
     #[Assert\Regex('/^[a-z][a-z\-\s]*[a-z]$/i')]
     private $surname;
 
-//    /**
-//     * @var string
-//     */
-//    #[Assert\NotBlank]
-//    #[Assert\Length(min:2, max:10)]
-//    #[Assert\Locale]
-//    private $locale;
+    /**
+     * @var string
+     */
+    #[Assert\NotBlank]
+    #[Assert\Length(min:2, max:10)]
+    #[Assert\Locale]
+    private $locale;
 
     public function getForenames(): ?string
     {
@@ -53,21 +53,21 @@ class UpdateUserProfile
         return $this;
     }
 
-//    /**
-//     * @return string
-//     */
-//    public function getLocale(): ?string
-//    {
-//        return $this->locale;
-//    }
-//
-//    /**
-//     * @param string $locale
-//     * @return UpdateUserProfile
-//     */
-//    public function setLocale(string $locale): UpdateUserProfile
-//    {
-//        $this->locale = $locale;
-//        return $this;
-//    }
+    /**
+     * @return string
+     */
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     * @return UpdateUserProfile
+     */
+    public function setLocale(string $locale): UpdateUserProfile
+    {
+        $this->locale = $locale;
+        return $this;
+    }
 }

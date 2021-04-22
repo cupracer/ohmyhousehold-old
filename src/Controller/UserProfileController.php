@@ -26,7 +26,7 @@ class UserProfileController extends AbstractController
         $updateUserProfile = new UpdateUserProfile();
         $updateUserProfile->setForenames($userProfile->getForenames());
         $updateUserProfile->setSurname($userProfile->getSurname());
-//        $updateUserProfile->setLocale($userProfile->getLocale());
+        $updateUserProfile->setLocale($userProfile->getLocale());
 
         $form = $this->createForm(UserProfileFormType::class, $updateUserProfile);
         $form->handleRequest($request);
@@ -34,7 +34,7 @@ class UserProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $userProfile->setForenames($updateUserProfile->getForenames());
             $userProfile->setSurname($updateUserProfile->getSurname());
-//            $userProfile->setLocale($updateUserProfile->getLocale());
+            $userProfile->setLocale($updateUserProfile->getLocale());
 
             try {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -45,7 +45,7 @@ class UserProfileController extends AbstractController
                 $this->addFlash("error", "Couldn't update profile settings.");
             }
 
-            return $this->redirectToRoute('app_user_profile');
+            return $this->redirectToRoute('app_user_profile', ['_locale' => $userProfile->getLocale()]);
         }
 
         return $this->render('user/profile/index.html.twig', [
