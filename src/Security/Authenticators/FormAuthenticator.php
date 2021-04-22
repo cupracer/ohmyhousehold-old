@@ -4,6 +4,7 @@ namespace App\Security\Authenticators;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,8 +20,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
-class FormAuthenticator extends AbstractAuthenticator
+class FormAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     public const LOGIN_ROUTE = 'app_user_login';
 
@@ -33,6 +35,19 @@ class FormAuthenticator extends AbstractAuthenticator
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->router = $router;
+    }
+
+    // required by AuthenticationEntryPointInterface
+    public function start(Request $request, AuthenticationException $authException = null)
+    {
+        if(str_starts_with($request->attributes->get('_route'), 'api_')) {
+            return new JsonResponse(["message" => "Authentication required."]);
+        }
+
+        // add a custom flash message and redirect to the login page
+        $this->session->getFlashBag()->add('info', 'You have to login in order to access this page.');
+
+        return new RedirectResponse($this->router->generate('app_user_login'));
     }
 
     /**
