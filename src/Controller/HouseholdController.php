@@ -5,15 +5,21 @@ namespace App\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HouseholdController extends AbstractController
 {
-    #[Route('/')]
-    public function indexNoLocale(): Response
+    #[Route('/', name: 'start')]
+    public function indexNoLocale(SessionInterface $session): Response
     {
-        return $this->redirectToRoute('homepage', ['_locale' => 'en']);
+        if($session->get('_locale')) {
+            return $this->redirectToRoute('homepage', ['_locale' => $session->get('_locale')]);
+        }else {
+            return $this->redirectToRoute('homepage', ['_locale' => 'en']);
+        }
     }
 
     #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]

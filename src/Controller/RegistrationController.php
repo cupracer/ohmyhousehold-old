@@ -57,6 +57,7 @@ class RegistrationController extends AbstractController
 
             $userProfile->setForenames($registerUserRequest->getForenames());
             $userProfile->setSurname($registerUserRequest->getSurname());
+            $userProfile->setLocale($request->getLocale());
 
             $user->setUserProfile($userProfile);
 

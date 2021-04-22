@@ -81,7 +81,7 @@ class FormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new RedirectResponse($this->router->generate('homepage'));
+        return new RedirectResponse($this->router->generate('start'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response

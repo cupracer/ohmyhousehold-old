@@ -44,6 +44,11 @@ class UserProfile
      */
     private $updatedAt;
 
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $locale;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -129,5 +134,17 @@ class UserProfile
     public function setUpdatedAtValue()
     {
         $this->updatedAt = new \DateTime();
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): self
+    {
+        $this->locale = $locale;
+
+        return $this;
     }
 }
