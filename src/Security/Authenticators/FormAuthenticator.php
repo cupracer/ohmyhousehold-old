@@ -12,31 +12,25 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 class FormAuthenticator extends AbstractAuthenticator
 {
     public const LOGIN_ROUTE = 'app_user_login';
 
     private EntityManagerInterface $entityManager;
-    private CsrfTokenManagerInterface $csrfTokenManager;
     private Session $session;
     private UrlGeneratorInterface $router;
 
-    public function __construct(EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager, SessionInterface $session, UrlGeneratorInterface $router)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UrlGeneratorInterface $router)
     {
         $this->entityManager = $entityManager;
-        $this->csrfTokenManager = $csrfTokenManager;
         $this->session = $session;
         $this->router = $router;
     }
@@ -58,29 +52,41 @@ class FormAuthenticator extends AbstractAuthenticator
             'username' => strtolower($request->request->get('username')),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
+            'remember_me' => $request->request->get('_remember_me'),
         ];
 
-        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-        if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
-        }
+//        /** @var User $user */
+//        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['username']]);
+//
+//        if (!$user) {
+//            // fail authentication with a custom error
+//            throw new UsernameNotFoundException();
+//        }
 
-        /** @var User $user */
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['username']]);
+//        if (!$user->isVerified()) {
+//            // fail authentication with a custom error
+//            throw new CustomUserMessageAuthenticationException('Account is not verified yet.');
+//        }
 
-        if (!$user) {
-            // fail authentication with a custom error
-            throw new UsernameNotFoundException();
-        }
+        // Instead of loading and checking the user manually,
+        // we use the Passport and Badges features to do this for us.
 
-        if (!$user->isVerified()) {
-            // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Account is not verified yet.');
+        $badges = [
+            new CsrfTokenBadge('authenticate', $credentials['csrf_token']),
+        ];
+
+        if($credentials['remember_me']) {
+            $badges[] = new RememberMeBadge();
         }
 
         return new Passport(
-            new UserBadge($user->getEmail()),
-            new PasswordCredentials($credentials['password'])
+            new UserBadge($credentials['username'], function ($userIdentifier) {
+                return $this->entityManager->getRepository(
+                    User::class)->findOneBy(['email' => $userIdentifier, 'isVerified' => true]
+                );
+            }),
+            new PasswordCredentials($credentials['password']),
+            $badges
         );
     }
 
