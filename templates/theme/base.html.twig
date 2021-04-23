@@ -65,7 +65,7 @@
         <div class="red text-red">
             <i class="fas fa-exclamation-triangle"></i>
             {{ 'You are currently masqueraded as user'|trans }} "{{ app.user.username }}".
-            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ path('homepage', {'_switch_user': '_exit'}) }}">{{ 'End'|trans }}</a>
+            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ impersonation_exit_url() }}">{{ 'End'|trans }}</a>
         </div>
     {% endif %}
 {% endblock masquerade %}
@@ -118,7 +118,7 @@
 {#                <div class="dropdown-divider"></div>#}
                 <div class="dropdown-footer">
                     <a  href="{{ path('app_user_profile') }}" class="btn btn-primary btn-sm mr-3">{{ 'My profile'|trans }}</a>
-                    <a  href="{{ path('app_user_logout') }}" class="btn btn-danger btn-sm ml-3">{{ 'Sign out'|trans }}</a>
+                    <a  href="{{ logout_path() }}" class="btn btn-danger btn-sm ml-3">{{ 'Sign out'|trans }}</a>
                 </div>
 
             </div>
