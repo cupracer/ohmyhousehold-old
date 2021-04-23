@@ -21,6 +21,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
@@ -29,12 +30,14 @@ class FormAuthenticator extends AbstractAuthenticator implements AuthenticationE
     private EntityManagerInterface $entityManager;
     private Session $session;
     private UrlGeneratorInterface $router;
+    private TranslatorInterface $translator;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UrlGeneratorInterface $router)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UrlGeneratorInterface $router, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->router = $router;
+        $this->translator = $translator;
     }
 
     // required by AuthenticationEntryPointInterface
@@ -43,7 +46,7 @@ class FormAuthenticator extends AbstractAuthenticator implements AuthenticationE
         if(str_starts_with($request->attributes->get('_route'), 'api_')) {
             return new JsonResponse([
                 'success' => false,
-                "message" => "Authentication required."
+                "message" => $this->translator->trans("Authentication required.")
             ]);
         }
 

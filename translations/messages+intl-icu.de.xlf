@@ -189,6 +189,10 @@
         <source>Profile has been updated.</source>
         <target>Benutzerprofil wurde aktualisiert.</target>
       </trans-unit>
+      <trans-unit id="0">
+        <source>Authenticated.</source>
+        <target>Authentifiziert.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

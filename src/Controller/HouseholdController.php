@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HouseholdController extends AbstractController
 {
@@ -40,11 +41,11 @@ class HouseholdController extends AbstractController
 
     #[Route('/api/authcheck', name: 'api_authcheck')]
     #[IsGranted("ROLE_API")]
-    public function apiAuthCheck(): Response
+    public function apiAuthCheck(TranslatorInterface $translator): Response
     {
         return new JsonResponse([
             'success' => true,
-            'message' => 'Authenticated.'
+            'message' => $translator->trans('Authenticated.')
         ]);
     }
 }
