@@ -177,13 +177,17 @@
         <source>Locale</source>
         <target>Gebietsschema</target>
       </trans-unit>
-      <trans-unit id="0" resname="de">
+      <trans-unit id="lZpF1E5" resname="de">
         <source>de</source>
         <target>Deutsch</target>
       </trans-unit>
-      <trans-unit id="1" resname="en">
+      <trans-unit id="29OknQ2" resname="en">
         <source>en</source>
         <target>English</target>
+      </trans-unit>
+      <trans-unit id="9BLvw9e" resname="Profile has been updated.">
+        <source>Profile has been updated.</source>
+        <target>Benutzerprofil wurde aktualisiert.</target>
       </trans-unit>
     </body>
   </file>

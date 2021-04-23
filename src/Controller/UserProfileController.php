@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use function Symfony\Component\Translation\t;
 
 #[Route('/{_locale<%app.supported_locales%>}/user/profile')]
 class UserProfileController extends AbstractController
@@ -40,9 +41,9 @@ class UserProfileController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($userProfile);
                 $entityManager->flush();
-                $this->addFlash("success", "Profile has been updated.");
+                $this->addFlash("success", t(message: 'Profile has been updated.', domain: 'messages'));
             } catch (\Exception $e) {
-                $this->addFlash("error", "Couldn't update profile settings.");
+                $this->addFlash("error", t(message: 'Could not update profile settings.', domain: 'messages'));
             }
 
             return $this->redirectToRoute('app_user_profile', ['_locale' => $userProfile->getLocale()]);
