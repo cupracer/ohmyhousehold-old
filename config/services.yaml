@@ -44,3 +44,7 @@ services:
     App\Service\LocaleService:
         arguments:
             $supportedLocales: '%app.supported_locales%'
+
+    App\Controller\Admin\DashboardController:
+        arguments:
+            $siteName: '%app.site_name%'
