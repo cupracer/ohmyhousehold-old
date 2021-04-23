@@ -18,25 +18,46 @@ class ApiTokenController extends AbstractController
 {
     #[Route('/', name: 'app_user_apitoken_index', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
+    #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(ApiTokenRepository $apiTokenRepository): Response
     {
+//        $apiTokens = array_filter(
+//            $apiTokenRepository->findBy(['user' => $this->getUser()]),
+//            function (ApiToken $apiToken) {
+//                return $this->isGranted('view', $apiToken);
+//            }
+//        );
+
+        $apiTokens = $apiTokenRepository->findBy(['user' => $this->getUser()]);
+
         return $this->render('user/apitoken/index.html.twig', [
-            'api_tokens' => $apiTokenRepository->findAll(),
+            'api_tokens' => $apiTokens,
             'pageTitle' => 'API Tokens'
         ]);
     }
 
     #[IsGranted("ROLE_USER")]
+    #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function indexSnippet(ApiTokenRepository $apiTokenRepository): Response
     {
+//        $apiTokens = array_filter(
+//            $apiTokenRepository->findBy(['user' => $this->getUser()]),
+//            function (ApiToken $apiToken) {
+//                return $this->isGranted('view', $apiToken);
+//            }
+//        );
+
+        $apiTokens = $apiTokenRepository->findBy(['user' => $this->getUser()]);
+
         return $this->render('user/apitoken/_index.html.twig', [
-            'api_tokens' => $apiTokenRepository->findBy(['user' => $this->getUser()]),
+            'api_tokens' => $apiTokens,
         ]);
     }
 
     #[IsGranted("ROLE_USER")]
+    #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     #[Route('/new', name: 'app_user_apitoken_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
@@ -76,10 +97,13 @@ class ApiTokenController extends AbstractController
 
     #[Route('/{id}', name: 'app_user_apitoken_delete', methods: ['POST'])]
     #[IsGranted("ROLE_USER")]
+    #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function delete(Request $request, ApiToken $apiToken): Response
     {
         if ($this->isCsrfTokenValid('delete'.$apiToken->getId(), $request->request->get('_token'))) {
+            $this->denyAccessUnlessGranted('delete', $apiToken);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($apiToken);
             $entityManager->flush();

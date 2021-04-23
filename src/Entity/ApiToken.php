@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="This description is already used for another token."
  * )
  */
-class ApiToken
+class ApiToken implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -55,6 +55,17 @@ class ApiToken
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastUsedAt;
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'description' => $this->description,
+            'createdAt' => $this->createdAt,
+            'expiresAt' => $this->expiresAt,
+            'lastUsedAt' => $this->lastUsedAt,
+        ];
+    }
 
     /**
      * @ORM\Column(type="string", length=20)
