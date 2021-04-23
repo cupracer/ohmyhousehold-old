@@ -189,9 +189,17 @@
         <source>Profile has been updated.</source>
         <target>Benutzerprofil wurde aktualisiert.</target>
       </trans-unit>
-      <trans-unit id="0">
+      <trans-unit id="iDITDtx" resname="Authenticated.">
         <source>Authenticated.</source>
         <target>Authentifiziert.</target>
+      </trans-unit>
+      <trans-unit id="RcztqDd" resname="Authentication required.">
+        <source>Authentication required.</source>
+        <target>Authentifizierung erforderlich.</target>
+      </trans-unit>
+      <trans-unit id="j7_7.Q1" resname="Permission denied.">
+        <source>Permission denied.</source>
+        <target>Zugriff verweigert.</target>
       </trans-unit>
     </body>
   </file>
