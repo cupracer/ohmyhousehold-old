@@ -41,7 +41,10 @@ class FormAuthenticator extends AbstractAuthenticator implements AuthenticationE
     public function start(Request $request, AuthenticationException $authException = null)
     {
         if(str_starts_with($request->attributes->get('_route'), 'api_')) {
-            return new JsonResponse(["message" => "Authentication required."]);
+            return new JsonResponse([
+                'success' => false,
+                "message" => "Authentication required."
+            ]);
         }
 
         // add a custom flash message and redirect to the login page

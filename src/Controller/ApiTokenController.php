@@ -17,7 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiTokenController extends AbstractController
 {
     #[Route('/', name: 'app_user_apitoken_index', methods: ['GET'])]
-    #[IsGranted("ROLE_USER")]
     #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(ApiTokenRepository $apiTokenRepository): Response
@@ -37,7 +36,6 @@ class ApiTokenController extends AbstractController
         ]);
     }
 
-    #[IsGranted("ROLE_USER")]
     #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function indexSnippet(ApiTokenRepository $apiTokenRepository): Response
@@ -56,7 +54,6 @@ class ApiTokenController extends AbstractController
         ]);
     }
 
-    #[IsGranted("ROLE_USER")]
     #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     #[Route('/new', name: 'app_user_apitoken_new', methods: ['GET', 'POST'])]

@@ -39,11 +39,12 @@ class HouseholdController extends AbstractController
     }
 
     #[Route('/api/authcheck', name: 'api_authcheck')]
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted("ROLE_API")]
     public function apiAuthCheck(): Response
     {
         return new JsonResponse([
-            'success' => true
+            'success' => true,
+            'message' => 'Authenticated.'
         ]);
     }
 }
