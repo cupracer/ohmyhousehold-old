@@ -82,13 +82,16 @@
 {% block navbar_messages_dropdown %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdown-language" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ app.request.locale|locale_name(app.request.locale)|u.title }}
-            </a>
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ localeRepresentations[app.request.locale].flag }}
+        </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-language">
-                <a class="dropdown-item" href="{{ path('app_user_locale', {_locale: 'en'}) }}">English</a>
-                <a class="dropdown-item" href="{{ path('app_user_locale', {_locale: 'de'}) }}">Deutsch</a>
-            </div>
+            {% for localeKey, localeData in localeRepresentations %}
+                <a class="dropdown-item" href="{{ path('app_user_locale', {_locale: localeKey}) }}">
+                    {{ localeData.flag }} {{ localeData.name|u.title }}
+                </a>
+            {% endfor %}
+        </div>
     </li>
 {% endblock navbar_messages_dropdown %}
 

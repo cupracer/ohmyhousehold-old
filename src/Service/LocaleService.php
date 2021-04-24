@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LocaleService
@@ -25,5 +26,19 @@ class LocaleService
         }
 
         return $choices;
+    }
+
+    public function getLocaleRepresentations(): array
+    {
+        return [
+            'en' => [
+                'flag' => UnicodeString::fromCodePoints(0x1F1EC, 0x1F1E7),
+                'name' => 'English'
+            ],
+            'de' => [
+                'flag' => UnicodeString::fromCodePoints(0x1F1E9, 0x1F1EA),
+                'name' => 'Deutsch'
+            ]
+        ];
     }
 }
