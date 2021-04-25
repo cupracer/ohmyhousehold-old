@@ -36,7 +36,7 @@ class UserProfileFormType extends AbstractType
                 ],
             ])
             ->add('locale', LocaleType::class, [
-                'choices' => $this->localeService->getSupportedLocaleChoices(),
+                'choices' => $this->localeService->getSupportedLocales(true),
                 'choice_loader' => null
             ])
         ;

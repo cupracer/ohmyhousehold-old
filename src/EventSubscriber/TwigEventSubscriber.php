@@ -24,7 +24,7 @@ class TwigEventSubscriber implements EventSubscriberInterface
     public function onKernelController()
     {
         $this->twig->addGlobal('siteName', $this->siteName);
-        $this->twig->addGlobal('localeRepresentations', $this->localeService->getLocaleRepresentations());
+        $this->twig->addGlobal('supportedLocales', $this->localeService->getSupportedLocales());
     }
 
     public static function getSubscribedEvents()

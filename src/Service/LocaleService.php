@@ -17,28 +17,18 @@ class LocaleService
         $this->translator = $translator;
     }
 
-    public function getSupportedLocaleChoices(): array
+    public function getSupportedLocales(bool $reverse = false): array
     {
-        $choices = [];
+        $result = [];
 
         foreach($this->supportedLocales as $locale) {
-            $choices[$this->translator->trans($locale)] = $locale;
+            if($reverse) {
+                $result[$this->translator->trans($locale)] = $locale;
+            }else {
+                $result[$locale] = $this->translator->trans($locale);
+            }
         }
 
-        return $choices;
-    }
-
-    public function getLocaleRepresentations(): array
-    {
-        return [
-            'en' => [
-                'flag' => UnicodeString::fromCodePoints(0x1F1EC, 0x1F1E7),
-                'name' => 'English'
-            ],
-            'de' => [
-                'flag' => UnicodeString::fromCodePoints(0x1F1E9, 0x1F1EA),
-                'name' => 'Deutsch'
-            ]
-        ];
+        return $result;
     }
 }
