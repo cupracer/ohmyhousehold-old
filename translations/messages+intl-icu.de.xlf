@@ -61,6 +61,10 @@
         <source>E-mail</source>
         <target>E-Mail</target>
       </trans-unit>
+      <trans-unit id="0" resname="e-mail">
+        <source>e-mail</source>
+        <target>E-Mail</target>
+      </trans-unit>
       <trans-unit id="588_9PF" resname="Password">
         <source>Password</source>
         <target>Passwort</target>

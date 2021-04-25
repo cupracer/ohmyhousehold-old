@@ -17,7 +17,7 @@ class ResetPasswordRequestFormType extends AbstractType
                 'mapped' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'E-Mail',
+                    'placeholder' => 'e-mail',
                     'autofocus' => true
                 ],
                 'constraints' => [

@@ -80,7 +80,7 @@ class ApiTokenController extends AbstractController
             $entityManager->persist($apiToken);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Your API token: ' . $token);
+            $this->addFlash('success', 'X-AUTH-TOKEN: ' . $token);
 
             return $this->redirectToRoute('app_user_profile');
         }
