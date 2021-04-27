@@ -5,52 +5,48 @@
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
-      <trans-unit id="DmuOXFN" resname="Welcome to">
-        <source>Welcome to</source>
+      <trans-unit id="DmuOXFN" resname="app.welcome-to">
+        <source>app.welcome-to</source>
         <target>Willkommen bei</target>
       </trans-unit>
-      <trans-unit id="GKvqQCd" resname="Go somewhere">
-        <source>Go somewhere</source>
-        <target>Gehe irgendwo hin</target>
+      <trans-unit id="UOuPWOj" resname="app.currently-masqueraded-as">
+        <source>app.currently-masqueraded-as</source>
+        <target>Du bist derzeit als "{name}" maskiert.</target>
       </trans-unit>
-      <trans-unit id="UOuPWOj" resname="You are currently masqueraded as user">
-        <source>You are currently masqueraded as user</source>
-        <target>Du bist derzeit maskiert als </target>
-      </trans-unit>
-      <trans-unit id="9NseSEd" resname="End">
-        <source>End</source>
+      <trans-unit id="9NseSEd" resname="app.end">
+        <source>app.end</source>
         <target>Ende</target>
       </trans-unit>
-      <trans-unit id="SPDT05f" resname="Sign out">
-        <source>Sign out</source>
+      <trans-unit id="SPDT05f" resname="app.sign-out">
+        <source>app.sign-out</source>
         <target>Abmelden</target>
       </trans-unit>
-      <trans-unit id="u3I07BJ" resname="Register">
-        <source>Register</source>
+      <trans-unit id="u3I07BJ" resname="app.register">
+        <source>app.register</source>
         <target>Registrieren</target>
       </trans-unit>
-      <trans-unit id="v9QCsvb" resname="Sign in">
-        <source>Sign in</source>
+      <trans-unit id="v9QCsvb" resname="app.sign-in">
+        <source>app.sign-in</source>
         <target>Anmelden</target>
       </trans-unit>
-      <trans-unit id="HLC6El_" resname="Information">
-        <source>Information</source>
+      <trans-unit id="HLC6El_" resname="app.information">
+        <source>app.information</source>
         <target>Information</target>
       </trans-unit>
-      <trans-unit id="yIoLkHQ" resname="Success">
-        <source>Success</source>
+      <trans-unit id="yIoLkHQ" resname="app.success">
+        <source>app.success</source>
         <target>Erfolgreich</target>
       </trans-unit>
-      <trans-unit id="6YHdrkX" resname="Warning">
-        <source>Warning</source>
+      <trans-unit id="6YHdrkX" resname="app.warning">
+        <source>app.warning</source>
         <target>Warnung</target>
       </trans-unit>
-      <trans-unit id="VKDowX6" resname="Error">
-        <source>Error</source>
+      <trans-unit id="VKDowX6" resname="app.error">
+        <source>app.error</source>
         <target>Fehler</target>
       </trans-unit>
-      <trans-unit id="Jxxi_i3" resname="My profile">
-        <source>My profile</source>
+      <trans-unit id="Jxxi_i3" resname="app.my-profile">
+        <source>app.my-profile</source>
         <target>Mein Profil</target>
       </trans-unit>
       <trans-unit id="8FGIkAR" resname="Sign in to start your session">
@@ -89,8 +85,8 @@
         <source>Generate API token...</source>
         <target>API-Token generieren...</target>
       </trans-unit>
-      <trans-unit id="H6cSvnZ" resname="My profile settings">
-        <source>My profile settings</source>
+      <trans-unit id="H6cSvnZ" resname="app.my-profile-setting">
+        <source>app.my-profile-setting</source>
         <target>Meine Profil-Einstellungen</target>
       </trans-unit>
       <trans-unit id="PJdk10m" resname="Forename(s)">
@@ -137,8 +133,8 @@
         <source>no records found</source>
         <target>keine Datensätze gefunden</target>
       </trans-unit>
-      <trans-unit id="xl4mYPh" resname="Back to my profile">
-        <source>Back to my profile</source>
+      <trans-unit id="xl4mYPh" resname="app.back-to-my-profile">
+        <source>app.back-to-my-profile</source>
         <target>Zurück zu meinem Profil</target>
       </trans-unit>
       <trans-unit id="SeSbtEA" resname="Generate">

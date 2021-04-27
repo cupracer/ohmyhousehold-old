@@ -64,8 +64,8 @@
     {% if is_granted('IS_IMPERSONATOR') %}
         <div class="red text-red">
             <i class="fas fa-exclamation-triangle"></i>
-            {{ 'You are currently masqueraded as user'|trans }} "{{ app.user.username }}".
-            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ impersonation_exit_url() }}">{{ 'End'|trans }}</a>
+            {% trans with {'name': app.user.username} %}app.currently-masqueraded-as{% endtrans %}
+            <a class="btn btn-outline-danger btn-sm" style="color: red;" href="{{ impersonation_exit_url() }}">{{ 'app.end'|trans }}</a>
         </div>
     {% endif %}
 {% endblock masquerade %}
@@ -120,8 +120,8 @@
                 </a>
 {#                <div class="dropdown-divider"></div>#}
                 <div class="dropdown-footer">
-                    <a  href="{{ path('app_user_profile') }}" class="btn btn-primary btn-sm mr-3">{{ 'My profile'|trans }}</a>
-                    <a  href="{{ logout_path() }}" class="btn btn-danger btn-sm ml-3">{{ 'Sign out'|trans }}</a>
+                    <a  href="{{ path('app_user_profile') }}" class="btn btn-primary btn-sm mr-3">{{ 'app.my-profile'|trans }}</a>
+                    <a  href="{{ logout_path() }}" class="btn btn-danger btn-sm ml-3">{{ 'app.sign-out'|trans|u.title }}</a>
                 </div>
 
             </div>
@@ -130,12 +130,12 @@
     {% else %}
         <li class="nav-item">
             <a class="nav-link" href="{{ path('app_user_register') }}">
-                <i class="fas fa-user-plus mr-1"></i> {{ 'Register'|trans }}
+                <i class="fas fa-user-plus mr-1"></i> {{ 'app.register'|trans|u.title }}
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ path('app_user_login') }}">
-                <i class="fas fa-sign-in-alt mr-1"></i> {{ 'Sign in'|trans }}
+                <i class="fas fa-sign-in-alt mr-1"></i> {{ 'app.sign-in'|trans|u.title }}
             </a>
         </li>
     {% endif %}
