@@ -1,1 +1,1 @@
-# cupracer/ohmyhousehold
+# cupracer/ohmymodel
