@@ -1,6 +1,6 @@
 {
     "name": "cupracer/ohmymodel",
-    "description": "web application to manage housekeeping stuff",
+    "description": "Personal basis for various web applications",
     "type": "project",
     "license": "Apache-2.0",
     "minimum-stability": "dev",
