@@ -53,6 +53,11 @@
     <li class="nav-item d-none d-sm-inline-block">
         <a href="{{ path('homepage') }}" class="nav-link">Home</a>
     </li>
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ path('app_admin_index') }}" class="nav-link">Admin</a>
+        </li>
+    {% endif %}
 {% endblock navbar_left_items %}
 
 
