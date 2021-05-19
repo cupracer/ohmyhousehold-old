@@ -209,6 +209,10 @@
         <source>Edit</source>
         <target>Bearbeiten</target>
       </trans-unit>
+      <trans-unit id="3" resname="app.settings">
+        <source>app.settings</source>
+        <target>Einstellungen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
