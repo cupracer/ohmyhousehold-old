@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\DTO\RegisterUser;
+use App\Entity\Household;
+use App\Entity\HouseholdUser;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Form\RegistrationFormType;
@@ -61,9 +63,21 @@ class RegistrationController extends AbstractController
 
             $user->setUserProfile($userProfile);
 
+            // Household + HouseholdUser
+
+            $household = new Household();
+            $household->setTitle($user->getEmail());
+
+            $householdUser = new HouseholdUser();
+            $householdUser->setUser($user);
+            $householdUser->setHousehold($household);
+            $householdUser->setIsAdmin(true);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($userProfile);
             $entityManager->persist($user);
+            $entityManager->persist($household);
+            $entityManager->persist($householdUser);
             $entityManager->flush();
 
             if($user->isVerified()) {
