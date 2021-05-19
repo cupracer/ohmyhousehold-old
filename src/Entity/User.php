@@ -73,9 +73,15 @@ class User implements UserInterface
      */
     private $apiTokens;
 
+    /**
+     * @ORM\OneToMany(targetEntity=HouseholdUser::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $householdUsers;
+
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
+        $this->householdUsers = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -257,6 +263,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($apiToken->getUser() === $this) {
                 $apiToken->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getHouseholdUsers(): Collection
+    {
+        return $this->householdUsers;
+    }
+
+    public function addHouseholdUser(HouseholdUser $householdUser): self
+    {
+        if (!$this->householdUsers->contains($householdUser)) {
+            $this->householdUsers[] = $householdUser;
+            $householdUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHouseholdUser(HouseholdUser $householdUser): self
+    {
+        if ($this->householdUsers->removeElement($householdUser)) {
+            // set the owning side to null (unless already changed)
+            if ($householdUser->getUser() === $this) {
+                $householdUser->setUser(null);
             }
         }
 
