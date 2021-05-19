@@ -45,9 +45,9 @@
         <source>app.error</source>
         <target>Fehler</target>
       </trans-unit>
-      <trans-unit id="Jxxi_i3" resname="app.my-profile">
-        <source>app.my-profile</source>
-        <target>Mein Profil</target>
+      <trans-unit id="Jxxi_i3" resname="app.user_settings">
+        <source>app.user_settings</source>
+        <target>Benutzereinstellungen</target>
       </trans-unit>
       <trans-unit id="8FGIkAR" resname="Sign in to start your session">
         <source>Sign in to start your session</source>
@@ -85,9 +85,9 @@
         <source>Generate API token...</source>
         <target>API-Token generieren...</target>
       </trans-unit>
-      <trans-unit id="H6cSvnZ" resname="app.my-profile-setting">
-        <source>app.my-profile-setting</source>
-        <target>Meine Profil-Einstellungen</target>
+      <trans-unit id="H6cSvnZ" resname="app.user_profile">
+        <source>app.user_profile</source>
+        <target>Benutzerprofil</target>
       </trans-unit>
       <trans-unit id="PJdk10m" resname="Forename(s)">
         <source>Forename(s)</source>
@@ -133,9 +133,9 @@
         <source>no records found</source>
         <target>keine Datensätze gefunden</target>
       </trans-unit>
-      <trans-unit id="xl4mYPh" resname="app.back-to-my-profile">
-        <source>app.back-to-my-profile</source>
-        <target>Zurück zu meinem Profil</target>
+      <trans-unit id="xl4mYPh" resname="app.back-to-user-settings">
+        <source>app.back-to-user-settings</source>
+        <target>Zurück zu den Benutzereinstellungen</target>
       </trans-unit>
       <trans-unit id="SeSbtEA" resname="Generate">
         <source>Generate</source>
@@ -200,6 +200,14 @@
       <trans-unit id="j7_7.Q1" resname="Permission denied.">
         <source>Permission denied.</source>
         <target>Zugriff verweigert.</target>
+      </trans-unit>
+      <trans-unit id="1" resname="app.personal_data">
+        <source>app.personal_data</source>
+        <target>Persönliche Daten</target>
+      </trans-unit>
+      <trans-unit id="2" resname="Edit">
+        <source>Edit</source>
+        <target>Bearbeiten</target>
       </trans-unit>
     </body>
   </file>

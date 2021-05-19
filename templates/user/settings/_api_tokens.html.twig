@@ -13,9 +13,9 @@
                 <th></th>
             </tr>
             </thead>
-            {% if api_tokens %}
+            {% if apiTokens %}
                 <tbody>
-                {% for api_token in api_tokens %}
+                {% for api_token in apiTokens %}
                     <tr>
                         <td>{{ api_token.description }}</td>
                         <td>{{ api_token.createdAt ? api_token.createdAt|format_datetime : '' }}</td>

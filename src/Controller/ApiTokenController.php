@@ -6,7 +6,6 @@ use App\Entity\ApiToken;
 use App\Entity\DTO\CreateApiToken;
 use App\Entity\User;
 use App\Form\CreateApiTokenType;
-use App\Repository\ApiTokenRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,44 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/{_locale<%app.supported_locales%>}/user/apitoken')]
 class ApiTokenController extends AbstractController
 {
-    #[Route('/', name: 'app_user_apitoken_index', methods: ['GET'])]
-    #[IsGranted("ROLE_API")]
-    #[IsGranted("IS_AUTHENTICATED_FULLY")]
-    public function index(ApiTokenRepository $apiTokenRepository): Response
-    {
-//        $apiTokens = array_filter(
-//            $apiTokenRepository->findBy(['user' => $this->getUser()]),
-//            function (ApiToken $apiToken) {
-//                return $this->isGranted('view', $apiToken);
-//            }
-//        );
-
-        $apiTokens = $apiTokenRepository->findBy(['user' => $this->getUser()]);
-
-        return $this->render('user/apitoken/index.html.twig', [
-            'api_tokens' => $apiTokens,
-            'pageTitle' => 'API Tokens'
-        ]);
-    }
-
-    #[IsGranted("ROLE_API")]
-    #[IsGranted("IS_AUTHENTICATED_FULLY")]
-    public function indexSnippet(ApiTokenRepository $apiTokenRepository): Response
-    {
-//        $apiTokens = array_filter(
-//            $apiTokenRepository->findBy(['user' => $this->getUser()]),
-//            function (ApiToken $apiToken) {
-//                return $this->isGranted('view', $apiToken);
-//            }
-//        );
-
-        $apiTokens = $apiTokenRepository->findBy(['user' => $this->getUser()]);
-
-        return $this->render('user/apitoken/_index.html.twig', [
-            'api_tokens' => $apiTokens,
-        ]);
-    }
-
     #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     #[Route('/new', name: 'app_user_apitoken_new', methods: ['GET', 'POST'])]
@@ -82,7 +43,7 @@ class ApiTokenController extends AbstractController
 
             $this->addFlash('success', 'X-AUTH-TOKEN: ' . $token);
 
-            return $this->redirectToRoute('app_user_profile');
+            return $this->redirectToRoute('app_user_settings');
         }
 
         return $this->render('user/apitoken/new.html.twig', [
@@ -109,7 +70,7 @@ class ApiTokenController extends AbstractController
             $this->addFlash("error", "Selected API token could not be deleted.");
         }
 
-        return $this->redirectToRoute('app_user_profile');
+        return $this->redirectToRoute('app_user_settings');
     }
 
     private function genRandomString($length = 1)
