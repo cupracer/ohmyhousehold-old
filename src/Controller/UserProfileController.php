@@ -15,7 +15,7 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/user/profile')]
 class UserProfileController extends AbstractController
 {
-    #[Route('/', name: 'app_user_profile')]
+    #[Route('/edit', name: 'app_user_profile_edit')]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function index(Request $request): Response
@@ -46,12 +46,12 @@ class UserProfileController extends AbstractController
                 $this->addFlash("error", t(message: 'Could not update profile settings.', domain: 'messages'));
             }
 
-            return $this->redirectToRoute('app_user_profile', ['_locale' => $userProfile->getLocale()]);
+            return $this->redirectToRoute('app_user_settings', ['_locale' => $userProfile->getLocale()]);
         }
 
-        return $this->render('user/profile/index.html.twig', [
+        return $this->render('user/profile/edit.html.twig', [
             'userProfileForm' => $form->createView(),
-            'pageTitle' => 'User profile',
+            'pageTitle' => t('app.user_profile'),
         ]);
     }
 }

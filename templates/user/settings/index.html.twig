@@ -1,0 +1,24 @@
+{% extends 'theme/base-datatables.html.twig' %}
+
+{% block page_header_buttons %}
+    {% if is_granted('ROLE_API') %}
+        <a href="{{ path('app_user_apitoken_new') }}" class="btn btn-primary btn-sm btn-icon-split ml-3">
+            <span class="icon text-white-50 mr-1">
+              <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">{{ 'Generate API token...'|trans }}</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    {% include 'user/settings/_user_profile.html.twig' %}
+    {% include 'user/settings/_api_tokens.html.twig' %}
+{% endblock %}
+
+
+{% block javascripts  %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('app_user_apitoken_index') }}
+{% endblock javascripts %}
