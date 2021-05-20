@@ -15,6 +15,18 @@ label.required:before {
     content: "*";
 }
 
+// set fixed size for language icon
 i.fa-language {
     font-size: 1.4rem !important;
+}
+
+// vertical align for all Datatables
+table.dataTable tbody td {
+    vertical-align: middle;
+}
+
+// set table column to minimum width
+td.min {
+    width: 1px;
+    white-space: nowrap;
 }
