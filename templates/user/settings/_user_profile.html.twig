@@ -1,50 +1,45 @@
-<div class="row">
-    <div class="col-lg-4">
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">{{ 'app.user_profile'|trans }}</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <table class="table">
-                            <tbody>
-                            <tr>
-                                <th style="width:50%">{{ 'Forename(s)'|trans }}:</th>
-                                <td>{{ userProfile.forenames }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ 'Surname'|trans }}:</th>
-                                <td>{{ userProfile.surname }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ 'Locale'|trans }}:</th>
-                                <td>{{ userProfile.locale|locale_name }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
-                <div class="row">
-                    <div class="col-12 text-right">
-                        <a href="{{ path('app_user_profile_edit') }}">
-                            <button class="btn btn-primary btn-icon-split ml-3">
-                                <span class="icon text-white-50 mr-1">
-                                    <i class="far fa-save"></i>
-                                </span>
-                                <span class="text">{{ button_label|default('Edit')|trans }}</span>
-                            </button>
-                        </a>
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
-            </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">{{ 'app.user_profile'|trans }}</h3>
     </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th style="width:50%">{{ 'Forename(s)'|trans }}:</th>
+                        <td>{{ userProfile.forenames }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Surname'|trans }}:</th>
+                        <td>{{ userProfile.surname }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'Locale'|trans }}:</th>
+                        <td>{{ userProfile.locale|locale_name }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-12 text-right">
+                <a href="{{ path('app_user_profile_edit') }}">
+                    <button class="btn btn-primary btn-icon-split ml-3">
+                        <span class="icon text-white-50 mr-1">
+                            <i class="far fa-save"></i>
+                        </span>
+                        <span class="text">{{ button_label|default('Edit')|trans }}</span>
+                    </button>
+                </a>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.card-body -->
 </div>
-<!-- /.row -->
+<!-- /.card -->
