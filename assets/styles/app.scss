@@ -30,3 +30,8 @@ td.min {
     width: 1px;
     white-space: nowrap;
 }
+
+// always use nowrap for table column headers
+table.dataTable th {
+    white-space: nowrap;
+}
