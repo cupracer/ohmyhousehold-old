@@ -46,7 +46,7 @@ class ApiTokenController extends AbstractController
             return $this->redirectToRoute('app_user_settings');
         }
 
-        return $this->render('user/apitoken/new.html.twig', [
+        return $this->render('user/settings/apitoken_new.html.twig', [
             'api_token' => $createApiToken,
             'form' => $form->createView(),
             'pageTitle' => 'Generate API token'

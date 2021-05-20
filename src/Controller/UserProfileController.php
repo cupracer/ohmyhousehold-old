@@ -49,7 +49,7 @@ class UserProfileController extends AbstractController
             return $this->redirectToRoute('app_user_settings', ['_locale' => $userProfile->getLocale()]);
         }
 
-        return $this->render('user/profile/edit.html.twig', [
+        return $this->render('user/settings/user_profile_edit.html.twig', [
             'userProfileForm' => $form->createView(),
             'pageTitle' => t('app.user_profile'),
         ]);
