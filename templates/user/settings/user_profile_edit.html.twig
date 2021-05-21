@@ -1,16 +1,8 @@
-{% extends 'theme/base-datatables.html.twig' %}
-
-{% block page_header_buttons %}
-    <a href="{{ path('app_user_settings') }}" class="btn btn-primary btn-sm btn-icon-split">
-        <span class="icon text-white-50 mr-1">
-          <i class="fas fa-arrow-circle-left"></i>
-        </span>
-        <span class="text">{{ 'app.back-to-user-settings'|trans }}</span>
-    </a>
-{% endblock %}
+{% extends 'theme/base.html.twig' %}
 
 {% block page_content %}
     <div class="row">
+        <div class="col-lg"></div>
         <div class="col-lg-4">
             <div class="card card-primary">
                 <div class="card-header">
@@ -35,6 +27,12 @@
                         </div>
                         <div class="row">
                             <div class="col-12 text-right">
+                                <a href="{{ path('app_user_settings') }}" class="btn btn-warning btn-icon-split">
+                                    <span class="icon text-white-50 mr-1">
+                                        <i class="far fa-times-circle"></i>
+                                    </span>
+                                    <span class="text">{{ button_label|default('Abort')|trans }}</span>
+                                </a>
                                 <button type="submit" class="btn btn-primary btn-icon-split ml-3">
                                     <span class="icon text-white-50 mr-1">
                                         <i class="far fa-save"></i>
@@ -50,6 +48,7 @@
             </div>
             <!-- /.card -->
         </div>
+        <div class="col-lg"></div>
     </div>
     <!-- /.row -->
 {% endblock %}
