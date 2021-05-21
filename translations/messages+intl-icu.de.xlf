@@ -213,6 +213,10 @@
         <source>app.settings</source>
         <target>Einstellungen</target>
       </trans-unit>
+      <trans-unit id="7" resname="Abort">
+        <source>Abort</source>
+        <target>Abbrechen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
