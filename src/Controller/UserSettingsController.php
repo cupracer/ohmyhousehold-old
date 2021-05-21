@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\ApiTokenRepository;
+use App\Repository\HouseholdUserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,17 +17,19 @@ class UserSettingsController extends AbstractController
     #[Route('/', name: 'app_user_settings')]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
-    public function index(ApiTokenRepository $apiTokenRepository): Response
+    public function index(ApiTokenRepository $apiTokenRepository, HouseholdUserRepository $householdUserRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
 
         $userProfile = $user->getUserProfile();
         $apiTokens = $apiTokenRepository->findBy(['user' => $this->getUser()]);
+        $householdUsers = $householdUserRepository->findBy(['user' => $this->getUser()]);
 
         return $this->render('user/settings/index.html.twig', [
             'pageTitle' => t('app.user_settings'),
             'userProfile' => $userProfile,
+            'householdUsers' => $householdUsers,
             'apiTokens' => $apiTokens,
         ]);
     }

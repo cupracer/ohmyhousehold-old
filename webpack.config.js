@@ -26,6 +26,9 @@ Encore
 
     .addEntry('app_user_settings_apitokens', './assets/js/user/settings/apitokens.js')
 
+    .addEntry('omh', './assets/js/omh.js')
+    .addEntry('omh_user_settings_households', './assets/js/user/settings/households.js')
+
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 

@@ -217,6 +217,26 @@
         <source>Abort</source>
         <target>Abbrechen</target>
       </trans-unit>
+      <trans-unit id="4" resname="app.households">
+        <source>app.households</source>
+        <target>Haushalte</target>
+      </trans-unit>
+      <trans-unit id="5" resname="Title">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="6" resname="Admin">
+        <source>Admin</source>
+        <target>Admin</target>
+      </trans-unit>
+      <trans-unit id="8" resname="app.household.details">
+        <source>app.household.details</source>
+        <target>Details</target>
+      </trans-unit>
+      <trans-unit id="9" resname="Household">
+        <source>Household</source>
+        <target>Haushalt</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

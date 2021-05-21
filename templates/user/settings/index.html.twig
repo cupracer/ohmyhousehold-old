@@ -16,6 +16,9 @@
         <div class="col-lg-4">
             {% include 'user/settings/_user_profile.html.twig' %}
         </div>
+        <div class="col-lg-4">
+            {% include 'user/settings/_households.html.twig' %}
+        </div>
     </div>
     <!-- /.row -->
 
@@ -32,4 +35,5 @@
     {{ parent() }}
 
     {{ encore_entry_script_tags('app_user_settings_apitokens') }}
+    {{ encore_entry_script_tags('omh_user_settings_households') }}
 {% endblock javascripts %}

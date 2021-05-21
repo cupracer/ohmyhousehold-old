@@ -1,0 +1,43 @@
+{% extends 'theme/base.html.twig' %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg"></div>
+        <div class="col-lg-4">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'app.household.details'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="form-group">
+                            {{ form_label(form.title) }}
+                            {{ form_widget(form.title) }}
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <a href="{{ path('omh_household_show', {'id': household.id}) }}" class="btn btn-warning btn-icon-split">
+                                    <span class="icon text-white-50 mr-1">
+                                        <i class="far fa-times-circle"></i>
+                                    </span>
+                                    <span class="text">{{ button_label|default('Abort')|trans }}</span>
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-icon-split ml-3">
+                                    <span class="icon text-white-50 mr-1">
+                                        <i class="far fa-save"></i>
+                                    </span>
+                                    <span class="text">{{ button_label|default('Update')|trans }}</span>
+                                </button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <div class="col-lg"></div>
+    </div>
+    <!-- /.row -->
+{% endblock %}

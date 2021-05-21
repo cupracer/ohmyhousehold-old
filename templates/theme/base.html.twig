@@ -261,7 +261,9 @@
 {% endblock javascripts_pre %}
 
 
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('omh') }}
+{% endblock javascripts %}
 
 
 {% block javascripts_post %}
