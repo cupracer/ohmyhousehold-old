@@ -18,10 +18,10 @@
                 {% for api_token in apiTokens %}
                     <tr>
                         <td>{{ api_token.description }}</td>
-                        <td>{{ api_token.createdAt ? api_token.createdAt|format_datetime : '' }}</td>
-                        <td>{{ api_token.expiresAt ? api_token.expiresAt|format_datetime : 'never'|trans }}</td>
-                        <td>{{ api_token.lastUsedAt ? api_token.lastUsedAt.locale(app.request.locale).diffForHumans : 'never'|trans }}</td>
-                        <td class="text-right">
+                        <td class="min text-center">{{ api_token.createdAt ? api_token.createdAt|format_datetime : '' }}</td>
+                        <td class="min text-center">{{ api_token.expiresAt ? api_token.expiresAt|format_datetime : 'never'|trans }}</td>
+                        <td class="min text-center">{{ api_token.lastUsedAt ? api_token.lastUsedAt.locale(app.request.locale).diffForHumans : 'never'|trans }}</td>
+                        <td class="text-right min">
                             <div class="btn-group">
                                 <form method="post" action="{{ path('app_user_apitoken_delete', {'id': api_token.id}) }}" onsubmit="return confirm('{{ 'Are you sure you want to delete this item?'|trans }}');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ api_token.id) }}">
