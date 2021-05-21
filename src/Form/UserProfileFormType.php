@@ -26,7 +26,8 @@ class UserProfileFormType extends AbstractType
                 'label' => 'Forename(s)',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Forename(s)'
+                    'placeholder' => 'Forename(s)',
+                    'autofocus' => true,
                 ],
             ])
             ->add('surname', TextType::class, [
