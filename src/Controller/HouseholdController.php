@@ -55,4 +55,38 @@ class HouseholdController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/switch', name: 'omh_household_switch', methods: ['GET', 'POST'])]
+    public function switch(Request $request, HouseholdRepository $householdRepository, HouseholdUserRepository $householdUserRepository): Response
+    {
+        $households = $householdRepository->findByMember($this->getUser());
+
+        if(count($households) > 1) {
+            $switchHousehold = new SwitchHousehold();
+
+            if($request->getSession()->has('current_household')) {
+                $switchHousehold->setHousehold($householdRepository->find($request->getSession()->get('current_household')));
+            }
+
+            $form = $this->createForm(SwitchHouseholdType::class, $switchHousehold, [
+                'action' => $this->generateUrl('omh_household_switch'),
+            ]);
+
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->denyAccessUnlessGranted('view', $switchHousehold->getHousehold());
+                $request->getSession()->set('current_household', $switchHousehold->getHousehold()->getId());
+
+                return $this->redirectToRoute('homepage');
+            }
+
+            return $this->render('household/_switch.html.twig', [
+                'switchHousehold' => $switchHousehold,
+                'form' => $form->createView(),
+            ]);
+        }else {
+            return new Response(null);
+        }
+    }
 }

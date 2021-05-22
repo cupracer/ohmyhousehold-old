@@ -1,0 +1,7 @@
+{% block sidebar_user %}
+    {% if is_granted('ROLE_USER') %}
+        {{ render(controller(
+            'App\\Controller\\HouseholdController::switch'
+        )) }}
+    {% endif %}
+{% endblock sidebar_user %}
