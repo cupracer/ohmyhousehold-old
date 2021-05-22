@@ -11,7 +11,7 @@ import 'admin-lte/plugins/fontawesome-free/css/all.css';
 
 import 'admin-lte/dist/css/adminlte.min.css';
 
-import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
+import 'bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css';
 
 global.$ = global.jQuery = $;
 
