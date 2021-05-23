@@ -11,12 +11,12 @@ import 'admin-lte/plugins/fontawesome-free/css/all.css';
 
 import 'admin-lte/dist/css/adminlte.min.css';
 
-import 'bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css';
+import 'admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css';
 
 global.$ = global.jQuery = $;
 
 import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min';
 import 'admin-lte/dist/js/adminlte.min';
 
-import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min';
-import 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min';
+import 'admin-lte/plugins/moment/moment.min';
+import 'admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min';
