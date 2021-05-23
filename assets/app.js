@@ -12,6 +12,8 @@ import 'admin-lte/plugins/fontawesome-free/css/all.css';
 import 'admin-lte/dist/css/adminlte.min.css';
 
 import 'admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css';
+import 'admin-lte/plugins/select2/css/select2.min.css';
+import 'admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css';
 
 global.$ = global.jQuery = $;
 
@@ -20,3 +22,12 @@ import 'admin-lte/dist/js/adminlte.min';
 
 import 'admin-lte/plugins/moment/moment.min';
 import 'admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min';
+import 'admin-lte/plugins/select2/js/select2.full.min';
+
+$(document).ready(function () {
+    $('.select2field').select2();
+
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-container--open .select2-search__field').focus();
+    });
+});
