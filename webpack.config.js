@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const webpack = require("webpack");
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -74,6 +75,21 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
+
+    // workaround to import Moment.js
+    //      Module build failed: Module not found:
+    //      "./node_modules/moment/min/moment.min.js" contains a reference to the file "./locale".
+    .addPlugin(
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^\.\/locale$/,
+            contextRegExp: /moment$/,
+        })
+    )
+    .addPlugin(
+        new webpack.ProvidePlugin({
+            moment: "moment"
+        })
+    )
 ;
 
 module.exports = Encore.getWebpackConfig();
