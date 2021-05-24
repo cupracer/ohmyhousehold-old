@@ -217,6 +217,10 @@
         <source>Abort</source>
         <target>Abbrechen</target>
       </trans-unit>
+      <trans-unit id="10" resname="button.add">
+        <source>button.add</source>
+        <target>hinzufügen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
