@@ -6,10 +6,16 @@ use App\Repository\AccountHolderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=AccountHolderRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(
+ *     fields={"name", "household"},
+ *     errorPath="name",
+ *     message="This name is already in use in this household."
+ *     )
  */
 class AccountHolder
 {
@@ -21,7 +27,7 @@ class AccountHolder
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 

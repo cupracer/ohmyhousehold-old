@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\AccountHolder;
+use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method AccountHolder|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +16,31 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AccountHolderRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private Security $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, AccountHolder::class);
+
+        $this->security = $security;
+    }
+
+    /**
+     * @return AccountHolder[] Returns an array of Booking objects
+     */
+    public function findAllGrantedByHousehold(Household $household)
+    {
+        $accountHolders = $this->createQueryBuilder('a')
+            ->andWhere('a.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('a.name', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($accountHolders, function (AccountHolder $accountHolder) {
+            return $this->security->isGranted('view', $accountHolder);
+        });
     }
 
     // /**
