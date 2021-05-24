@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Household;
 use App\Entity\HouseholdUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method HouseholdUser|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,15 +38,15 @@ class HouseholdUserRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?HouseholdUser
+    public function findOneByUserAndHousehold(UserInterface $user, Household $household): ?HouseholdUser
     {
         return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('h.user = :user')
+            ->andWhere('h.household = :household')
+            ->setParameter('user', $user)
+            ->setParameter('household', $household)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }
