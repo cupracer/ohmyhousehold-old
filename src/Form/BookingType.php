@@ -50,7 +50,7 @@ class BookingType extends AbstractType
                 'label' => false,
                 'attr' => [
                     'data-on-text' => t('private'),
-                    'data-off-text' => t('public'),
+                    'data-off-text' => t('household'),
                     'data-on-color' => 'success',
                     'data-label-text' => t('Visibility'),
                 ]
