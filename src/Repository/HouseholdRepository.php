@@ -40,6 +40,20 @@ class HouseholdRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByAdmin(UserInterface $user): ?array
+    {
+        return $this->createQueryBuilder('h')
+            ->innerJoin('h.householdUsers', 'householdUsers')
+            ->andWhere('householdUsers.user = :user')
+            ->andWhere('householdUsers.isAdmin = :true')
+            ->setParameter('user', $user)
+            ->setParameter('true', true)
+            ->orderBy('h.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     /**
      * @return Household[] Returns an array of Household objects
      */
