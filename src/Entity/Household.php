@@ -35,9 +35,21 @@ class Household
      */
     private $createdAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AccountHolder::class, mappedBy="household", orphanRemoval=true)
+     */
+    private $accountHolders;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BookingCategory::class, mappedBy="household", orphanRemoval=true)
+     */
+    private $bookingCategories;
+
     public function __construct()
     {
         $this->householdUsers = new ArrayCollection();
+        $this->accountHolders = new ArrayCollection();
+        $this->bookingCategories = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -110,5 +122,65 @@ class Household
     public function setCreatedAtValue()
     {
         $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * @return Collection|AccountHolder[]
+     */
+    public function getAccountHolders(): Collection
+    {
+        return $this->accountHolders;
+    }
+
+    public function addAccountHolder(AccountHolder $accountHolder): self
+    {
+        if (!$this->accountHolders->contains($accountHolder)) {
+            $this->accountHolders[] = $accountHolder;
+            $accountHolder->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccountHolder(AccountHolder $accountHolder): self
+    {
+        if ($this->accountHolders->removeElement($accountHolder)) {
+            // set the owning side to null (unless already changed)
+            if ($accountHolder->getHousehold() === $this) {
+                $accountHolder->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BookingCategory[]
+     */
+    public function getBookingCategories(): Collection
+    {
+        return $this->bookingCategories;
+    }
+
+    public function addBookingCategory(BookingCategory $bookingCategory): self
+    {
+        if (!$this->bookingCategories->contains($bookingCategory)) {
+            $this->bookingCategories[] = $bookingCategory;
+            $bookingCategory->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookingCategory(BookingCategory $bookingCategory): self
+    {
+        if ($this->bookingCategories->removeElement($bookingCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($bookingCategory->getHousehold() === $this) {
+                $bookingCategory->setHousehold(null);
+            }
+        }
+
+        return $this;
     }
 }

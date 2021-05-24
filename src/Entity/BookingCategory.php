@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\HouseholdUserRepository;
+use App\Repository\BookingCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=HouseholdUserRepository::class)
+ * @ORM\Entity(repositoryClass=BookingCategoryRepository::class)
  * @ORM\HasLifecycleCallbacks()
  */
-class HouseholdUser
+class BookingCategory
 {
     /**
      * @ORM\Id
@@ -21,21 +21,9 @@ class HouseholdUser
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="householdUsers")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="householdUsers")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $household;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isAdmin;
+    private $name;
 
     /**
      * @ORM\Column(type="datetime")
@@ -43,7 +31,13 @@ class HouseholdUser
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="householdUser", orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="bookingCategories")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $household;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="bookingCategory", orphanRemoval=true)
      */
     private $bookings;
 
@@ -54,7 +48,7 @@ class HouseholdUser
 
     public function __toString(): string
     {
-        return $this->user->getUsername();
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -62,38 +56,14 @@ class HouseholdUser
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getName(): ?string
     {
-        return $this->user;
+        return $this->name;
     }
 
-    public function setUser(?User $user): self
+    public function setName(string $name): self
     {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getHousehold(): ?Household
-    {
-        return $this->household;
-    }
-
-    public function setHousehold(?Household $household): self
-    {
-        $this->household = $household;
-
-        return $this;
-    }
-
-    public function getIsAdmin(): ?bool
-    {
-        return $this->isAdmin;
-    }
-
-    public function setIsAdmin(bool $isAdmin): self
-    {
-        $this->isAdmin = $isAdmin;
+        $this->name = $name;
 
         return $this;
     }
@@ -118,6 +88,18 @@ class HouseholdUser
         $this->createdAt = new \DateTime();
     }
 
+    public function getHousehold(): ?Household
+    {
+        return $this->household;
+    }
+
+    public function setHousehold(?Household $household): self
+    {
+        $this->household = $household;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Booking[]
      */
@@ -130,7 +112,7 @@ class HouseholdUser
     {
         if (!$this->bookings->contains($booking)) {
             $this->bookings[] = $booking;
-            $booking->setHouseholdUser($this);
+            $booking->setBookingCategory($this);
         }
 
         return $this;
@@ -140,8 +122,8 @@ class HouseholdUser
     {
         if ($this->bookings->removeElement($booking)) {
             // set the owning side to null (unless already changed)
-            if ($booking->getHouseholdUser() === $this) {
-                $booking->setHouseholdUser(null);
+            if ($booking->getBookingCategory() === $this) {
+                $booking->setBookingCategory(null);
             }
         }
 

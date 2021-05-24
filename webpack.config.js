@@ -30,6 +30,9 @@ Encore
     .addEntry('omh', './assets/js/omh.js')
     .addEntry('omh_user_settings_households', './assets/js/user/settings/households.js')
 
+    .addEntry('housekeepingbook_booking_index', './assets/js/housekeepingbook/booking_index.js')
+    .addEntry('housekeepingbook_booking_form', './assets/js/housekeepingbook/booking_form.js')
+
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 

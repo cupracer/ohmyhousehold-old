@@ -2,19 +2,19 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Household;
+use App\Entity\Booking;
 use App\Entity\HouseholdUser;
 use App\Entity\User;
 use App\Repository\HouseholdUserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class HouseholdVoter extends Voter
+class BookingVoter extends Voter
 {
     // these strings are just invented: you can use anything
     const VIEW = 'view';
     const EDIT = 'edit';
-    const CREATE_BOOKING = 'createBooking';
+    const DELETE = 'delete';
 
     private HouseholdUserRepository $householdUserRepository;
 
@@ -26,12 +26,12 @@ class HouseholdVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::CREATE_BOOKING])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])) {
             return false;
         }
 
-        // only vote on `Household` objects
-        if (!$subject instanceof Household) {
+        // only vote on `Booking` objects
+        if (!$subject instanceof Booking) {
             return false;
         }
 
@@ -47,11 +47,14 @@ class HouseholdVoter extends Voter
             return false;
         }
 
-        // you know $subject is a Household object, thanks to `supports()`
-        /** @var Household $household */
-        $household = $subject;
+        // you know $subject is a Booking object, thanks to `supports()`
+        /** @var Booking $booking */
+        $booking = $subject;
 
-        $householdUser = $this->householdUserRepository->findOneBy(['user' => $user, 'household' => $household]);
+        $householdUser = $this->householdUserRepository->findOneBy([
+            'user' => $user,
+            'household' => $booking->getHousehold()
+        ]);
 
         if (!$householdUser instanceof HouseholdUser) {
             // the user must be a valid householdUser; if not, deny access
@@ -60,31 +63,31 @@ class HouseholdVoter extends Voter
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($householdUser);
+                return $this->canView($householdUser, $booking);
             case self::EDIT:
-                return $this->canEdit($householdUser);
-            case self::CREATE_BOOKING:
-                return $this->canCreateBooking($householdUser);
+                return $this->canEdit($householdUser, $booking);
+            case self::DELETE:
+                return $this->canDelete($householdUser, $booking);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(HouseholdUser $householdUser): bool
+    private function canView(HouseholdUser $householdUser, Booking $booking): bool
     {
-        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return (bool)$householdUser;
+        return ((bool)$householdUser && !$booking->getPrivate())
+            || $booking->getHouseholdUser() === $householdUser;
     }
 
-    private function canEdit(HouseholdUser $householdUser): bool
+    private function canEdit(HouseholdUser $householdUser, Booking $booking): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return $householdUser->getIsAdmin();
+        return $householdUser->getIsAdmin() || $householdUser === $booking->getHouseholdUser();
     }
 
-    private function canCreateBooking(HouseholdUser $householdUser): bool
+    private function canDelete(HouseholdUser $householdUser, Booking $booking): bool
     {
-        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return (bool)$householdUser;
+        // if users can edit, they can delete as well
+        return $this->canEdit($householdUser, $booking);
     }
 }
