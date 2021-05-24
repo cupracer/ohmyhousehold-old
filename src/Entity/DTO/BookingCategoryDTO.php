@@ -4,7 +4,7 @@ namespace App\Entity\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AccountHolderDTO
+class BookingCategoryDTO
 {
     /**
      * @var string
@@ -22,9 +22,9 @@ class AccountHolderDTO
 
     /**
      * @param string $name
-     * @return AccountHolderDTO
+     * @return BookingCategoryDTO
      */
-    public function setName(string $name): AccountHolderDTO
+    public function setName(string $name): BookingCategoryDTO
     {
         $this->name = $name;
         return $this;

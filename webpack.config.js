@@ -34,6 +34,7 @@ Encore
     .addEntry('housekeepingbook_booking_form', './assets/js/housekeepingbook/booking_form.js')
 
     .addEntry('housekeepingbook_accountholder_index', './assets/js/housekeepingbook/accountholder_index.js')
+    .addEntry('housekeepingbook_bookingcategory_index', './assets/js/housekeepingbook/bookingcategory_index.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

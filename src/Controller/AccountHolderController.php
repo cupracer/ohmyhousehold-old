@@ -82,7 +82,6 @@ class AccountHolderController extends AbstractController
         $this->denyAccessUnlessGranted('edit', $accountHolder);
 
         $editAccountHolder = new AccountHolderDTO();
-        $editAccountHolder->setId($accountHolder->getId());
         $editAccountHolder->setName($accountHolder->getName());
 
         $form = $this->createForm(AccountHolderType::class, $editAccountHolder, ['accountHolder' => $accountHolder]);
