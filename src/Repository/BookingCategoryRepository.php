@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\AccountHolder;
 use App\Entity\BookingCategory;
+use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method BookingCategory|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +17,31 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BookingCategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private Security $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, BookingCategory::class);
+
+        $this->security = $security;
+    }
+
+    /**
+     * @return AccountHolder[] Returns an array of Booking objects
+     */
+    public function findAllGrantedByHousehold(Household $household)
+    {
+        $bookingCategories = $this->createQueryBuilder('b')
+            ->andWhere('b.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('b.name', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($bookingCategories, function (BookingCategory $bookingCategory) {
+            return $this->security->isGranted('view', $bookingCategory);
+        });
     }
 
     // /**
