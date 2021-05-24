@@ -237,6 +237,10 @@
         <source>Household</source>
         <target>Haushalt</target>
       </trans-unit>
+      <trans-unit id="10" resname="button.add">
+        <source>button.add</source>
+        <target>hinzufügen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
