@@ -22,6 +22,9 @@ class BookingType extends AbstractType
             ->add('bookingDate', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
+                'attr' => [
+                    'class' => 'text-center',
+                ],
             ])
             ->add('bookingCategory', EntityType::class, [
                 'placeholder' => '',
