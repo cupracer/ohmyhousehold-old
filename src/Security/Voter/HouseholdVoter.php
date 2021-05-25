@@ -15,6 +15,7 @@ class HouseholdVoter extends Voter
     const VIEW = 'view';
     const EDIT = 'edit';
     const CREATE_BOOKING = 'createBooking';
+    const CREATE_PERIODICBOOKING = 'createPeriodicBooking';
     const CREATE_ACCOUNTHOLDER = 'createAccountHolder';
     const CREATE_BOOKINGCATEGORY = 'createBookingCategory';
 
@@ -32,6 +33,7 @@ class HouseholdVoter extends Voter
             self::VIEW,
             self::EDIT,
             self::CREATE_BOOKING,
+            self::CREATE_PERIODICBOOKING,
             self::CREATE_ACCOUNTHOLDER,
             self::CREATE_BOOKINGCATEGORY
         ])) {
@@ -73,6 +75,8 @@ class HouseholdVoter extends Voter
                 return $this->canEdit($householdUser);
             case self::CREATE_BOOKING:
                 return $this->canCreateBooking($householdUser);
+            case self::CREATE_PERIODICBOOKING:
+                return $this->canCreatePeriodicBooking($householdUser);
             case self::CREATE_ACCOUNTHOLDER:
                 return $this->canCreateAccountHolder($householdUser);
             case self::CREATE_BOOKINGCATEGORY:
@@ -95,6 +99,12 @@ class HouseholdVoter extends Voter
     }
 
     private function canCreateBooking(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCreatePeriodicBooking(HouseholdUser $householdUser): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return (bool)$householdUser;
