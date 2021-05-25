@@ -17,13 +17,6 @@ class AccountHolderVoter extends Voter
     const EDIT = 'edit';
     const DELETE = 'delete';
 
-    private HouseholdUserRepository $householdUserRepository;
-
-    public function __construct(HouseholdUserRepository $householdUserRepository)
-    {
-        $this->householdUserRepository = $householdUserRepository;
-    }
-
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
@@ -52,43 +45,38 @@ class AccountHolderVoter extends Voter
         /** @var AccountHolder $accountHolder */
         $accountHolder = $subject;
 
-        $householdUser = $this->householdUserRepository->findOneBy([
-            'user' => $user,
-            'household' => $accountHolder->getHousehold()
-        ]);
-
-        if (!$householdUser instanceof HouseholdUser) {
-            // the user must be a valid householdUser; if not, deny access
-            return false;
-        }
-
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($householdUser);
+                return $this->canView($accountHolder, $user);
             case self::EDIT:
-                return $this->canEdit($householdUser);
+                return $this->canEdit($accountHolder, $user);
             case self::DELETE:
-                return $this->canDelete($householdUser);
+                return $this->canDelete($accountHolder, $user);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(HouseholdUser $householdUser): bool
+    private function canView(AccountHolder $accountHolder, User $user): bool
     {
-        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return (bool)$householdUser;
+        foreach($accountHolder->getHousehold()->getHouseholdUsers() as $householdUser) {
+            if($householdUser->getUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    private function canEdit(HouseholdUser $householdUser): bool
+    private function canEdit(AccountHolder $accountHolder, User $user): bool
     {
-        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return (bool)$householdUser;
+        // no further permissions than 'view' required to edit account holders
+        return $this->canView($accountHolder, $user);
     }
 
-    private function canDelete(HouseholdUser $householdUser): bool
+    private function canDelete(AccountHolder $accountHolder, User $user): bool
     {
         // if users can edit, they can delete as well
-        return $this->canEdit($householdUser);
+        return $this->canEdit($accountHolder, $user);
     }
 }

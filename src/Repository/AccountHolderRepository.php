@@ -33,7 +33,7 @@ class AccountHolderRepository extends ServiceEntityRepository
         $accountHolders = $this->createQueryBuilder('a')
             ->andWhere('a.household = :household')
             ->setParameter('household', $household)
-            ->orderBy('a.name', 'ASC')
+            ->orderBy('LOWER(a.name)', 'ASC')
             ->getQuery()
             ->execute()
         ;

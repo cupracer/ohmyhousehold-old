@@ -27,7 +27,7 @@ class BookingCategoryController extends AbstractController
         return $this->render('housekeepingbook/bookingcategory/index.html.twig', [
             'pageTitle' => t('DynamicBooking categories'),
             'household' => $currentHousehold,
-            'bookingCategories' => $bookingCategoryRepository->findAllGrantedByHousehold($currentHousehold),
+            'bookingCategories' => $bookingCategoryRepository->findByHousehold($currentHousehold),
         ]);
     }
 

@@ -16,13 +16,6 @@ class BookingCategoryVoter extends Voter
     const EDIT = 'edit';
     const DELETE = 'delete';
 
-    private HouseholdUserRepository $householdUserRepository;
-
-    public function __construct(HouseholdUserRepository $householdUserRepository)
-    {
-        $this->householdUserRepository = $householdUserRepository;
-    }
-
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
@@ -51,43 +44,47 @@ class BookingCategoryVoter extends Voter
         /** @var BookingCategory $bookingCategory */
         $bookingCategory = $subject;
 
-        $householdUser = $this->householdUserRepository->findOneBy([
-            'user' => $user,
-            'household' => $bookingCategory->getHousehold()
-        ]);
-
-        if (!$householdUser instanceof HouseholdUser) {
-            // the user must be a valid householdUser; if not, deny access
-            return false;
-        }
-
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($householdUser);
+                return $this->canView($bookingCategory, $user);
             case self::EDIT:
-                return $this->canEdit($householdUser);
+                return $this->canEdit($bookingCategory, $user);
             case self::DELETE:
-                return $this->canDelete($householdUser);
+                return $this->canDelete($bookingCategory, $user);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(HouseholdUser $householdUser): bool
+    private function canView(BookingCategory $bookingCategory, User $user): bool
     {
-        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return (bool)$householdUser;
+        foreach($bookingCategory->getHousehold()->getHouseholdUsers() as $householdUser) {
+            if($householdUser->getUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    private function canEdit(HouseholdUser $householdUser): bool
+    private function canEdit(BookingCategory $bookingCategory, User $user): bool
     {
-        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return $householdUser->getIsAdmin();
+        foreach($bookingCategory->getHousehold()->getHouseholdUsers() as $householdUser) {
+            if($householdUser->getUser() === $user) {
+                if($householdUser->getIsAdmin()) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 
-    private function canDelete(HouseholdUser $householdUser): bool
+    private function canDelete(BookingCategory $bookingCategory, User $user): bool
     {
         // if users can edit, they can delete as well
-        return $this->canEdit($householdUser);
+        return $this->canEdit($bookingCategory, $user);
     }
 }

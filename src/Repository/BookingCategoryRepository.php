@@ -27,14 +27,14 @@ class BookingCategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return AccountHolder[] Returns an array of DynamicBooking objects
+     * @return BookingCategory[] Returns an array of BookingCategory objects
      */
-    public function findAllGrantedByHousehold(Household $household)
+    public function findAllGrantedByHousehold(Household $household): array
     {
         $bookingCategories = $this->createQueryBuilder('b')
             ->andWhere('b.household = :household')
             ->setParameter('household', $household)
-            ->orderBy('b.name', 'ASC')
+            ->orderBy('LOWER(b.name)', 'ASC')
             ->getQuery()
             ->execute()
         ;
