@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\BookingRepository;
+use App\Repository\DynamicBookingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=BookingRepository::class)
+ * @ORM\Entity(repositoryClass=DynamicBookingRepository::class)
  */
-class Booking extends BaseBooking
+class DynamicBooking extends BaseBooking
 {
     /**
      * @ORM\Column(type="date")

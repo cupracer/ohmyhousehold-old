@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#bookings').DataTable({
+    $('#dynamicBookings').DataTable({
         "paging": true,
         "lengthChange": true,
         "searching": true,

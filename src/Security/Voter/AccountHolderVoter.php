@@ -3,7 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\AccountHolder;
-use App\Entity\Booking;
+use App\Entity\DynamicBooking;
 use App\Entity\HouseholdUser;
 use App\Entity\User;
 use App\Repository\HouseholdUserRepository;

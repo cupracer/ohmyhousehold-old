@@ -43,7 +43,7 @@ class HouseholdUser
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="householdUser", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=DynamicBooking::class, mappedBy="householdUser", orphanRemoval=true)
      */
     private $bookings;
 
@@ -119,14 +119,14 @@ class HouseholdUser
     }
 
     /**
-     * @return Collection|Booking[]
+     * @return Collection|DynamicBooking[]
      */
     public function getBookings(): Collection
     {
         return $this->bookings;
     }
 
-    public function addBooking(Booking $booking): self
+    public function addBooking(DynamicBooking $booking): self
     {
         if (!$this->bookings->contains($booking)) {
             $this->bookings[] = $booking;
@@ -136,7 +136,7 @@ class HouseholdUser
         return $this;
     }
 
-    public function removeBooking(Booking $booking): self
+    public function removeBooking(DynamicBooking $booking): self
     {
         if ($this->bookings->removeElement($booking)) {
             // set the owning side to null (unless already changed)

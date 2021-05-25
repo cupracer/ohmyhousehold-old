@@ -27,7 +27,7 @@ class BookingCategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return AccountHolder[] Returns an array of Booking objects
+     * @return AccountHolder[] Returns an array of DynamicBooking objects
      */
     public function findAllGrantedByHousehold(Household $household)
     {

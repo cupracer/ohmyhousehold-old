@@ -6,7 +6,7 @@ use App\Entity\AccountHolder;
 use App\Entity\BookingCategory;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class BookingDTO
+class DynamicBookingDTO
 {
     /**
      * @var \DateTimeInterface
@@ -44,9 +44,9 @@ class BookingDTO
 
     /**
      * @param \DateTimeInterface $bookingDate
-     * @return BookingDTO
+     * @return DynamicBookingDTO
      */
-    public function setBookingDate(\DateTimeInterface $bookingDate): BookingDTO
+    public function setBookingDate(\DateTimeInterface $bookingDate): DynamicBookingDTO
     {
         $this->bookingDate = $bookingDate;
         return $this;
@@ -62,9 +62,9 @@ class BookingDTO
 
     /**
      * @param BookingCategory $bookingCategory
-     * @return BookingDTO
+     * @return DynamicBookingDTO
      */
-    public function setBookingCategory(BookingCategory $bookingCategory): BookingDTO
+    public function setBookingCategory(BookingCategory $bookingCategory): DynamicBookingDTO
     {
         $this->bookingCategory = $bookingCategory;
         return $this;
@@ -80,9 +80,9 @@ class BookingDTO
 
     /**
      * @param AccountHolder $accountHolder
-     * @return BookingDTO
+     * @return DynamicBookingDTO
      */
-    public function setAccountHolder(AccountHolder $accountHolder): BookingDTO
+    public function setAccountHolder(AccountHolder $accountHolder): DynamicBookingDTO
     {
         $this->accountHolder = $accountHolder;
         return $this;
@@ -98,7 +98,7 @@ class BookingDTO
 
     /**
      * @param mixed $amount
-     * @return BookingDTO
+     * @return DynamicBookingDTO
      */
     public function setAmount($amount)
     {
@@ -116,7 +116,7 @@ class BookingDTO
 
     /**
      * @param mixed $description
-     * @return BookingDTO
+     * @return DynamicBookingDTO
      */
     public function setDescription($description)
     {
@@ -134,7 +134,7 @@ class BookingDTO
 
     /**
      * @param mixed $private
-     * @return BookingDTO
+     * @return DynamicBookingDTO
      */
     public function setPrivate($private)
     {

@@ -2,11 +2,11 @@
 
 {% block page_header_buttons %}
     {% if is_granted('createBooking', household) %}
-        <a href="{{ path('housekeepingbook_booking_new') }}" class="btn btn-outline-primary btn-sm btn-icon-split ml-3">
+        <a href="{{ path('housekeepingbook_dynamicbooking_new') }}" class="btn btn-outline-primary btn-sm btn-icon-split ml-3">
             <span class="icon text-primary mr-1">
               <i class="fas fa-plus-circle"></i>
             </span>
-            <span class="text">{{ 'Add booking...'|trans }}</span>
+            <span class="text">{{ 'Add dynamic booking...'|trans }}</span>
         </a>
     {% endif %}
 {% endblock %}
@@ -19,7 +19,7 @@
                     <h3 class="card-title">{{ 'Dynamic bookings'|trans }}</h3>
                 </div>
                 <div class="card-body">
-                    <table id="bookings" class="table table-hover table-striped dataTable" role="grid">
+                    <table id="dynamicBookings" class="table table-hover table-striped dataTable" role="grid">
                         <thead>
                         <tr>
                             <th>{{ 'Date'|trans }}</th>
@@ -31,32 +31,32 @@
                             <th></th>
                         </tr>
                         </thead>
-                        {% if bookings %}
+                        {% if dynamicBookings %}
                             <tbody>
-                            {% for booking in bookings %}
-                                <tr class="{% if booking.private %}font-italic{% endif %}">
-                                    <td class="min text-center" data-sort="{{ booking.bookingDate|date('U') }}">{{ booking.bookingDate|format_date }}</td>
-                                    <td class="min">{{ booking.householdUser.user }}</td>
-                                    <td class="min text-center">{{ booking.bookingCategory }}</td>
-                                    <td class="min">{{ booking.accountHolder }}</td>
-                                    <td>{{ booking.description }}</td>
+                            {% for dynamicBooking in dynamicBookings %}
+                                <tr class="{% if dynamicBooking.private %}font-italic{% endif %}">
+                                    <td class="min text-center" data-sort="{{ dynamicBooking.bookingDate|date('U') }}">{{ dynamicBooking.bookingDate|format_date }}</td>
+                                    <td class="min">{{ dynamicBooking.householdUser.user }}</td>
+                                    <td class="min text-center">{{ dynamicBooking.bookingCategory }}</td>
+                                    <td class="min">{{ dynamicBooking.accountHolder }}</td>
+                                    <td>{{ dynamicBooking.description }}</td>
                                     <td class="min text-right">
-                                        <span class="{% if booking.amount > 0 %}text-success{% elseif booking.amount < 0 %}text-danger{% endif %}">
-                                            {{ booking.amount|format_currency('EUR') }}
+                                        <span class="{% if dynamicBooking.amount > 0 %}text-success{% elseif dynamicBooking.amount < 0 %}text-danger{% endif %}">
+                                            {{ dynamicBooking.amount|format_currency('EUR') }}
                                         </span>
                                     </td>
                                     <td class="text-right min">
                                         <div class="btn-group">
-                                            {% if is_granted('edit', booking) %}
-                                                <a href="{{ path('housekeepingbook_booking_edit', {'id': booking.id}) }}" class="btn btn-xs btn-outline-primary">
+                                            {% if is_granted('edit', dynamicBooking) %}
+                                                <a href="{{ path('housekeepingbook_dynamicbooking_edit', {'id': dynamicBooking.id}) }}" class="btn btn-xs btn-outline-primary">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                             {% endif %}
                                         </div>
                                         <div class="btn-group">
-                                            {% if is_granted('delete', booking) %}
-                                                <form method="post" action="{{ path('housekeepingbook_booking_delete', {'id': booking.id}) }}" onsubmit="return confirm('{{ 'Are you sure you want to delete this item?'|trans }}');">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ booking.id) }}">
+                                            {% if is_granted('delete', dynamicBooking) %}
+                                                <form method="post" action="{{ path('housekeepingbook_dynamicbooking_delete', {'id': dynamicBooking.id}) }}" onsubmit="return confirm('{{ 'Are you sure you want to delete this item?'|trans }}');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dynamicBooking.id) }}">
                                                     <button class="btn btn-xs btn-outline-danger btn-delete"><i class="fas fa-trash-alt"></i></button>
                                                 </form>
                                             {% endif %}
@@ -83,5 +83,5 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {{ encore_entry_script_tags('housekeepingbook_booking_index') }}
+    {{ encore_entry_script_tags('housekeepingbook_dynamicbooking_index') }}
 {% endblock javascripts %}

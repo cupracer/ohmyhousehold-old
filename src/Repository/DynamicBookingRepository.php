@@ -2,31 +2,31 @@
 
 namespace App\Repository;
 
-use App\Entity\Booking;
+use App\Entity\DynamicBooking;
 use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * @method Booking|null find($id, $lockMode = null, $lockVersion = null)
- * @method Booking|null findOneBy(array $criteria, array $orderBy = null)
- * @method Booking[]    findAll()
- * @method Booking[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DynamicBooking|null find($id, $lockMode = null, $lockVersion = null)
+ * @method DynamicBooking|null findOneBy(array $criteria, array $orderBy = null)
+ * @method DynamicBooking[]    findAll()
+ * @method DynamicBooking[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BookingRepository extends ServiceEntityRepository
+class DynamicBookingRepository extends ServiceEntityRepository
 {
     private Security $security;
 
     public function __construct(ManagerRegistry $registry, Security $security)
     {
-        parent::__construct($registry, Booking::class);
+        parent::__construct($registry, DynamicBooking::class);
 
         $this->security = $security;
     }
 
     /**
-    * @return Booking[] Returns an array of Booking objects
+    * @return DynamicBooking[] Returns an array of DynamicBooking objects
     */
     public function findAllGrantedByHousehold(Household $household)
     {
@@ -38,13 +38,13 @@ class BookingRepository extends ServiceEntityRepository
             ->execute()
         ;
 
-        return array_filter($bookings, function (Booking $booking) {
+        return array_filter($bookings, function (DynamicBooking $booking) {
             return $this->security->isGranted('view', $booking);
         });
     }
 
     /*
-    public function findOneBySomeField($value): ?Booking
+    public function findOneBySomeField($value): ?DynamicBooking
     {
         return $this->createQueryBuilder('b')
             ->andWhere('b.exampleField = :val')

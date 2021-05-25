@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Booking;
+use App\Entity\DynamicBooking;
 use App\Entity\HouseholdUser;
 use App\Entity\User;
 use App\Repository\HouseholdUserRepository;
@@ -30,8 +30,8 @@ class BookingVoter extends Voter
             return false;
         }
 
-        // only vote on `Booking` objects
-        if (!$subject instanceof Booking) {
+        // only vote on `DynamicBooking` objects
+        if (!$subject instanceof DynamicBooking) {
             return false;
         }
 
@@ -47,8 +47,8 @@ class BookingVoter extends Voter
             return false;
         }
 
-        // you know $subject is a Booking object, thanks to `supports()`
-        /** @var Booking $booking */
+        // you know $subject is a DynamicBooking object, thanks to `supports()`
+        /** @var DynamicBooking $booking */
         $booking = $subject;
 
         $householdUser = $this->householdUserRepository->findOneBy([
@@ -73,19 +73,19 @@ class BookingVoter extends Voter
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(HouseholdUser $householdUser, Booking $booking): bool
+    private function canView(HouseholdUser $householdUser, DynamicBooking $booking): bool
     {
         return ((bool)$householdUser && !$booking->getPrivate())
             || $booking->getHouseholdUser() === $householdUser;
     }
 
-    private function canEdit(HouseholdUser $householdUser, Booking $booking): bool
+    private function canEdit(HouseholdUser $householdUser, DynamicBooking $booking): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return $householdUser->getIsAdmin() || $householdUser === $booking->getHouseholdUser();
     }
 
-    private function canDelete(HouseholdUser $householdUser, Booking $booking): bool
+    private function canDelete(HouseholdUser $householdUser, DynamicBooking $booking): bool
     {
         // if users can edit, they can delete as well
         return $this->canEdit($householdUser, $booking);

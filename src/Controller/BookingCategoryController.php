@@ -25,7 +25,7 @@ class BookingCategoryController extends AbstractController
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
         return $this->render('housekeepingbook/bookingcategory/index.html.twig', [
-            'pageTitle' => t('Booking categories'),
+            'pageTitle' => t('DynamicBooking categories'),
             'household' => $currentHousehold,
             'bookingCategories' => $bookingCategoryRepository->findAllGrantedByHousehold($currentHousehold),
         ]);
@@ -61,11 +61,11 @@ class BookingCategoryController extends AbstractController
                 $entityManager->persist($bookingCategory);
                 $entityManager->flush();
 
-                $this->addFlash('success', t('Booking category was added.'));
+                $this->addFlash('success', t('DynamicBooking category was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_bookingcategory_index');
             }catch(\Exception) {
-                $this->addFlash('error', t('Booking category could not be created.'));
+                $this->addFlash('error', t('DynamicBooking category could not be created.'));
             }
         }
 
@@ -93,11 +93,11 @@ class BookingCategoryController extends AbstractController
 
                 $this->getDoctrine()->getManager()->flush();
 
-                $this->addFlash('success', t('Booking category was updated.'));
+                $this->addFlash('success', t('DynamicBooking category was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_bookingcategory_index');
             }catch (\Exception) {
-                $this->addFlash('error', t('Booking category could not be updated.'));
+                $this->addFlash('error', t('DynamicBooking category could not be updated.'));
             }
         }
 
@@ -118,12 +118,12 @@ class BookingCategoryController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($bookingCategory);
                 $entityManager->flush();
-                $this->addFlash('success', t('Booking category was deleted.'));
+                $this->addFlash('success', t('DynamicBooking category was deleted.'));
             } else {
                 throw new \Exception('invalid CSRF token');
             }
         }catch (\Exception) {
-            $this->addFlash('error', t('Booking category could not be deleted.'));
+            $this->addFlash('error', t('DynamicBooking category could not be deleted.'));
         }
 
         return $this->redirectToRoute('housekeepingbook_bookingcategory_index');

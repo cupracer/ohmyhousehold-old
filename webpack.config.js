@@ -30,8 +30,8 @@ Encore
     .addEntry('omh', './assets/js/omh.js')
     .addEntry('omh_user_settings_households', './assets/js/user/settings/households.js')
 
-    .addEntry('housekeepingbook_booking_index', './assets/js/housekeepingbook/booking_index.js')
-    .addEntry('housekeepingbook_booking_form', './assets/js/housekeepingbook/booking_form.js')
+    .addEntry('housekeepingbook_dynamicbooking_index', './assets/js/housekeepingbook/dynamicbooking_index.js')
+    .addEntry('housekeepingbook_dynamicbooking_form', './assets/js/housekeepingbook/dynamicbooking_form.js')
 
     .addEntry('housekeepingbook_periodicbooking_index', './assets/js/housekeepingbook/periodicbooking_index.js')
     .addEntry('housekeepingbook_periodicbooking_form', './assets/js/housekeepingbook/periodicbooking_form.js')
