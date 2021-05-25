@@ -6,28 +6,30 @@
     {% endif %}
 {% endblock sidebar_user %}
 
-<li class="nav-header">HOUSEKEEPING BOOK</li>
+<li class="nav-header">APPS</li>
+
+<li class="nav-header font-weight-bold">HOUSEKEEPING BOOK</li>
 
 <li class="nav-item">
-    <a href="{{ path('housekeepingbook_booking_index') }}" class="nav-link">
+    <a href="{{ path('housekeepingbook_booking_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_booking_index') %}active{% endif %}">
         <i class="nav-icon fas fa-money-check-alt"></i> Dynamic bookings
     </a>
 </li>
 <li class="nav-item">
-    <a href="{{ path('housekeepingbook_periodicbooking_index') }}" class="nav-link">
+    <a href="{{ path('housekeepingbook_periodicbooking_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodicbooking_index') %}active{% endif %}">
         <i class="nav-icon fas fa-sync"></i> Periodic bookings
     </a>
 </li>
 
-<li class="nav-header font-weight-bold">SETTINGS</li>
-<li class="nav-header">HOUSEKEEPING BOOK</li>
+<li class="nav-header mt-lg-5">SETTINGS</li>
+<li class="nav-header font-weight-bold">HOUSEKEEPING BOOK</li>
 <li class="nav-item">
-    <a href="{{ path('housekeepingbook_accountholder_index') }}" class="nav-link ">
+    <a href="{{ path('housekeepingbook_accountholder_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_accountholder_index') %}active{% endif %}">
         <i class="nav-icon fas fa-handshake"></i> Account holders
     </a>
 </li>
 <li class="nav-item">
-    <a href="{{ path('housekeepingbook_bookingcategory_index') }}" class="nav-link ">
+    <a href="{{ path('housekeepingbook_bookingcategory_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_bookingcategory_index') %}active{% endif %}">
         <i class="nav-icon fas fa-handshake"></i> Booking categories
     </a>
 </li>
