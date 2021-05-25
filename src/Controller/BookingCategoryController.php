@@ -71,7 +71,6 @@ class BookingCategoryController extends AbstractController
 
         return $this->render('housekeepingbook/bookingcategory/form.html.twig', [
             'pageTitle' => t('Add booking category'),
-            'bookingCategory' => $bookingCategory,
             'form' => $form->createView(),
         ]);
     }
@@ -103,7 +102,6 @@ class BookingCategoryController extends AbstractController
 
         return $this->render('housekeepingbook/bookingcategory/form.html.twig', [
             'pageTitle' => t('Edit booking category'),
-            'bookingCategory' => $bookingCategory,
             'form' => $form->createView(),
             'button_label' => t('Update'),
         ]);

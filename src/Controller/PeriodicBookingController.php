@@ -85,8 +85,6 @@ class PeriodicBookingController extends AbstractController
 
         return $this->render('housekeepingbook/periodicbooking/form.html.twig', [
             'pageTitle' => t('Add periodic booking'),
-            'periodicBooking' => $periodicBooking,
-            'createPeriodicBooking' => $createPeriodicBooking,
             'form' => $form->createView(),
         ]);
     }
@@ -131,7 +129,6 @@ class PeriodicBookingController extends AbstractController
 
         return $this->render('housekeepingbook/periodicbooking/form.html.twig', [
             'pageTitle' => t('Edit periodic booking'),
-            'periodicBooking' => $periodicBooking,
             'form' => $form->createView(),
             'button_label' => t('Update'),
         ]);

@@ -71,7 +71,6 @@ class AccountHolderController extends AbstractController
 
         return $this->render('housekeepingbook/accountholder/form.html.twig', [
             'pageTitle' => t('Add account holder'),
-            'accountHolder' => $accountHolder,
             'form' => $form->createView(),
         ]);
     }
@@ -103,7 +102,6 @@ class AccountHolderController extends AbstractController
 
         return $this->render('housekeepingbook/accountholder/form.html.twig', [
             'pageTitle' => t('Edit account holder'),
-            'accountHolder' => $accountHolder,
             'form' => $form->createView(),
             'button_label' => t('Update'),
         ]);
