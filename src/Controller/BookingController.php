@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Entity\DTO\BookingDTO;
 use App\Form\BookingType;
 use App\Repository\BookingRepository;
 use App\Repository\HouseholdRepository;
@@ -50,13 +51,12 @@ class BookingController extends AbstractController
         $this->denyAccessUnlessGranted('createBooking', $household);
 
         $booking = new Booking();
-        $createBooking = new \App\Entity\DTO\Booking();
+        $createBooking = new BookingDTO();
 
         $form = $this->createForm(BookingType::class, $createBooking);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             try {
                 // explicitly setting to "midnight" might not be necessary for a db date field
                 $booking->setBookingDate($createBooking->getBookingDate()->modify('midnight'));
@@ -73,7 +73,9 @@ class BookingController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($booking);
                 $entityManager->flush();
+
                 $this->addFlash('success', t('Booking was added.'));
+
                 return $this->redirectToRoute('housekeepingbook_booking_new');
             } catch (\Exception) {
                 $this->addFlash('error', t('Booking could not be created.'));
@@ -93,7 +95,7 @@ class BookingController extends AbstractController
     {
         $this->denyAccessUnlessGranted('edit', $booking);
 
-        $editBooking = new \App\Entity\DTO\Booking();
+        $editBooking = new BookingDTO();
         $editBooking->setBookingDate($booking->getBookingDate());
         $editBooking->setBookingCategory($booking->getBookingCategory());
         $editBooking->setAccountHolder($booking->getAccountHolder());
@@ -105,7 +107,6 @@ class BookingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             try {
                 $booking->setBookingDate($editBooking->getBookingDate());
                 $booking->setBookingCategory($editBooking->getBookingCategory());
@@ -134,11 +135,18 @@ class BookingController extends AbstractController
     #[Route('/{id}', name: 'housekeepingbook_booking_delete', methods: ['POST'])]
     public function delete(Request $request, Booking $booking): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$booking->getId(), $request->request->get('_token'))) {
-            $this->denyAccessUnlessGranted('delete', $booking);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($booking);
-            $entityManager->flush();
+        try {
+            if ($this->isCsrfTokenValid('delete' . $booking->getId(), $request->request->get('_token'))) {
+                $this->denyAccessUnlessGranted('delete', $booking);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($booking);
+                $entityManager->flush();
+                $this->addFlash('success', t('Booking was deleted.'));
+            }else {
+                throw new \Exception('invalid CSRF token');
+            }
+        }catch (\Exception) {
+            $this->addFlash('error', t('Booking could not be deleted.'));
         }
 
         return $this->redirectToRoute('housekeepingbook_booking_index');

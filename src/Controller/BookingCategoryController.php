@@ -112,11 +112,18 @@ class BookingCategoryController extends AbstractController
     #[Route('/{id}', name: 'housekeepingbook_bookingcategory_delete', methods: ['POST'])]
     public function delete(Request $request, BookingCategory $bookingCategory): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$bookingCategory->getId(), $request->request->get('_token'))) {
-            $this->denyAccessUnlessGranted('delete', $bookingCategory);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($bookingCategory);
-            $entityManager->flush();
+        try {
+            if ($this->isCsrfTokenValid('delete' . $bookingCategory->getId(), $request->request->get('_token'))) {
+                $this->denyAccessUnlessGranted('delete', $bookingCategory);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($bookingCategory);
+                $entityManager->flush();
+                $this->addFlash('success', t('Booking category was deleted.'));
+            } else {
+                throw new \Exception('invalid CSRF token');
+            }
+        }catch (\Exception) {
+            $this->addFlash('error', t('Booking category could not be deleted.'));
         }
 
         return $this->redirectToRoute('housekeepingbook_bookingcategory_index');

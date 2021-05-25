@@ -59,14 +59,18 @@ class ApiTokenController extends AbstractController
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     public function delete(Request $request, ApiToken $apiToken): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$apiToken->getId(), $request->request->get('_token'))) {
-            $this->denyAccessUnlessGranted('delete', $apiToken);
+        try {
+            if ($this->isCsrfTokenValid('delete' . $apiToken->getId(), $request->request->get('_token'))) {
+                $this->denyAccessUnlessGranted('delete', $apiToken);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($apiToken);
-            $entityManager->flush();
-            $this->addFlash("success", "Selected API token was deleted.");
-        }else {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($apiToken);
+                $entityManager->flush();
+                $this->addFlash("success", "Selected API token was deleted.");
+            } else {
+                throw new \Exception('invalid CSRF token');
+            }
+        }catch(\Exception) {
             $this->addFlash("error", "Selected API token could not be deleted.");
         }
 

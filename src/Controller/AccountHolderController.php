@@ -112,11 +112,18 @@ class AccountHolderController extends AbstractController
     #[Route('/{id}', name: 'housekeepingbook_accountholder_delete', methods: ['POST'])]
     public function delete(Request $request, AccountHolder $accountHolder): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$accountHolder->getId(), $request->request->get('_token'))) {
-            $this->denyAccessUnlessGranted('delete', $accountHolder);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($accountHolder);
-            $entityManager->flush();
+        try {
+            if ($this->isCsrfTokenValid('delete' . $accountHolder->getId(), $request->request->get('_token'))) {
+                $this->denyAccessUnlessGranted('delete', $accountHolder);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($accountHolder);
+                $entityManager->flush();
+                $this->addFlash('success', t('Account holder was deleted.'));
+            }else {
+                throw new \Exception('invalid CSRF token');
+            }
+        }catch (\Exception) {
+            $this->addFlash('error', t('Account holder could not be deleted.'));
         }
 
         return $this->redirectToRoute('housekeepingbook_accountholder_index');

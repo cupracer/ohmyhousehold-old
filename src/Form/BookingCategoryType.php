@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\AccountHolder;
 use App\Entity\BookingCategory;
 use App\Entity\DTO\BookingCategoryDTO;
 use App\Repository\BookingCategoryRepository;

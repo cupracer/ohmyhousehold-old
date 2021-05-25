@@ -1,0 +1,91 @@
+{% extends 'theme/base-datatables.html.twig' %}
+
+{% block page_header_buttons %}
+    {% if is_granted('createPeriodicBooking', household) %}
+        <a href="{{ path('housekeepingbook_periodicbooking_new') }}" class="btn btn-outline-primary btn-sm btn-icon-split ml-3">
+            <span class="icon text-primary mr-1">
+              <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">{{ 'Add periodic booking...'|trans }}</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'Periodic bookings'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    <table id="periodicBookings" class="table table-hover table-striped dataTable" role="grid">
+                        <thead>
+                        <tr>
+                            <th>{{ 'Start'|trans }}</th>
+                            <th>{{ 'End'|trans }}</th>
+                            <th>{{ 'DOM'|trans }}</th>
+                            <th>{{ 'User'|trans }}</th>
+                            <th>{{ 'Category'|trans }}</th>
+                            <th>{{ 'Account holder'|trans }}</th>
+                            <th>{{ 'Description'|trans }}</th>
+                            <th>{{ 'Amount'|trans }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        {% if periodicBookings %}
+                            <tbody>
+                            {% for periodicBooking in periodicBookings %}
+                                <tr>
+                                    <td class="min text-center" data-sort="{{ periodicBooking.startDate|date('U') }}">{{ periodicBooking.startDate|format_date }}</td>
+                                    <td class="min text-center" data-sort="{{ periodicBooking.endDate|date('U') }}">{% if periodicBooking.endDate %}{{ periodicBooking.endDate|format_date }}{% else %}-{% endif %}</td>
+                                    <td class="min">{{ periodicBooking.bookingDayOfMonth }}</td>
+                                    <td class="min">{{ periodicBooking.householdUser.user }}</td>
+                                    <td class="min text-center">{{ periodicBooking.bookingCategory }}</td>
+                                    <td class="min">{{ periodicBooking.accountHolder }}</td>
+                                    <td>{{ periodicBooking.description }}</td>
+                                    <td class="min text-right">
+                                        <span class="{% if periodicBooking.amount > 0 %}text-success{% elseif periodicBooking.amount < 0 %}text-danger{% endif %}">
+                                            {{ periodicBooking.amount|format_currency('EUR') }}
+                                        </span>
+                                    </td>
+                                    <td class="text-right min">
+                                        <div class="btn-group">
+                                            {% if is_granted('edit', periodicBooking) %}
+                                                <a href="{{ path('housekeepingbook_periodicbooking_edit', {'id': periodicBooking.id}) }}" class="btn btn-xs btn-outline-primary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="btn-group">
+                                            {% if is_granted('delete', periodicBooking) %}
+                                                <form method="post" action="{{ path('housekeepingbook_periodicbooking_delete', {'id': periodicBooking.id}) }}" onsubmit="return confirm('{{ 'Are you sure you want to delete this item?'|trans }}');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ periodicBooking.id) }}">
+                                                    <button class="btn btn-xs btn-outline-danger btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="9">{{ 'no records found'|trans }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('housekeepingbook_periodicbooking_index') }}
+{% endblock javascripts %}

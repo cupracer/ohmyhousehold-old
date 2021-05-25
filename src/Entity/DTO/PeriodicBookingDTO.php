@@ -6,7 +6,7 @@ use App\Entity\AccountHolder;
 use App\Entity\BookingCategory;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Booking
+class PeriodicBookingDTO
 {
 
     /**
@@ -14,7 +14,21 @@ class Booking
      */
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
-    private $bookingDate;
+    private $startDate;
+
+    /**
+     * @var \DateTimeInterface
+     */
+    #[Assert\Type("\DateTimeInterface")]
+    private $endDate;
+
+    #[Assert\NotBlank]
+    #[Assert\Type('integer')]
+    private $bookingDayOfMonth;
+
+    #[Assert\NotBlank]
+    #[Assert\Type('integer')]
+    private $interval;
 
     /**
      * @var BookingCategory
@@ -38,18 +52,72 @@ class Booking
     /**
      * @return \DateTimeInterface
      */
-    public function getBookingDate(): \DateTimeInterface
+    public function getStartDate(): \DateTimeInterface
     {
-        return $this->bookingDate;
+        return $this->startDate;
     }
 
     /**
-     * @param \DateTimeInterface $bookingDate
-     * @return Booking
+     * @param \DateTimeInterface $startDate
+     * @return PeriodicBookingDTO
      */
-    public function setBookingDate(\DateTimeInterface $bookingDate): Booking
+    public function setStartDate(\DateTimeInterface $startDate): PeriodicBookingDTO
     {
-        $this->bookingDate = $bookingDate;
+        $this->startDate = $startDate;
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeInterface
+     */
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param \DateTimeInterface $endDate
+     * @return PeriodicBookingDTO
+     */
+    public function setEndDate(?\DateTimeInterface $endDate): PeriodicBookingDTO
+    {
+        $this->endDate = $endDate;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBookingDayOfMonth()
+    {
+        return $this->bookingDayOfMonth;
+    }
+
+    /**
+     * @param mixed $bookingDayOfMonth
+     * @return PeriodicBookingDTO
+     */
+    public function setBookingDayOfMonth($bookingDayOfMonth)
+    {
+        $this->bookingDayOfMonth = $bookingDayOfMonth;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInterval()
+    {
+        return $this->interval;
+    }
+
+    /**
+     * @param mixed $interval
+     * @return PeriodicBookingDTO
+     */
+    public function setInterval($interval)
+    {
+        $this->interval = $interval;
         return $this;
     }
 
@@ -63,9 +131,9 @@ class Booking
 
     /**
      * @param BookingCategory $bookingCategory
-     * @return Booking
+     * @return PeriodicBookingDTO
      */
-    public function setBookingCategory(BookingCategory $bookingCategory): Booking
+    public function setBookingCategory(BookingCategory $bookingCategory): PeriodicBookingDTO
     {
         $this->bookingCategory = $bookingCategory;
         return $this;
@@ -81,9 +149,9 @@ class Booking
 
     /**
      * @param AccountHolder $accountHolder
-     * @return Booking
+     * @return PeriodicBookingDTO
      */
-    public function setAccountHolder(AccountHolder $accountHolder): Booking
+    public function setAccountHolder(AccountHolder $accountHolder): PeriodicBookingDTO
     {
         $this->accountHolder = $accountHolder;
         return $this;
@@ -99,7 +167,7 @@ class Booking
 
     /**
      * @param mixed $amount
-     * @return Booking
+     * @return PeriodicBookingDTO
      */
     public function setAmount($amount)
     {
@@ -117,7 +185,7 @@ class Booking
 
     /**
      * @param mixed $description
-     * @return Booking
+     * @return PeriodicBookingDTO
      */
     public function setDescription($description)
     {
@@ -135,7 +203,7 @@ class Booking
 
     /**
      * @param mixed $private
-     * @return Booking
+     * @return PeriodicBookingDTO
      */
     public function setPrivate($private)
     {
