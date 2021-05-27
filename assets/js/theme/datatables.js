@@ -22,3 +22,13 @@ import 'admin-lte/plugins/pdfmake/vfs_fonts';
 import 'admin-lte/plugins/datatables-buttons/js/buttons.html5.min';
 import 'admin-lte/plugins/datatables-buttons/js/buttons.print.min';
 import 'admin-lte/plugins/datatables-buttons/js/buttons.colVis.min';
+
+export function generateDatatablesEditButton(url) {
+    let output = '<div class="btn-group">';
+    output+= '<a href="' + url + '" class="btn btn-xs btn-outline-primary">';
+    output+= '<i class="fas fa-edit"></i>';
+    output+= '</a>';
+    output+= '</div>';
+
+    return output;
+}
