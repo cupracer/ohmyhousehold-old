@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\AccountHolder;
 use App\Entity\DTO\AccountHolderDTO;
 use App\Form\AccountHolderType;
-use App\Repository\AccountHolderRepository;
 use App\Repository\HouseholdRepository;
+use App\Service\DatatablesService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,15 +20,24 @@ use function Symfony\Component\Translation\t;
 class AccountHolderController extends AbstractController
 {
     #[Route('/', name: 'housekeepingbook_accountholder_index', methods: ['GET'])]
-    public function index(AccountHolderRepository $accountHolderRepository, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
         return $this->render('housekeepingbook/accountholder/index.html.twig', [
             'pageTitle' => t('Account holders'),
             'household' => $currentHousehold,
-            'accountHolders' => $accountHolderRepository->findAllGrantedByHousehold($currentHousehold),
         ]);
+    }
+
+    #[Route('/json', name: 'housekeepingbook_accountholder_json', methods: ['GET'])]
+    public function toJson(Request $request, DatatablesService $datatablesService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    {
+        $currentHousehold = $householdRepository->find($session->get('current_household'));
+
+        return $this->json(
+            $datatablesService->getAccountHoldersAsDatatablesArray($request, $currentHousehold)
+        );
     }
 
     #[Route('/new', name: 'housekeepingbook_accountholder_new', methods: ['GET', 'POST'])]
@@ -103,6 +112,7 @@ class AccountHolderController extends AbstractController
         return $this->render('housekeepingbook/accountholder/form.html.twig', [
             'pageTitle' => t('Edit account holder'),
             'form' => $form->createView(),
+            'accountHolder' => $accountHolder,
             'button_label' => t('Update'),
         ]);
     }
@@ -111,8 +121,8 @@ class AccountHolderController extends AbstractController
     public function delete(Request $request, AccountHolder $accountHolder): Response
     {
         try {
-            if ($this->isCsrfTokenValid('delete' . $accountHolder->getId(), $request->request->get('_token'))) {
-                $this->denyAccessUnlessGranted('delete', $accountHolder);
+            if ($this->isCsrfTokenValid('delete_account_holder_' . $accountHolder->getId(), $request->request->get('_token'))) {
+                $this->denyAccessUnlessGranted('delete' , $accountHolder);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($accountHolder);
                 $entityManager->flush();
