@@ -7,6 +7,7 @@ use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method AccountHolder|null find($id, $lockMode = null, $lockVersion = null)
@@ -41,6 +42,68 @@ class AccountHolderRepository extends ServiceEntityRepository
         return array_filter($accountHolders, function (AccountHolder $accountHolder) {
             return $this->security->isGranted('view', $accountHolder);
         });
+    }
+
+    /**
+     * @return integer
+     */
+    public function getCountAllByHouseholdAndUser(Household $household, UserInterface $user, string $search = '')
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        $query = $qb->select($qb->expr()->count('a'))
+            ->andWhere('a.household = :household')
+            ->innerJoin('a.household', 'hh')
+            ->innerJoin('hh.householdUsers', 'hhu')
+            ->andWhere('hhu.user = :user')
+            ->setParameter('household', $household)
+            ->setParameter('user', $user)
+            ->orderBy('LOWER(a.name)', 'ASC')
+        ;
+
+        if($search) {
+            $query->andWhere('a.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        return $query
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllGrantedByHouseholdData(Household $household, $start, $length, string $search = '')
+    {
+        $result = [
+            'recordsTotal' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser()),
+            'recordsFiltered' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $search),
+        ];
+
+        $query = $this->createQueryBuilder('a')
+            ->andWhere('a.household = :household')
+            ->innerJoin('a.household', 'hh')
+            ->innerJoin('hh.householdUsers', 'hhu')
+            ->andWhere('hhu.user = :user')
+            ->setParameter('household', $household)
+            ->setParameter('user', $this->security->getUser())
+            ->orderBy('LOWER(a.name)', 'ASC')
+            ->setFirstResult($start)
+            ->setMaxResults($length);
+
+        if($search) {
+            $query->andWhere('a.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        $result['data'] = $query
+            ->getQuery()
+            ->execute()
+        ;
+
+        return $result;
     }
 
     // /**
