@@ -17,7 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="This name is already in use in this household."
  *     )
  */
-class AccountHolder
+class AccountHolder implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -55,6 +55,14 @@ class AccountHolder
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "name" => $this->name,
+            "createdAt" => $this->createdAt,
+        ];
     }
 
     public function getId(): ?int
