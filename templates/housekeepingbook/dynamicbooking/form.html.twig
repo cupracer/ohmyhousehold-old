@@ -75,6 +75,22 @@
                     {{ form_end(form) }}
                 </div>
                 <!-- /.card-body -->
+                {% if dynamicBooking is defined and is_granted('delete', dynamicBooking) %}
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            <form method="post" action="{{ path('housekeepingbook_dynamicbooking_delete', {'id': dynamicBooking.id}) }}" onsubmit="return confirm('{{ 'Are you sure you want to delete this item?'|trans }}');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_dynamic_booking_' ~ dynamicBooking.id) }}">
+                                <button class="btn btn-xs btn-outline-danger btn-delete">
+                                            <span class="icon mr-1">
+                                                <i class="far fa-trash-alt"></i>
+                                            </span>
+                                    <span class="text">{{ 'delete'|trans|u.title }}</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.card-footer -->
+                {% endif %}
             </div>
             <!-- /.card -->
         </div>

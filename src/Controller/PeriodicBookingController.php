@@ -130,6 +130,7 @@ class PeriodicBookingController extends AbstractController
         return $this->render('housekeepingbook/periodicbooking/form.html.twig', [
             'pageTitle' => t('Edit periodic booking'),
             'form' => $form->createView(),
+            'periodicBooking' => $periodicBooking,
             'button_label' => t('Update'),
         ]);
     }
@@ -138,7 +139,7 @@ class PeriodicBookingController extends AbstractController
     public function delete(Request $request, PeriodicBooking $periodicBooking): Response
     {
         try {
-            if ($this->isCsrfTokenValid('delete' . $periodicBooking->getId(), $request->request->get('_token'))) {
+            if ($this->isCsrfTokenValid('delete_periodic_booking_' . $periodicBooking->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $periodicBooking);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($periodicBooking);

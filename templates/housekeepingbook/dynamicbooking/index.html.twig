@@ -53,14 +53,6 @@
                                                 </a>
                                             {% endif %}
                                         </div>
-                                        <div class="btn-group">
-                                            {% if is_granted('delete', dynamicBooking) %}
-                                                <form method="post" action="{{ path('housekeepingbook_dynamicbooking_delete', {'id': dynamicBooking.id}) }}" onsubmit="return confirm('{{ 'Are you sure you want to delete this item?'|trans }}');">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dynamicBooking.id) }}">
-                                                    <button class="btn btn-xs btn-outline-danger btn-delete"><i class="fas fa-trash-alt"></i></button>
-                                                </form>
-                                            {% endif %}
-                                        </div>
                                     </td>
                                 </tr>
                             {% else %}

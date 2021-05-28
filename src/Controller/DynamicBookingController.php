@@ -125,6 +125,7 @@ class DynamicBookingController extends AbstractController
         return $this->render('housekeepingbook/dynamicbooking/form.html.twig', [
             'pageTitle' => t('Edit dynamic booking'),
             'form' => $form->createView(),
+            'dynamicBooking' => $dynamicBooking,
             'button_label' => t('Update'),
         ]);
     }
@@ -133,7 +134,7 @@ class DynamicBookingController extends AbstractController
     public function delete(Request $request, DynamicBooking $dynamicBooking): Response
     {
         try {
-            if ($this->isCsrfTokenValid('delete' . $dynamicBooking->getId(), $request->request->get('_token'))) {
+            if ($this->isCsrfTokenValid('delete_dynamic_booking_' . $dynamicBooking->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $dynamicBooking);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($dynamicBooking);
