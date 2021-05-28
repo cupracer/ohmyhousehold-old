@@ -3,17 +3,17 @@ import {generateDatatablesEditButton} from "../theme/datatables";
 $(document).ready(function () {
     let datatable = $('#accountHolders');
     datatable.DataTable({
-        "paging": true,
-        "serverSide": true,
-        "lengthChange": true,
-        "searching": true,
-        "ajax": datatable.data('jsonUrl'),
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-        "order": [[ 0, "asc" ]],
-        "columns": [
+        paging: true,
+        serverSide: true,
+        lengthChange: true,
+        searching: true,
+        ajax: datatable.data('jsonUrl'),
+        ordering: true,
+        info: true,
+        autoWidth: false,
+        responsive: true,
+        order: [[ 0, "asc" ]],
+        columns: [
             {
                 data: "name",
                 defaultContent: "-",

@@ -29,7 +29,7 @@ class AccountHolderRepository extends ServiceEntityRepository
     /**
      * @return AccountHolder[] Returns an array of DynamicBooking objects
      */
-    public function findAllGrantedByHousehold(Household $household)
+    public function findAllGrantedByHousehold(Household $household): array
     {
         $accountHolders = $this->createQueryBuilder('a')
             ->andWhere('a.household = :household')
@@ -49,6 +49,8 @@ class AccountHolderRepository extends ServiceEntityRepository
      */
     public function getCountAllByHouseholdAndUser(Household $household, UserInterface $user, string $search = '')
     {
+        // For performance reasons, no security voter is used. Filtering is done by the query.
+
         $qb = $this->createQueryBuilder('a');
 
         $query = $qb->select($qb->expr()->count('a'))
@@ -58,7 +60,6 @@ class AccountHolderRepository extends ServiceEntityRepository
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $user)
-            ->orderBy('LOWER(a.name)', 'ASC')
         ;
 
         if($search) {
@@ -75,8 +76,10 @@ class AccountHolderRepository extends ServiceEntityRepository
     /**
      * @return array
      */
-    public function getAllGrantedByHouseholdData(Household $household, $start, $length, string $search = '')
+    public function getFilteredDataByHousehold(Household $household, $start, $length, array $orderingData, string $search = '')
     {
+        // This method generates an array which is to be used for a Datatables output.
+        // For performance reasons, no security voter is used. Filtering is done by the query.
         $result = [
             'recordsTotal' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser()),
             'recordsFiltered' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $search),
@@ -89,13 +92,24 @@ class AccountHolderRepository extends ServiceEntityRepository
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $this->security->getUser())
-            ->orderBy('LOWER(a.name)', 'ASC')
             ->setFirstResult($start)
             ->setMaxResults($length);
 
         if($search) {
+            // TODO: enable searching for more columns (as defined by Datatables)
             $query->andWhere('a.name LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
+        }
+
+        foreach($orderingData as $order) {
+            switch ($order['name']) {
+                case "name":
+                    $query->addOrderBy('LOWER(a.name)', $order['dir']);
+                    break;
+                case "createdAt":
+                    $query->addOrderBy('a.createdAt', $order['dir']);
+                    break;
+            }
         }
 
         $result['data'] = $query

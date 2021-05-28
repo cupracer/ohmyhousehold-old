@@ -6,7 +6,7 @@ use App\Entity\AccountHolder;
 use App\Entity\DTO\AccountHolderDTO;
 use App\Form\AccountHolderType;
 use App\Repository\HouseholdRepository;
-use App\Service\DatatablesService;
+use App\Service\AccountHolderService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +31,12 @@ class AccountHolderController extends AbstractController
     }
 
     #[Route('/json', name: 'housekeepingbook_accountholder_json', methods: ['GET'])]
-    public function toJson(Request $request, DatatablesService $datatablesService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function toJson(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
         return $this->json(
-            $datatablesService->getAccountHoldersAsDatatablesArray($request, $currentHousehold)
+            $accountHolderService->getAccountHoldersAsDatatablesArray($request, $currentHousehold)
         );
     }
 
