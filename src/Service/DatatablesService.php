@@ -2,56 +2,54 @@
 
 namespace App\Service;
 
-use App\Entity\AccountHolder;
-use App\Entity\Household;
-use App\Repository\AccountHolderRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
 class DatatablesService
 {
-    private AccountHolderRepository $accountHolderRepository;
-    private UrlGeneratorInterface $urlGenerator;
-
-    public function __construct(AccountHolderRepository $accountHolderRepository, UrlGeneratorInterface $urlGenerator)
+    protected function getOrderingData($fakeObject, array $requestColumns, array $requestOrders, $defaultDirection = 'asc'): array
     {
-        $this->accountHolderRepository = $accountHolderRepository;
-        $this->urlGenerator = $urlGenerator;
-    }
+        $columns = [];
+        $orderColumns = [];
 
-    public function getAccountHoldersAsDatatablesArray(Request $request, Household $household): array
-    {
-        $draw = $request->query->getInt('draw');
-        $start = $request->query->getInt('start');
-        $length = $request->query->getInt('length');
-
-        $searchParam = (array) $request->query->get('search');
-        $search = null;
-
-        if(array_key_exists('value', $searchParam)) {
-            $search = $searchParam['value'];
+        // requestColumns is provided by Datatables as request query param
+        if(is_array($requestColumns)) {
+            // We're on interested in the "data" value, which should be a key of the object's jsonSerialize array,
+            // so we initialize a fake class instance to get the keys from it.
+            // Each request column name is only accepted if it matches one of these keys.
+            foreach($requestColumns as $requestColumn) {
+                if(in_array($requestColumn['data'], array_keys($fakeObject->jsonSerialize()))) {
+                    $columns[] = $requestColumn['data'];
+                }
+            }
         }
 
-        $result = $this->accountHolderRepository->getAllGrantedByHouseholdData($household, $start, $length, $search);
+        // Sorting is requested by Datatables with one or more column names and order directions.
+        // We check if the column names match the validated columns (above)
+        // and also check whether the direction is valid.
+        foreach($requestOrders as $requestOrder) {
+            $orderColumn = [];
 
-        $tableData = [];
+            if (array_key_exists('column', $requestOrder)) {
+                $orderColumn['num'] = (int)$requestOrder['column'];
+                $orderColumn['name'] = array_key_exists($orderColumn['num'], $columns) ?
+                    $columns[$orderColumn['num']] : null;
+            }
 
-        /** @var AccountHolder $row */
-        foreach($result['data'] as $row) {
-            $rowData = $row->jsonSerialize();
+            if (array_key_exists('dir', $requestOrder)) {
+                $orderColumn['dir'] = in_array(strtolower($requestOrder['dir']), ['asc', 'desc']) ?
+                    strtolower($requestOrder['dir']) : $defaultDirection;
+            }
 
-            $rowData['createdAt'] = \IntlDateFormatter::formatObject($rowData['createdAt']);
-            $rowData['editLink'] = $this->urlGenerator->generate(
-                'housekeepingbook_accountholder_edit', ['id' => $row->getId()]);
-
-            $tableData[] = $rowData;
+            $orderColumns[] = $orderColumn;
         }
 
-        return [
-            'draw' => $draw,
-            'data' => $tableData,
-            'recordsTotal' => $result['recordsTotal'],
-            'recordsFiltered' => $result['recordsFiltered'],
-        ];
+        // Example return:
+        // array:1 [
+        //  0 => array:3 [
+        //    "num" => 0
+        //    "name" => "name"
+        //    "dir" => "asc"
+        //  ]
+        // ]
+
+        return $orderColumns;
     }
 }
