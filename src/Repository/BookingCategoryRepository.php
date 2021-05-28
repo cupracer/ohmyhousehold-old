@@ -8,6 +8,7 @@ use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method BookingCategory|null find($id, $lockMode = null, $lockVersion = null)
@@ -42,6 +43,82 @@ class BookingCategoryRepository extends ServiceEntityRepository
         return array_filter($bookingCategories, function (BookingCategory $bookingCategory) {
             return $this->security->isGranted('view', $bookingCategory);
         });
+    }
+
+    /**
+     * @return integer
+     */
+    public function getCountAllByHouseholdAndUser(Household $household, UserInterface $user, string $search = '')
+    {
+        // For performance reasons, no security voter is used. Filtering is done by the query.
+
+        $qb = $this->createQueryBuilder('b');
+
+        $query = $qb->select($qb->expr()->count('b'))
+            ->andWhere('b.household = :household')
+            ->innerJoin('b.household', 'hh')
+            ->innerJoin('hh.householdUsers', 'hhu')
+            ->andWhere('hhu.user = :user')
+            ->setParameter('household', $household)
+            ->setParameter('user', $user)
+        ;
+
+        if($search) {
+            $query->andWhere('b.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        return $query
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilteredDataByHousehold(Household $household, $start, $length, array $orderingData, string $search = '')
+    {
+        // This method generates an array which is to be used for a Datatables output.
+        // For performance reasons, no security voter is used. Filtering is done by the query.
+        $result = [
+            'recordsTotal' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser()),
+            'recordsFiltered' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $search),
+        ];
+
+        $query = $this->createQueryBuilder('b')
+            ->andWhere('b.household = :household')
+            ->innerJoin('b.household', 'hh')
+            ->innerJoin('hh.householdUsers', 'hhu')
+            ->andWhere('hhu.user = :user')
+            ->setParameter('household', $household)
+            ->setParameter('user', $this->security->getUser())
+            ->setFirstResult($start)
+            ->setMaxResults($length);
+
+        if($search) {
+            // TODO: enable searching for more columns (as defined by Datatables)
+            $query->andWhere('b.name LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        foreach($orderingData as $order) {
+            switch ($order['name']) {
+                case "name":
+                    $query->addOrderBy('LOWER(b.name)', $order['dir']);
+                    break;
+                case "createdAt":
+                    $query->addOrderBy('b.createdAt', $order['dir']);
+                    break;
+            }
+        }
+
+        $result['data'] = $query
+            ->getQuery()
+            ->execute()
+        ;
+
+        return $result;
     }
 
     // /**

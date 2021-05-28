@@ -7,6 +7,7 @@ use App\Entity\DTO\BookingCategoryDTO;
 use App\Form\BookingCategoryType;
 use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
+use App\Service\BookingCategoryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,10 +26,19 @@ class BookingCategoryController extends AbstractController
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
         return $this->render('housekeepingbook/bookingcategory/index.html.twig', [
-            'pageTitle' => t('DynamicBooking categories'),
+            'pageTitle' => t('Booking categories'),
             'household' => $currentHousehold,
-            'bookingCategories' => $bookingCategoryRepository->findByHousehold($currentHousehold),
         ]);
+    }
+
+    #[Route('/json', name: 'housekeepingbook_bookingcategory_json', methods: ['GET'])]
+    public function toJson(Request $request, BookingCategoryService $bookingCategoryService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    {
+        $currentHousehold = $householdRepository->find($session->get('current_household'));
+
+        return $this->json(
+            $bookingCategoryService->getBookingCategoriesAsDatatablesArray($request, $currentHousehold)
+        );
     }
 
     #[Route('/new', name: 'housekeepingbook_bookingcategory_new', methods: ['GET', 'POST'])]
@@ -61,11 +71,11 @@ class BookingCategoryController extends AbstractController
                 $entityManager->persist($bookingCategory);
                 $entityManager->flush();
 
-                $this->addFlash('success', t('DynamicBooking category was added.'));
+                $this->addFlash('success', t('Booking category was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_bookingcategory_index');
             }catch(\Exception) {
-                $this->addFlash('error', t('DynamicBooking category could not be created.'));
+                $this->addFlash('error', t('Booking category could not be created.'));
             }
         }
 
@@ -92,17 +102,18 @@ class BookingCategoryController extends AbstractController
 
                 $this->getDoctrine()->getManager()->flush();
 
-                $this->addFlash('success', t('DynamicBooking category was updated.'));
+                $this->addFlash('success', t('Booking category was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_bookingcategory_index');
-            }catch (\Exception) {
-                $this->addFlash('error', t('DynamicBooking category could not be updated.'));
+            }catch(\Exception) {
+                $this->addFlash('error', t('Booking category could not be updated.'));
             }
         }
 
         return $this->render('housekeepingbook/bookingcategory/form.html.twig', [
             'pageTitle' => t('Edit booking category'),
             'form' => $form->createView(),
+            'bookingCategory' => $bookingCategory,
             'button_label' => t('Update'),
         ]);
     }
@@ -111,17 +122,17 @@ class BookingCategoryController extends AbstractController
     public function delete(Request $request, BookingCategory $bookingCategory): Response
     {
         try {
-            if ($this->isCsrfTokenValid('delete' . $bookingCategory->getId(), $request->request->get('_token'))) {
+            if ($this->isCsrfTokenValid('delete_booking_category_' . $bookingCategory->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $bookingCategory);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($bookingCategory);
                 $entityManager->flush();
-                $this->addFlash('success', t('DynamicBooking category was deleted.'));
+                $this->addFlash('success', t('Booking category was deleted.'));
             } else {
                 throw new \Exception('invalid CSRF token');
             }
         }catch (\Exception) {
-            $this->addFlash('error', t('DynamicBooking category could not be deleted.'));
+            $this->addFlash('error', t('Booking category could not be deleted.'));
         }
 
         return $this->redirectToRoute('housekeepingbook_bookingcategory_index');

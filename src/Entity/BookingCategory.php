@@ -6,12 +6,18 @@ use App\Repository\BookingCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=BookingCategoryRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(
+ *     fields={"name", "household"},
+ *     errorPath="name",
+ *     message="This name is already in use in this household."
+ *     )
  */
-class BookingCategory
+class BookingCategory implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -21,7 +27,7 @@ class BookingCategory
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
@@ -49,6 +55,14 @@ class BookingCategory
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "name" => $this->name,
+            "createdAt" => $this->createdAt,
+        ];
     }
 
     public function getId(): ?int
