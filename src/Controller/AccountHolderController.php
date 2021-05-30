@@ -30,8 +30,8 @@ class AccountHolderController extends AbstractController
         ]);
     }
 
-    #[Route('/json', name: 'housekeepingbook_accountholder_json', methods: ['GET'])]
-    public function toJson(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    #[Route('/datatables', name: 'housekeepingbook_accountholder_datatables', methods: ['GET'])]
+    public function getAsDatatables(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
@@ -41,7 +41,7 @@ class AccountHolderController extends AbstractController
     }
 
     #[Route('/select2', name: 'housekeepingbook_accountholder_select2', methods: ['GET'])]
-    public function select2(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsSelect2(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 

@@ -31,8 +31,8 @@ class BookingCategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/json', name: 'housekeepingbook_bookingcategory_json', methods: ['GET'])]
-    public function toJson(Request $request, BookingCategoryService $bookingCategoryService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    #[Route('/datatables', name: 'housekeepingbook_bookingcategory_datatables', methods: ['GET'])]
+    public function getAsDatatables(Request $request, BookingCategoryService $bookingCategoryService, HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
@@ -42,7 +42,7 @@ class BookingCategoryController extends AbstractController
     }
 
     #[Route('/select2', name: 'housekeepingbook_bookingcategory_select2', methods: ['GET'])]
-    public function select2(Request $request, BookingCategoryService $bookingCategoryService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsSelect2(Request $request, BookingCategoryService $bookingCategoryService, HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
