@@ -25,10 +25,11 @@ class AccountHolderService extends DatatablesService
         $start = $request->query->getInt('start');
         $length = $request->query->getInt('length', 10);
         $searchParam = (array) $request->query->get('search');
-        $search = null;
 
         if(array_key_exists('value', $searchParam)) {
             $search = $searchParam['value'];
+        }else {
+            $search = '';
         }
 
         $orderingData = $this->getOrderingData(
