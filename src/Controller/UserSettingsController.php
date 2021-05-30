@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\ApiTokenRepository;
+use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use function Symfony\Component\Translation\t;
@@ -17,7 +19,7 @@ class UserSettingsController extends AbstractController
     #[Route('/', name: 'app_user_settings')]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
-    public function index(ApiTokenRepository $apiTokenRepository, HouseholdUserRepository $householdUserRepository): Response
+    public function index(ApiTokenRepository $apiTokenRepository, HouseholdUserRepository $householdUserRepository, HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -25,11 +27,13 @@ class UserSettingsController extends AbstractController
         $userProfile = $user->getUserProfile();
         $apiTokens = $apiTokenRepository->findBy(['user' => $this->getUser()]);
         $householdUsers = $householdUserRepository->findBy(['user' => $this->getUser()]);
+        $currentHousehold = $householdRepository->find($session->get('current_household'));
 
         return $this->render('user/settings/index.html.twig', [
             'pageTitle' => t('app.user_settings'),
             'userProfile' => $userProfile,
             'householdUsers' => $householdUsers,
+            'currentHousehold' => $currentHousehold,
             'apiTokens' => $apiTokens,
         ]);
     }

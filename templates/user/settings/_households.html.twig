@@ -16,14 +16,28 @@
                     {% for householdUser in householdUsers %}
                         <tr>
                             <td>
-                                {{ householdUser.household.title }}
+                                <span class="{% if householdUser.household == currentHousehold %}text-bold{% endif %}">{{ householdUser.household.title }}</span>
                                 {% if householdUser.isAdmin %}<i class="fas fa-user-shield text-success text-xs ml-1" title="{{ 'Admin'|trans }}"></i>{% endif %}
                             </td>
                             <td class="min text-center">{{ householdUser.household.createdAt ? householdUser.household.createdAt|format_datetime : '' }}</td>
                             <td class="text-right min">
-                                <a href="{{ path('omh_household_show', {'id': householdUser.household.id}) }}">
-                                    <button class="btn btn-outline-primary btn-xs"><i class="far fa-eye"></i></button>
-                                </a>
+                                {% if householdUser.household != currentHousehold %}
+                                    <div class="btn-group">
+                                        <form method="post" action="{{ path('omh_household_switch', {'id': householdUser.household.id}) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('switch_household_' ~ householdUser.household.id) }}">
+                                            <button class="btn btn-outline-success btn-xs">
+                                                    <span class="icon">
+                                                        <i class="fas fa-exchange-alt"></i>
+                                                    </span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                                <div class="btn-group">
+                                    <a href="{{ path('omh_household_show', {'id': householdUser.household.id}) }}">
+                                        <button class="btn btn-outline-primary btn-xs"><i class="far fa-eye"></i></button>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     {% else %}

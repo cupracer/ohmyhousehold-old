@@ -1,11 +1,3 @@
-{% block sidebar_user %}
-    {% if is_granted('ROLE_USER') %}
-        {{ render(controller(
-            'App\\Controller\\HouseholdController::switch'
-        )) }}
-    {% endif %}
-{% endblock sidebar_user %}
-
 <li class="nav-header">APPS</li>
 
 <li class="nav-header font-weight-bold">HOUSEKEEPING BOOK</li>

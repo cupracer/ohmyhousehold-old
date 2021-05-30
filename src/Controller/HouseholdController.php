@@ -56,37 +56,22 @@ class HouseholdController extends AbstractController
         ]);
     }
 
-    #[Route('/switch', name: 'omh_household_switch', methods: ['GET', 'POST'])]
-    public function switch(Request $request, HouseholdRepository $householdRepository, HouseholdUserRepository $householdUserRepository): Response
+
+    #[Route('/switch/{id}', name: 'omh_household_switch', methods: ['POST'])]
+    public function delete(Request $request, Household $household): Response
     {
-        $households = $householdRepository->findByMember($this->getUser());
-
-        if(count($households) > 1) {
-            $switchHousehold = new SwitchHousehold();
-
-            if($request->getSession()->has('current_household')) {
-                $switchHousehold->setHousehold($householdRepository->find($request->getSession()->get('current_household')));
+        try {
+            if ($this->isCsrfTokenValid('switch_household_' . $household->getId(), $request->request->get('_token'))) {
+                $this->denyAccessUnlessGranted('view' , $household);
+                $request->getSession()->set('current_household', $household->getId());
+                $this->addFlash('success', t('Switched household.'));
+            }else {
+                throw new \Exception('invalid CSRF token');
             }
-
-            $form = $this->createForm(SwitchHouseholdType::class, $switchHousehold, [
-                'action' => $this->generateUrl('omh_household_switch'),
-            ]);
-
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->denyAccessUnlessGranted('view', $switchHousehold->getHousehold());
-                $request->getSession()->set('current_household', $switchHousehold->getHousehold()->getId());
-
-                return $this->redirectToRoute('homepage');
-            }
-
-            return $this->render('household/_switch.html.twig', [
-                'switchHousehold' => $switchHousehold,
-                'form' => $form->createView(),
-            ]);
-        }else {
-            return new Response(null);
+        }catch (\Exception) {
+            $this->addFlash('error', t('Account holder could not be deleted.'));
         }
+
+        return $this->redirectToRoute('app_user_settings');
     }
 }
