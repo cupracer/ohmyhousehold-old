@@ -82,8 +82,12 @@ class AccountHolderRepository extends ServiceEntityRepository
         // For performance reasons, no security voter is used. Filtering is done by the query.
         $result = [
             'recordsTotal' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser()),
-            'recordsFiltered' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $search),
         ];
+
+        // no need to run the same query again if no search term is used.
+        $result['recordsFiltered'] = $search ?
+            $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $search) :
+            $result['recordsTotal'];
 
         $query = $this->createQueryBuilder('a')
             ->andWhere('a.household = :household')
