@@ -5,8 +5,6 @@ namespace App\Form;
 use App\Entity\AccountHolder;
 use App\Entity\BookingCategory;
 use App\Entity\DTO\PeriodicBookingDTO;
-use App\Repository\AccountHolderRepository;
-use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -16,26 +14,24 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function Symfony\Component\Translation\t;
 
 class PeriodicBookingType extends AbstractType
 {
     private SessionInterface $session;
-    private BookingCategoryRepository $bookingCategoryRepository;
-    private AccountHolderRepository $accountHolderRepository;
     private HouseholdRepository $householdRepository;
+    private UrlGeneratorInterface $router;
 
     public function __construct(
         SessionInterface $session,
-        BookingCategoryRepository $bookingCategoryRepository,
-        AccountHolderRepository $accountHolderRepository,
-        HouseholdRepository $householdRepository
+        HouseholdRepository $householdRepository,
+        UrlGeneratorInterface $router
     )
     {
         $this->session = $session;
-        $this->bookingCategoryRepository = $bookingCategoryRepository;
-        $this->accountHolderRepository = $accountHolderRepository;
         $this->householdRepository = $householdRepository;
+        $this->router = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -79,17 +75,17 @@ class PeriodicBookingType extends AbstractType
             ->add('bookingCategory', EntityType::class, [
                 'placeholder' => '',
                 'class' => BookingCategory::class,
-                'choices' => $this->bookingCategoryRepository->findAllGrantedByHousehold($household),
                 'attr' => [
                     'class' => 'form-control select2field',
+                    'data-json-url' => $this->router->generate('housekeepingbook_bookingcategory_select2'),
                 ],
             ])
             ->add('accountHolder', EntityType::class, [
                 'placeholder' => '',
                 'class' => AccountHolder::class,
-                'choices' => $this->accountHolderRepository->findAllGrantedByHousehold($household),
                 'attr' => [
                     'class' => 'form-control select2field',
+                    'data-json-url' => $this->router->generate('housekeepingbook_accountholder_select2'),
                 ],
             ])
             ->add('amount', NumberType::class, [
@@ -114,7 +110,7 @@ class PeriodicBookingType extends AbstractType
             'data_class' => PeriodicBookingDTO::class,
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
-            'csrf_token_id'   => 'periodicbooking',
+            'csrf_token_id'   => 'periodicBooking',
         ]);
     }
 }

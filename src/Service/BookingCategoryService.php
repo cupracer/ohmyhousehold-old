@@ -25,10 +25,11 @@ class BookingCategoryService extends DatatablesService
         $start = $request->query->getInt('start');
         $length = $request->query->getInt('length', 10);
         $searchParam = (array) $request->query->get('search');
-        $search = null;
 
         if(array_key_exists('value', $searchParam)) {
             $search = $searchParam['value'];
+        }else {
+            $search = '';
         }
 
         $orderingData = $this->getOrderingData(
@@ -36,8 +37,6 @@ class BookingCategoryService extends DatatablesService
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
-
-        dump($orderingData);
 
         $result = $this->bookingCategoryRepository->getFilteredDataByHousehold(
             $household, $start, $length, $orderingData, $search);
@@ -60,6 +59,43 @@ class BookingCategoryService extends DatatablesService
             'data' => $tableData,
             'recordsTotal' => $result['recordsTotal'],
             'recordsFiltered' => $result['recordsFiltered'],
+        ];
+    }
+
+    public function getBookingCategoriesAsSelect2Array(Request $request, Household $household): array
+    {
+        $page = $request->query->getInt('page', 1);
+        $length = $request->query->getInt('length', 10);
+        $start = $page > 1 ? $page * $length : 0;
+        $search = $request->query->get('term', '');
+
+        $orderingData = [
+            [
+                'name' => 'name',
+                'dir' => 'asc',
+            ]
+        ];
+
+        $result = $this->bookingCategoryRepository->getFilteredDataByHousehold(
+            $household, $start, $length, $orderingData, $search);
+
+        $tableData = [];
+
+        /** @var BookingCategory $row */
+        foreach($result['data'] as $row) {
+            $rowData = [
+                'id' => $row->getId(),
+                'text' => $row->getName(),
+            ];
+
+            $tableData[] = $rowData;
+        }
+
+        return [
+            'results' => $tableData,
+            'pagination' => [
+                'more' => $start + $length < $result['recordsFiltered'],
+            ]
         ];
     }
 }
