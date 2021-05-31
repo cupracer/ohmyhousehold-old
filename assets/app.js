@@ -27,10 +27,6 @@ import 'admin-lte/plugins/select2/js/select2.full.min';
 import 'admin-lte/plugins/bootstrap-switch/js/bootstrap-switch.min';
 
 $(document).ready(function () {
-    // $('.select2field').select2({
-    //     placeholder: '',
-    // });
-
     $(document).on('select2:open', () => {
         document.querySelector('.select2-container--open .select2-search__field').focus();
     });
