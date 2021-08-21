@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Account;
 
-use App\Entity\AccountHolder;
+use App\Entity\AssetAccount;
 use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -10,28 +10,28 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @method AccountHolder|null find($id, $lockMode = null, $lockVersion = null)
- * @method AccountHolder|null findOneBy(array $criteria, array $orderBy = null)
- * @method AccountHolder[]    findAll()
- * @method AccountHolder[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method AssetAccount|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AssetAccount|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AssetAccount[]    findAll()
+ * @method AssetAccount[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AccountHolderRepository extends ServiceEntityRepository
+class AssetAccountRepository extends ServiceEntityRepository
 {
     private Security $security;
-
+    
     public function __construct(ManagerRegistry $registry, Security $security)
     {
-        parent::__construct($registry, AccountHolder::class);
+        parent::__construct($registry, AssetAccount::class);
 
         $this->security = $security;
     }
 
     /**
-     * @return AccountHolder[] Returns an array of AccountHolder objects
+     * @return AssetAccount[] Returns an array of AssetAccount objects
      */
-    public function findAllGrantedByHousehold(Household $household): array
+    public function findAllViewableByHousehold(Household $household): array
     {
-        $accountHolders = $this->createQueryBuilder('a')
+        $accounts = $this->createQueryBuilder('a')
             ->andWhere('a.household = :household')
             ->setParameter('household', $household)
             ->orderBy('LOWER(a.name)', 'ASC')
@@ -39,8 +39,26 @@ class AccountHolderRepository extends ServiceEntityRepository
             ->execute()
         ;
 
-        return array_filter($accountHolders, function (AccountHolder $accountHolder) {
-            return $this->security->isGranted('view', $accountHolder);
+        return array_filter($accounts, function (AssetAccount $account) {
+            return $this->security->isGranted('view', $account);
+        });
+    }
+
+    /**
+     * @return AssetAccount[] Returns an array of AssetAccount objects
+     */
+    public function findAllUsableByHousehold(Household $household): array
+    {
+        $accounts = $this->createQueryBuilder('a')
+            ->andWhere('a.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('LOWER(a.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($accounts, function (AssetAccount $account) {
+            return $this->security->isGranted('use', $account);
         });
     }
 
@@ -110,6 +128,12 @@ class AccountHolderRepository extends ServiceEntityRepository
                 case "name":
                     $query->addOrderBy('LOWER(a.name)', $order['dir']);
                     break;
+                case "accountType":
+                    $query->addOrderBy('LOWER(a.accountType)', $order['dir']);
+                    break;
+                case "iban":
+                    $query->addOrderBy('LOWER(a.iban)', $order['dir']);
+                    break;
                 case "createdAt":
                     $query->addOrderBy('a.createdAt', $order['dir']);
                     break;
@@ -123,9 +147,9 @@ class AccountHolderRepository extends ServiceEntityRepository
 
         return $result;
     }
-
+    
     // /**
-    //  * @return AccountHolder[] Returns an array of AccountHolder objects
+    //  * @return Account[] Returns an array of Account objects
     //  */
     /*
     public function findByExampleField($value)
@@ -142,7 +166,7 @@ class AccountHolderRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?AccountHolder
+    public function findOneBySomeField($value): ?Account
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')

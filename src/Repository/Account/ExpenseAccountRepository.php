@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Account;
 
 use App\Entity\AccountHolder;
+use App\Entity\ExpenseAccount;
 use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -10,28 +11,28 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @method AccountHolder|null find($id, $lockMode = null, $lockVersion = null)
- * @method AccountHolder|null findOneBy(array $criteria, array $orderBy = null)
- * @method AccountHolder[]    findAll()
- * @method AccountHolder[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ExpenseAccount|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ExpenseAccount|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ExpenseAccount[]    findAll()
+ * @method ExpenseAccount[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AccountHolderRepository extends ServiceEntityRepository
+class ExpenseAccountRepository extends ServiceEntityRepository
 {
     private Security $security;
-
+    
     public function __construct(ManagerRegistry $registry, Security $security)
     {
-        parent::__construct($registry, AccountHolder::class);
+        parent::__construct($registry, ExpenseAccount::class);
 
         $this->security = $security;
     }
 
     /**
-     * @return AccountHolder[] Returns an array of AccountHolder objects
+     * @return ExpenseAccount[] Returns an array of ExpenseAccount objects
      */
     public function findAllGrantedByHousehold(Household $household): array
     {
-        $accountHolders = $this->createQueryBuilder('a')
+        $accounts = $this->createQueryBuilder('a')
             ->andWhere('a.household = :household')
             ->setParameter('household', $household)
             ->orderBy('LOWER(a.name)', 'ASC')
@@ -39,9 +40,28 @@ class AccountHolderRepository extends ServiceEntityRepository
             ->execute()
         ;
 
-        return array_filter($accountHolders, function (AccountHolder $accountHolder) {
-            return $this->security->isGranted('view', $accountHolder);
+        return array_filter($accounts, function (ExpenseAccount $account) {
+            return $this->security->isGranted('view', $account);
         });
+    }
+
+    /**
+     * @param Household $household
+     * @param AccountHolder $accountHolder
+     * @return ExpenseAccount|null Returns an ExpenseAccount object
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByHouseholdAndAccountHolder(Household $household, AccountHolder $accountHolder): ?ExpenseAccount
+    {
+        return $this->createQueryBuilder('a')
+            ->innerJoin('a.accountHolder', 'ah')
+            ->andWhere('a.household = :household')
+            ->andWhere('ah = :accountHolder')
+            ->setParameter('household', $household)
+            ->setParameter('accountHolder', $accountHolder)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     /**
@@ -93,6 +113,7 @@ class AccountHolderRepository extends ServiceEntityRepository
             ->andWhere('a.household = :household')
             ->innerJoin('a.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
+            ->innerJoin('a.accountHolder', 'ah')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $this->security->getUser())
@@ -108,7 +129,10 @@ class AccountHolderRepository extends ServiceEntityRepository
         foreach($orderingData as $order) {
             switch ($order['name']) {
                 case "name":
-                    $query->addOrderBy('LOWER(a.name)', $order['dir']);
+                    $query->addOrderBy('LOWER(ah.name)', $order['dir']);
+                    break;
+                case "iban":
+                    $query->addOrderBy('LOWER(a.iban)', $order['dir']);
                     break;
                 case "createdAt":
                     $query->addOrderBy('a.createdAt', $order['dir']);
@@ -123,9 +147,9 @@ class AccountHolderRepository extends ServiceEntityRepository
 
         return $result;
     }
-
+    
     // /**
-    //  * @return AccountHolder[] Returns an array of AccountHolder objects
+    //  * @return Account[] Returns an array of Account objects
     //  */
     /*
     public function findByExampleField($value)
@@ -142,7 +166,7 @@ class AccountHolderRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?AccountHolder
+    public function findOneBySomeField($value): ?Account
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')
