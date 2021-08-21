@@ -45,11 +45,29 @@ class Household
      */
     private $bookingCategories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AssetAccount::class, mappedBy="household", orphanRemoval=true)
+     */
+    private $assetAccounts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ExpenseAccount::class, mappedBy="household", orphanRemoval=true)
+     */
+    private $expenseAccounts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RevenueAccount::class, mappedBy="household", orphanRemoval=true)
+     */
+    private $revenueAccounts;
+
     public function __construct()
     {
         $this->householdUsers = new ArrayCollection();
         $this->accountHolders = new ArrayCollection();
         $this->bookingCategories = new ArrayCollection();
+        $this->assetAccounts = new ArrayCollection();
+        $this->expenseAccounts = new ArrayCollection();
+        $this->revenueAccounts = new ArrayCollection();
     }
 
     public function __toString(): string

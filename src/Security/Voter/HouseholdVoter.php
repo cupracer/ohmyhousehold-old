@@ -14,8 +14,17 @@ class HouseholdVoter extends Voter
     // these strings are just invented: you can use anything
     const VIEW = 'view';
     const EDIT = 'edit';
-    const CREATE_BOOKING = 'createBooking';
-    const CREATE_PERIODICBOOKING = 'createPeriodicBooking';
+
+    const CREATE_ASSET_ACCOUNT = 'createAssetAccount';
+
+    const CREATE_DEPOSIT_TRANSACTION = 'createDepositTransaction';
+    const CREATE_WITHDRAWAL_TRANSACTION = 'createWithdrawalTransaction';
+    const CREATE_TRANSFER_TRANSACTION = 'createTransferTransaction';
+
+    const CREATE_PERIODIC_DEPOSIT_TRANSACTION = 'createPeriodicDepositTransaction';
+    const CREATE_PERIODIC_WITHDRAWAL_TRANSACTION = 'createPeriodicWithdrawalTransaction';
+    const CREATE_PERIODIC_TRANSFER_TRANSACTION = 'createPeriodicTransferTransaction';
+
     const CREATE_ACCOUNTHOLDER = 'createAccountHolder';
     const CREATE_BOOKINGCATEGORY = 'createBookingCategory';
 
@@ -32,8 +41,13 @@ class HouseholdVoter extends Voter
         if (!in_array($attribute, [
             self::VIEW,
             self::EDIT,
-            self::CREATE_BOOKING,
-            self::CREATE_PERIODICBOOKING,
+            self::CREATE_ASSET_ACCOUNT,
+            self::CREATE_DEPOSIT_TRANSACTION,
+            self::CREATE_WITHDRAWAL_TRANSACTION,
+            self::CREATE_TRANSFER_TRANSACTION,
+            self::CREATE_PERIODIC_DEPOSIT_TRANSACTION,
+            self::CREATE_PERIODIC_WITHDRAWAL_TRANSACTION,
+            self::CREATE_PERIODIC_TRANSFER_TRANSACTION,
             self::CREATE_ACCOUNTHOLDER,
             self::CREATE_BOOKINGCATEGORY
         ])) {
@@ -73,10 +87,20 @@ class HouseholdVoter extends Voter
                 return $this->canView($householdUser);
             case self::EDIT:
                 return $this->canEdit($householdUser);
-            case self::CREATE_BOOKING:
-                return $this->canCreateBooking($householdUser);
-            case self::CREATE_PERIODICBOOKING:
-                return $this->canCreatePeriodicBooking($householdUser);
+            case self::CREATE_ASSET_ACCOUNT:
+                return $this->canCreateAssetAccount($householdUser);
+            case self::CREATE_DEPOSIT_TRANSACTION:
+                return $this->canCreateDepositTransaction($householdUser);
+            case self::CREATE_WITHDRAWAL_TRANSACTION:
+                return $this->canCreateWithdrawalTransaction($householdUser);
+            case self::CREATE_TRANSFER_TRANSACTION:
+                return $this->canCreateTransferTransaction($householdUser);
+            case self::CREATE_PERIODIC_DEPOSIT_TRANSACTION:
+                return $this->canCreatePeriodicDepositTransaction($householdUser);
+            case self::CREATE_PERIODIC_WITHDRAWAL_TRANSACTION:
+                return $this->canCreatePeriodicWithdrawalTransaction($householdUser);
+            case self::CREATE_PERIODIC_TRANSFER_TRANSACTION:
+                return $this->canCreatePeriodicTransferTransaction($householdUser);
             case self::CREATE_ACCOUNTHOLDER:
                 return $this->canCreateAccountHolder($householdUser);
             case self::CREATE_BOOKINGCATEGORY:
@@ -98,13 +122,43 @@ class HouseholdVoter extends Voter
         return $householdUser->getIsAdmin();
     }
 
-    private function canCreateBooking(HouseholdUser $householdUser): bool
+    private function canCreateAssetAccount(HouseholdUser $householdUser): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return (bool)$householdUser;
     }
 
-    private function canCreatePeriodicBooking(HouseholdUser $householdUser): bool
+    private function canCreateDepositTransaction(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCreateWithdrawalTransaction(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCreateTransferTransaction(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCreatePeriodicDepositTransaction(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCreatePeriodicWithdrawalTransaction(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCreatePeriodicTransferTransaction(HouseholdUser $householdUser): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return (bool)$householdUser;

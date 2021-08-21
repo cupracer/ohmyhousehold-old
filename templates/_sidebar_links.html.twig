@@ -1,20 +1,106 @@
-<li class="nav-header">APPS</li>
-
 <li class="nav-header font-weight-bold">HOUSEKEEPING BOOK</li>
 
-<li class="nav-item">
-    <a href="{{ path('housekeepingbook_dynamicbooking_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_dynamicbooking_index') %}active{% endif %}">
-        <i class="nav-icon fas fa-money-check-alt"></i> Dynamic bookings
+<li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_report_index') %}menu-open{% endif %}">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-chart-line"></i>
+        <p>Reports <i class="right fas fa-angle-left"></i></p>
     </a>
-</li>
-<li class="nav-item">
-    <a href="{{ path('housekeepingbook_periodicbooking_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodicbooking_index') %}active{% endif %}">
-        <i class="nav-icon fas fa-sync"></i> Periodic bookings
-    </a>
+    <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_report_index') %}block{% else %}none{% endif %};">
+        <li class="nav-item">
+            <a href="{{ path('housekeepingbook_report_periodical_index', {year: 2021, month: 08}) }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_report_periodical_index', {year: 2021, month: 08}) %}active{% endif %}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Current period</p>
+            </a>
+        </li>
+    </ul>
 </li>
 
-<li class="nav-header mt-lg-5">SETTINGS</li>
-<li class="nav-header font-weight-bold">HOUSEKEEPING BOOK</li>
+{#<li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_account_index') %}menu-open{% endif %}">#}
+{#    <a href="#" class="nav-link">#}
+{#        <i class="nav-icon fa fa-credit-card"></i>#}
+{#        <p>Accounts <i class="right fas fa-angle-left"></i></p>#}
+{#    </a>#}
+{#    <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_account_index') %}block{% else %}none{% endif %};">#}
+{#        <li class="nav-item">#}
+{#            <a href="{{ path('housekeepingbook_asset_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_asset_account_index') %}active{% endif %}">#}
+{#                <i class="far fa-circle nav-icon"></i>#}
+{#                <p>Asset</p>#}
+{#            </a>#}
+{#        </li>#}
+{#        <li class="nav-item">#}
+{#            <a href="{{ path('housekeepingbook_revenue_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_revenue_account_index') %}active{% endif %}">#}
+{#                <i class="far fa-circle nav-icon"></i>#}
+{#                <p>Revenue</p>#}
+{#            </a>#}
+{#        </li>#}
+{#        <li class="nav-item">#}
+{#            <a href="{{ path('housekeepingbook_expense_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_expense_account_index') %}active{% endif %}">#}
+{#                <i class="far fa-circle nav-icon"></i>#}
+{#                <p>Expense</p>#}
+{#            </a>#}
+{#        </li>#}
+{#    </ul>#}
+{#</li>#}
+
+<li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_transaction_index') %}menu-open{% endif %}">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-random"></i>
+        <p>Transactions <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_transaction_index') %}block{% else %}none{% endif %};">
+        <li class="nav-item">
+            <a href="{{ path('housekeepingbook_deposit_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_deposit_transaction_index') %}active{% endif %}">
+                <i class="far fa-smile nav-icon"></i>
+                <p>Deposit</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('housekeepingbook_withdrawal_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_withdrawal_transaction_index') %}active{% endif %}">
+                <i class="far fa-frown nav-icon"></i>
+                <p>Withdrawal</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('housekeepingbook_transfer_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_transfer_transaction_index') %}active{% endif %}">
+                <i class="far fa-meh nav-icon"></i>
+                <p>Transfer</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_periodic_transaction_index') %}menu-open{% endif %}">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-redo"></i>
+        <p>Periodic Transactions <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_periodic_transaction_index') %}block{% else %}none{% endif %};">
+        <li class="nav-item">
+            <a href="{{ path('housekeepingbook_periodic_deposit_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodic_deposit_transaction_index') %}active{% endif %}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Deposit</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('housekeepingbook_periodic_withdrawal_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodic_withdrawal_transaction_index') %}active{% endif %}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Withdrawal</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('housekeepingbook_periodic_transfer_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodic_transfer_transaction_index') %}active{% endif %}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Transfer</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item">
+    <a href="{{ path('housekeepingbook_asset_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_asset_account_index') %}active{% endif %}">
+        <i class="nav-icon fas fa-credit-card"></i> Asset accounts
+    </a>
+</li>
 <li class="nav-item">
     <a href="{{ path('housekeepingbook_accountholder_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_accountholder_index') %}active{% endif %}">
         <i class="nav-icon fas fa-handshake"></i> Account holders

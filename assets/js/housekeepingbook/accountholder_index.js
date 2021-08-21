@@ -19,6 +19,12 @@ $(document).ready(function () {
                 defaultContent: "-",
             },
             {
+                data: "usageCount",
+                defaultContent: "-",
+                class: "min text-right",
+                orderable: false,
+            },
+            {
                 data: "createdAt",
                 defaultContent: "-",
                 class: "min",

@@ -33,7 +33,7 @@ class BookingCategoryService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            new BookingCategory(),
+            ['name', 'createdAt', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -46,7 +46,7 @@ class BookingCategoryService extends DatatablesService
         /** @var BookingCategory $row */
         foreach($result['data'] as $row) {
             $rowData = $row->jsonSerialize();
-
+            $rowData['usageCount'] = $this->getUsageCount($row);
             $rowData['createdAt'] = \IntlDateFormatter::formatObject($rowData['createdAt']);
             $rowData['editLink'] = $this->urlGenerator->generate(
                 'housekeepingbook_bookingcategory_edit', ['id' => $row->getId()]);
@@ -97,5 +97,23 @@ class BookingCategoryService extends DatatablesService
                 'more' => $start + $length < $result['recordsFiltered'],
             ]
         ];
+    }
+
+    /**
+     * @param BookingCategory $bookingCategory
+     * @return int
+     */
+    protected function getUsageCount(BookingCategory $bookingCategory): int {
+        $count = 0;
+
+        $count+= count($bookingCategory->getDepositTransactions());
+        $count+= count($bookingCategory->getTransferTransactions());
+        $count+= count($bookingCategory->getWithdrawalTransactions());
+
+        $count+= count($bookingCategory->getPeriodicDepositTransactions());
+        $count+= count($bookingCategory->getPeriodicTransferTransactions());
+        $count+= count($bookingCategory->getPeriodicWithdrawalTransactions());
+
+        return $count;
     }
 }

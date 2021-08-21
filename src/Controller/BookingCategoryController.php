@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\BookingCategory;
 use App\Entity\DTO\BookingCategoryDTO;
 use App\Form\BookingCategoryType;
-use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
 use App\Service\BookingCategoryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,7 +20,7 @@ use function Symfony\Component\Translation\t;
 class BookingCategoryController extends AbstractController
 {
     #[Route('/', name: 'housekeepingbook_bookingcategory_index', methods: ['GET'])]
-    public function index(BookingCategoryRepository $bookingCategoryRepository, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 

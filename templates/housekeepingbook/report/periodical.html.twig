@@ -1,0 +1,146 @@
+{% extends 'theme/base-datatables.html.twig' %}
+
+{% block page_header_buttons %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="btn-group">
+                <a href="{{ path('housekeepingbook_report_periodical_index', {year: previousStartDate.format('Y'), month: previousStartDate.format('m'),}) }}">
+                    <button type="button" class="btn btn-default">
+                        <i class="fas fa-angle-double-left mr-2"></i>
+                        {{ previousStartDate|format_date(pattern='MMM yy', locale='de') }}
+                    </button>
+                </a>
+                <a href="{{ path('housekeepingbook_report_periodical_index', {year: currentStartDate.format('Y'), month: currentStartDate.format('m'),}) }}">
+                    <button type="button" class="btn btn-default">
+                        <div class="ml-3 mr-3">{{ t('current') }}</div>
+                    </button>
+                </a>
+                <a href="{{ path('housekeepingbook_report_periodical_index', {year: nextStartDate.format('Y'), month: nextStartDate.format('m'),}) }}">
+                    <button type="button" class="btn btn-default">
+                        {{ nextStartDate|format_date(pattern='MMM yy', locale='de') }}
+                        <i class="fas fa-angle-double-right ml-2"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock page_header_buttons %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-3">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <p>Deposit</p>
+                    <h3>{{ deposit|format_currency('EUR') }}</h3>
+                    <h4 class="text-right text-lightgreen"><small>further</small> +{{ upcomingDeposit|format_currency('EUR') }}</h4>
+                </div>
+                <div class="icon">
+                    <i class="far fa-smile"></i>
+                </div>
+{#                <a href="{{ path('housekeepingbook_deposit_transaction_index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>#}
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <p>Withdrawal</p>
+                    <h3>{{ withdrawal|format_currency('EUR') }}</h3>
+                    <h4 class="text-right text-lightred"><small>further</small> {{ upcomingWithdrawal|format_currency('EUR') }}</h4>
+                </div>
+                <div class="icon">
+                    <i class="far fa-frown"></i>
+                </div>
+{#                <a href="{{ path('housekeepingbook_withdrawal_transaction_index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>#}
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <p>Balance</p>
+                    <h3>{{ balance|format_currency('EUR') }}</h3>
+                    <h4 class="text-right text-lightcyan"><small>total</small> {{ expectedBalance|format_currency('EUR') }}</h4>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-balance-scale-left"></i>
+                </div>
+                {#                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>#}
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <p>Savings</p>
+                    <h3>{{ savings|format_currency('EUR') }}</h3>
+                    <h4 class="text-right text-gray"><small>total</small> {{ expectedSavings|format_currency('EUR') }}</h4>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                {#                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>#}
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="transactions" class="table table-hover dataTable" role="grid">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>{{ 'Date'|trans }}</th>
+                            <th>{{ 'Timestamp'|trans }}</th>
+                            <th>{{ 'User'|trans }}</th>
+                            <th>{{ 'Category'|trans }}</th>
+                            <th>{{ 'Source'|trans }}</th>
+                            <th>{{ 'Destination'|trans }}</th>
+                            <th>{{ 'Description'|trans }}</th>
+                            <th>{{ 'Amount'|trans }}</th>
+                            <th>amount_filter</th>
+                            <th>private</th>
+                        </tr>
+                        </thead>
+                        {% if transactions %}
+                            <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction.bookingType }}</td>
+                                <td>{{ transaction.bookingDate }}</td>
+                                <td>{{ transaction.bookingDate_sort }}</td>
+                                <td>{{ transaction.user }}</td>
+                                <td>{{ transaction.bookingCategory }}</td>
+                                <td>{{ transaction.source }}</td>
+                                <td>{{ transaction.destination }}</td>
+                                <td>{{ transaction.description }}</td>
+                                <td>{{ transaction.amount }}</td>
+                                <td>{{ transaction.amount_filter }}</td>
+                                <td>{{ transaction.private }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('housekeepingbook_report_current_period') }}
+{% endblock javascripts %}

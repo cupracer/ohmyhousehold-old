@@ -43,13 +43,19 @@ class AccountHolder implements \JsonSerializable
     private $household;
 
     /**
-     * @ORM\OneToMany(targetEntity=DynamicBooking::class, mappedBy="accountHolder", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ExpenseAccount::class, mappedBy="accountHolder")
      */
-    private $bookings;
+    private $expenseAccounts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RevenueAccount::class, mappedBy="accountHolder")
+     */
+    private $revenueAccounts;
 
     public function __construct()
     {
-        $this->bookings = new ArrayCollection();
+        $this->expenseAccounts = new ArrayCollection();
+        $this->revenueAccounts = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -115,29 +121,60 @@ class AccountHolder implements \JsonSerializable
     }
 
     /**
-     * @return Collection|DynamicBooking[]
+     * @return Collection
      */
-    public function getBookings(): Collection
+    public function getExpenseAccounts(): Collection
     {
-        return $this->bookings;
+        return $this->expenseAccounts;
     }
 
-    public function addBooking(DynamicBooking $booking): self
+    public function addExpenseAccount(ExpenseAccount $expenseAccount): self
     {
-        if (!$this->bookings->contains($booking)) {
-            $this->bookings[] = $booking;
-            $booking->setAccountHolder($this);
+        if (!$this->expenseAccounts->contains($expenseAccount)) {
+            $this->expenseAccounts[] = $expenseAccount;
+            $expenseAccount->setAccountHolder($this);
         }
 
         return $this;
     }
 
-    public function removeBooking(DynamicBooking $booking): self
+    public function removeExpenseAccount(ExpenseAccount $expenseAccount): self
     {
-        if ($this->bookings->removeElement($booking)) {
+        if ($this->expenseAccounts->removeElement($expenseAccount)) {
             // set the owning side to null (unless already changed)
-            if ($booking->getAccountHolder() === $this) {
-                $booking->setAccountHolder(null);
+            if ($expenseAccount->getAccountHolder() === $this) {
+                $expenseAccount->setAccountHolder(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection
+     */
+    public function getRevenueAccounts(): Collection
+    {
+        return $this->revenueAccounts;
+    }
+
+    public function addRevenueAccount(RevenueAccount $revenueAccount): self
+    {
+        if (!$this->revenueAccounts->contains($revenueAccount)) {
+            $this->revenueAccounts[] = $revenueAccount;
+            $revenueAccount->setAccountHolder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRevenueAccount(RevenueAccount $revenueAccount): self
+    {
+        if ($this->revenueAccounts->removeElement($revenueAccount)) {
+            // set the owning side to null (unless already changed)
+            if ($revenueAccount->getAccountHolder() === $this) {
+                $revenueAccount->setAccountHolder(null);
             }
         }
 

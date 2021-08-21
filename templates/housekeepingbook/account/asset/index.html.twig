@@ -1,0 +1,48 @@
+{% extends 'theme/base-datatables.html.twig' %}
+
+{% block page_header_buttons %}
+    {% if is_granted('createAssetAccount', household) %}
+        <a href="{{ path('housekeepingbook_asset_account_new') }}" class="btn btn-outline-primary btn-sm btn-icon-split ml-3">
+            <span class="icon text-primary mr-1">
+              <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">{{ 'Add asset account...'|trans }}</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'Asset accounts'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    <table id="assetAccounts" class="table table-hover dataTable" role="grid"
+                           data-json-url="{{ path('housekeepingbook_asset_account_datatables') }}">
+                        <thead>
+                        <tr>
+                            <th>{{ 'Name'|trans }}</th>
+                            <th>{{ 'Type'|trans }}</th>
+                            <th>{{ 'IBAN'|trans }}</th>
+                            <th>{{ 'Owner(s)'|trans }}</th>
+                            <th>{{ 'Balance'|trans }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('housekeepingbook_asset_account_index') }}
+{% endblock javascripts %}

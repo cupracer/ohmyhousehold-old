@@ -27,7 +27,7 @@ class AccountHolderRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return AccountHolder[] Returns an array of DynamicBooking objects
+     * @return AccountHolder[] Returns an array of AccountHolder objects
      */
     public function findAllGrantedByHousehold(Household $household): array
     {

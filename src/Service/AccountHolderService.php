@@ -33,7 +33,7 @@ class AccountHolderService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            new AccountHolder(),
+            ['name', 'createdAt', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -46,7 +46,7 @@ class AccountHolderService extends DatatablesService
         /** @var AccountHolder $row */
         foreach($result['data'] as $row) {
             $rowData = $row->jsonSerialize();
-
+            $rowData['usageCount'] = $this->getUsageCount($row);
             $rowData['createdAt'] = \IntlDateFormatter::formatObject($rowData['createdAt']);
             $rowData['editLink'] = $this->urlGenerator->generate(
                 'housekeepingbook_accountholder_edit', ['id' => $row->getId()]);
@@ -97,5 +97,18 @@ class AccountHolderService extends DatatablesService
                 'more' => $start + $length < $result['recordsFiltered'],
             ]
         ];
+    }
+
+    /**
+     * @param AccountHolder $accountHolder
+     * @return int
+     */
+    protected function getUsageCount(AccountHolder $accountHolder): int {
+        $count = 0;
+
+        $count+= count($accountHolder->getExpenseAccounts());
+        $count+= count($accountHolder->getRevenueAccounts());
+
+        return $count;
     }
 }
