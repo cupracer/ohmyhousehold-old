@@ -1,37 +1,43 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\PeriodicTransaction;
 
-use App\Entity\AccountHolder;
+use App\Entity\AssetAccount;
 use App\Entity\BookingCategory;
-use App\Entity\DTO\PeriodicBookingDTO;
+use App\Entity\DTO\PeriodicTransferTransactionDTO;
+use App\Repository\Account\AssetAccountRepository;
+use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function Symfony\Component\Translation\t;
 
-class PeriodicBookingType extends AbstractType
+class PeriodicTransferTransactionType extends AbstractType
 {
     private SessionInterface $session;
+
     private HouseholdRepository $householdRepository;
-    private UrlGeneratorInterface $router;
+    private BookingCategoryRepository $bookingCategoryRepository;
+    private AssetAccountRepository $assetAccountRepository;
 
     public function __construct(
         SessionInterface $session,
         HouseholdRepository $householdRepository,
-        UrlGeneratorInterface $router
+        BookingCategoryRepository $bookingCategoryRepository,
+        AssetAccountRepository $assetAccountRepository
     )
     {
         $this->session = $session;
         $this->householdRepository = $householdRepository;
-        $this->router = $router;
+        $this->bookingCategoryRepository = $bookingCategoryRepository;
+        $this->assetAccountRepository = $assetAccountRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -48,6 +54,7 @@ class PeriodicBookingType extends AbstractType
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'text-center',
+                    'autofocus' => true,
                 ],
             ])
             ->add('endDate', DateType::class, [
@@ -58,41 +65,41 @@ class PeriodicBookingType extends AbstractType
                     'class' => 'text-center',
                 ],
             ])
-            ->add('bookingDayOfMonth', NumberType::class, [
-                'scale' => 0,
+            ->add('bookingDayOfMonth', TextType::class, [
                 'label' => t('DOM'),
                 'attr' => [
                     'class' => 'form-control text-center',
                 ],
             ])
-            ->add('interval', NumberType::class, [
-                'scale' => 0,
-                'attr' => [
-                    'class' => 'form-control text-center',
-                    'placeholder' => '1-12',
-                ],
-            ])
             ->add('bookingCategory', EntityType::class, [
                 'placeholder' => '',
                 'class' => BookingCategory::class,
+                'choices' => $this->bookingCategoryRepository->findAllGrantedByHousehold($household),
                 'attr' => [
                     'class' => 'form-control select2field',
-                    'data-json-url' => $this->router->generate('housekeepingbook_bookingcategory_select2'),
                 ],
             ])
-            ->add('accountHolder', EntityType::class, [
+            ->add('source', EntityType::class, [
                 'placeholder' => '',
-                'class' => AccountHolder::class,
+                'class' => AssetAccount::class,
+                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($household),
                 'attr' => [
                     'class' => 'form-control select2field',
-                    'data-json-url' => $this->router->generate('housekeepingbook_accountholder_select2'),
+                ],
+            ])
+            ->add('destination', EntityType::class, [
+                'placeholder' => '',
+                'class' => AssetAccount::class,
+                'choices' => $this->assetAccountRepository->findAllViewableByHousehold($household),
+                'attr' => [
+                    'class' => 'form-control select2field',
                 ],
             ])
             ->add('amount', NumberType::class, [
                 'scale' => 2,
                 'attr' => [
                     'class' => 'form-control text-right',
-                    'placeholder' => '8,88 / -8,88',
+                    'placeholder' => '8,88',
                 ],
             ])
             ->add('description', TextType::class, [
@@ -101,16 +108,38 @@ class PeriodicBookingType extends AbstractType
                     'class' => 'form-control',
                 ],
             ])
+            ->add('bookingInterval', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control text-center',
+                ],
+                'label' => t('Interval'),
+            ])
+            ->add('private', CheckboxType::class, [
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'data-on-text' => t('private'),
+                    'data-off-text' => t('household'),
+                    'data-on-color' => 'success',
+                    'data-label-text' => t('Visibility'),
+                ]
+            ])
+            ->add('bookingPeriodOffset', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control text-center',
+                ],
+                'label' => t('Offset'),
+            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => PeriodicBookingDTO::class,
+            'data_class' => PeriodicTransferTransactionDTO::class,
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
-            'csrf_token_id'   => 'periodicBooking',
+            'csrf_token_id'   => 'periodicTransferTransaction',
         ]);
     }
 }
