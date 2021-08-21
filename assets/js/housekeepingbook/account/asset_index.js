@@ -1,7 +1,7 @@
-import {generateDatatablesEditButton} from "../theme/datatables";
+import {generateDatatablesEditButton} from "../../theme/datatables";
 
 $(document).ready(function () {
-    let datatable = $('#accountHolders');
+    let datatable = $('#assetAccounts');
     datatable.DataTable({
         paging: true,
         serverSide: true,
@@ -19,15 +19,35 @@ $(document).ready(function () {
                 defaultContent: "-",
             },
             {
-                data: "usageCount",
+                data: "accountType",
                 defaultContent: "-",
-                class: "min text-right",
-                orderable: false,
             },
             {
-                data: "createdAt",
+                data: "iban",
                 defaultContent: "-",
-                class: "min",
+            },
+            {
+                data: "owners",
+                defaultContent: "-",
+                orderable: false,
+                render: function (data, type, row) {
+                    let owners = '';
+
+                    for (let i=0; i<data.length; i++) {
+                        owners+= data[i];
+                        if(i < data.length-1) {
+                            owners+= '\n';
+                        }
+                    }
+
+                    return owners;
+                },
+            },
+            {
+                data: "balance",
+                class: "text-right min",
+                defaultContent: "-",
+                orderable: false,
             },
             {
                 class: "min",
@@ -42,7 +62,7 @@ $(document).ready(function () {
                     }
 
                     return editButton;
-                }
+                },
             },
         ],
     });
