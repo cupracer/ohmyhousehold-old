@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Security\Voter;
+namespace App\Security\Voter\Account;
 
 use App\Entity\HouseholdUser;
-use App\Entity\PeriodicBooking;
 use App\Entity\User;
+use App\Entity\AssetAccount;
 use App\Repository\HouseholdUserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class PeriodicBookingVoter extends Voter
+class AssetAccountVoter extends Voter
 {
     // these strings are just invented: you can use anything
     const VIEW = 'view';
     const EDIT = 'edit';
     const DELETE = 'delete';
+    const USE = 'use';
 
     private HouseholdUserRepository $householdUserRepository;
 
@@ -26,12 +27,12 @@ class PeriodicBookingVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::USE])) {
             return false;
         }
 
-        // only vote on `PeriodicBooking` objects
-        if (!$subject instanceof PeriodicBooking) {
+        // only vote on `AssetAccount` objects
+        if (!$subject instanceof AssetAccount) {
             return false;
         }
 
@@ -47,13 +48,13 @@ class PeriodicBookingVoter extends Voter
             return false;
         }
 
-        // you know $subject is a PeriodicBooking object, thanks to `supports()`
-        /** @var PeriodicBooking $periodicBooking */
-        $periodicBooking = $subject;
+        // you know $subject is a AssetAccount object, thanks to `supports()`
+        /** @var AssetAccount $assetAccount */
+        $assetAccount = $subject;
 
         $householdUser = $this->householdUserRepository->findOneBy([
             'user' => $user,
-            'household' => $periodicBooking->getHousehold()
+            'household' => $assetAccount->getHousehold()
         ]);
 
         if (!$householdUser instanceof HouseholdUser) {
@@ -65,9 +66,11 @@ class PeriodicBookingVoter extends Voter
             case self::VIEW:
                 return $this->canView($householdUser);
             case self::EDIT:
-                return $this->canEdit($householdUser, $periodicBooking);
+                return $this->canEdit($householdUser, $assetAccount);
             case self::DELETE:
-                return $this->canDelete($householdUser, $periodicBooking);
+                return $this->canDelete($householdUser, $assetAccount);
+            case self::USE:
+                return $this->canUse($householdUser, $assetAccount);
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -75,18 +78,24 @@ class PeriodicBookingVoter extends Voter
 
     private function canView(HouseholdUser $householdUser): bool
     {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return (bool)$householdUser;
     }
 
-    private function canEdit(HouseholdUser $householdUser, PeriodicBooking $periodicBooking): bool
+    private function canEdit(HouseholdUser $householdUser, AssetAccount $assetAccount): bool
     {
-        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return $householdUser->getIsAdmin() || $householdUser === $periodicBooking->getHouseholdUser();
+        return $householdUser->getIsAdmin() || in_array($householdUser, $assetAccount->getOwners()->toArray());
     }
 
-    private function canDelete(HouseholdUser $householdUser, PeriodicBooking $periodicBooking): bool
+    private function canDelete(HouseholdUser $householdUser, AssetAccount $assetAccount): bool
     {
         // if users can edit, they can delete as well
-        return $this->canEdit($householdUser, $periodicBooking);
+        return $this->canEdit($householdUser, $assetAccount);
+    }
+
+    private function canUse(HouseholdUser $householdUser, AssetAccount $assetAccount): bool
+    {
+        // if users can edit, they can use as well
+        return $this->canEdit($householdUser, $assetAccount);
     }
 }

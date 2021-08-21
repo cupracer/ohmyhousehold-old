@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Security\Voter;
+namespace App\Security\Voter\Account;
 
-use App\Entity\AccountHolder;
 use App\Entity\HouseholdUser;
 use App\Entity\User;
+use App\Entity\ExpenseAccount;
 use App\Repository\HouseholdUserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class AccountHolderVoter extends Voter
+class ExpenseAccountVoter extends Voter
 {
     // these strings are just invented: you can use anything
     const VIEW = 'view';
@@ -30,8 +30,8 @@ class AccountHolderVoter extends Voter
             return false;
         }
 
-        // only vote on `AccountHolder` objects
-        if (!$subject instanceof AccountHolder) {
+        // only vote on `ExpenseAccount` objects
+        if (!$subject instanceof ExpenseAccount) {
             return false;
         }
 
@@ -47,13 +47,13 @@ class AccountHolderVoter extends Voter
             return false;
         }
 
-        // you know $subject is an AccountHolder object, thanks to `supports()`
-        /** @var AccountHolder $accountHolder */
-        $accountHolder = $subject;
+        // you know $subject is a ExpenseAccount object, thanks to `supports()`
+        /** @var ExpenseAccount $expenseAccount */
+        $expenseAccount = $subject;
 
         $householdUser = $this->householdUserRepository->findOneBy([
             'user' => $user,
-            'household' => $accountHolder->getHousehold()
+            'household' => $expenseAccount->getHousehold()
         ]);
 
         if (!$householdUser instanceof HouseholdUser) {
@@ -81,8 +81,7 @@ class AccountHolderVoter extends Voter
 
     private function canEdit(HouseholdUser $householdUser): bool
     {
-        // no further permissions than 'view' required to edit account holders
-        return $this->canView($householdUser);
+        return (bool)$householdUser;
     }
 
     private function canDelete(HouseholdUser $householdUser): bool

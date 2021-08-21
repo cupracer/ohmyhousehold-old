@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Security\Voter;
+namespace App\Security\Voter\PeriodicTransaction;
 
-use App\Entity\DynamicBooking;
 use App\Entity\HouseholdUser;
 use App\Entity\User;
+use App\Entity\PeriodicDepositTransaction;
 use App\Repository\HouseholdUserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class BookingVoter extends Voter
+class PeriodicDepositTransactionVoter extends Voter
 {
     // these strings are just invented: you can use anything
     const VIEW = 'view';
@@ -30,8 +30,8 @@ class BookingVoter extends Voter
             return false;
         }
 
-        // only vote on `DynamicBooking` objects
-        if (!$subject instanceof DynamicBooking) {
+        // only vote on `PeriodicDepositTransaction` objects
+        if (!$subject instanceof PeriodicDepositTransaction) {
             return false;
         }
 
@@ -47,13 +47,13 @@ class BookingVoter extends Voter
             return false;
         }
 
-        // you know $subject is a DynamicBooking object, thanks to `supports()`
-        /** @var DynamicBooking $booking */
-        $booking = $subject;
+        // you know $subject is a PeriodicDepositTransaction object, thanks to `supports()`
+        /** @var PeriodicDepositTransaction $periodicDepositTransaction */
+        $periodicDepositTransaction = $subject;
 
         $householdUser = $this->householdUserRepository->findOneBy([
             'user' => $user,
-            'household' => $booking->getHousehold()
+            'household' => $periodicDepositTransaction->getHousehold()
         ]);
 
         if (!$householdUser instanceof HouseholdUser) {
@@ -63,31 +63,31 @@ class BookingVoter extends Voter
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($householdUser, $booking);
+                return $this->canView($householdUser, $periodicDepositTransaction);
             case self::EDIT:
-                return $this->canEdit($householdUser, $booking);
+                return $this->canEdit($householdUser, $periodicDepositTransaction);
             case self::DELETE:
-                return $this->canDelete($householdUser, $booking);
+                return $this->canDelete($householdUser, $periodicDepositTransaction);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(HouseholdUser $householdUser, DynamicBooking $booking): bool
+    private function canView(HouseholdUser $householdUser, PeriodicDepositTransaction $periodicDepositTransaction): bool
     {
-        return ((bool)$householdUser && !$booking->getPrivate())
-            || $booking->getHouseholdUser() === $householdUser;
+        return ((bool)$householdUser && !$periodicDepositTransaction->getPrivate())
+            || $periodicDepositTransaction->getHouseholdUser() === $householdUser;
     }
 
-    private function canEdit(HouseholdUser $householdUser, DynamicBooking $booking): bool
+    private function canEdit(HouseholdUser $householdUser, PeriodicDepositTransaction $periodicDepositTransaction): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return $householdUser->getIsAdmin() || $householdUser === $booking->getHouseholdUser();
+        return $householdUser->getIsAdmin() || $householdUser === $periodicDepositTransaction->getHouseholdUser();
     }
 
-    private function canDelete(HouseholdUser $householdUser, DynamicBooking $booking): bool
+    private function canDelete(HouseholdUser $householdUser, PeriodicDepositTransaction $periodicDepositTransaction): bool
     {
         // if users can edit, they can delete as well
-        return $this->canEdit($householdUser, $booking);
+        return $this->canEdit($householdUser, $periodicDepositTransaction);
     }
 }

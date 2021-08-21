@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Security\Voter;
+namespace App\Security\Voter\Transaction;
 
-use App\Entity\AccountHolder;
 use App\Entity\HouseholdUser;
 use App\Entity\User;
+use App\Entity\DepositTransaction;
 use App\Repository\HouseholdUserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class AccountHolderVoter extends Voter
+class DepositTransactionVoter extends Voter
 {
     // these strings are just invented: you can use anything
     const VIEW = 'view';
@@ -30,8 +30,8 @@ class AccountHolderVoter extends Voter
             return false;
         }
 
-        // only vote on `AccountHolder` objects
-        if (!$subject instanceof AccountHolder) {
+        // only vote on `DepositTransaction` objects
+        if (!$subject instanceof DepositTransaction) {
             return false;
         }
 
@@ -47,13 +47,13 @@ class AccountHolderVoter extends Voter
             return false;
         }
 
-        // you know $subject is an AccountHolder object, thanks to `supports()`
-        /** @var AccountHolder $accountHolder */
-        $accountHolder = $subject;
+        // you know $subject is a DepositTransaction object, thanks to `supports()`
+        /** @var DepositTransaction $depositTransaction */
+        $depositTransaction = $subject;
 
         $householdUser = $this->householdUserRepository->findOneBy([
             'user' => $user,
-            'household' => $accountHolder->getHousehold()
+            'household' => $depositTransaction->getHousehold()
         ]);
 
         if (!$householdUser instanceof HouseholdUser) {
@@ -63,30 +63,31 @@ class AccountHolderVoter extends Voter
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($householdUser);
+                return $this->canView($householdUser, $depositTransaction);
             case self::EDIT:
-                return $this->canEdit($householdUser);
+                return $this->canEdit($householdUser, $depositTransaction);
             case self::DELETE:
-                return $this->canDelete($householdUser);
+                return $this->canDelete($householdUser, $depositTransaction);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(HouseholdUser $householdUser): bool
+    private function canView(HouseholdUser $householdUser, DepositTransaction $depositTransaction): bool
+    {
+        return ((bool)$householdUser && !$depositTransaction->getPrivate())
+            || $depositTransaction->getHouseholdUser() === $householdUser;
+    }
+
+    private function canEdit(HouseholdUser $householdUser, DepositTransaction $depositTransaction): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
-        return (bool)$householdUser;
+        return $householdUser->getIsAdmin() || $householdUser === $depositTransaction->getHouseholdUser();
     }
 
-    private function canEdit(HouseholdUser $householdUser): bool
+    private function canDelete(HouseholdUser $householdUser, DepositTransaction $depositTransaction): bool
     {
-        // no further permissions than 'view' required to edit account holders
-        return $this->canView($householdUser);
-    }
-
-    private function canDelete(HouseholdUser $householdUser): bool
-    {
-        return $householdUser->getIsAdmin();
+        // if users can edit, they can delete as well
+        return $this->canEdit($householdUser, $depositTransaction);
     }
 }
