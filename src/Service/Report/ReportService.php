@@ -7,9 +7,6 @@ use App\Entity\DepositTransaction;
 use App\Entity\ExpenseAccount;
 use App\Entity\Household;
 use App\Entity\HouseholdUser;
-use App\Entity\PeriodicDepositTransaction;
-use App\Entity\PeriodicTransferTransaction;
-use App\Entity\PeriodicWithdrawalTransaction;
 use App\Entity\RevenueAccount;
 use App\Entity\TransferTransaction;
 use App\Entity\User;
@@ -117,13 +114,13 @@ class ReportService extends DatatablesService
 
         foreach($periodicTransactionsArray as $transaction) {
             switch(true) {
-                case $transaction instanceof PeriodicDepositTransaction:
+                case $transaction instanceof DepositTransaction:
                     $data['upcomingDeposit'] += $transaction->getAmount();
                     break;
-                case $transaction instanceof PeriodicWithdrawalTransaction:
+                case $transaction instanceof WithdrawalTransaction:
                     $data['upcomingWithdrawal'] += $transaction->getAmount();
                     break;
-                case $transaction instanceof PeriodicTransferTransaction:
+                case $transaction instanceof TransferTransaction:
                     if($transaction->getSource()->getAccountType() === AssetAccount::TYPE_CURRENT && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
                         $data['upcomingSavings'] += $transaction->getAmount();
                     }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_CURRENT) {
@@ -133,37 +130,41 @@ class ReportService extends DatatablesService
             }
         }
 
-        $data['balance'] = $data['deposit'] + $data['withdrawal'];
-        $data['expectedBalance'] = $data['balance'] + $data['upcomingDeposit'] + $data['upcomingWithdrawal'];
+        $data['balance'] = $data['deposit'] - $data['withdrawal'] - $data['savings'];
+        $data['expectedBalance'] = $data['balance'] + $data['upcomingDeposit'] - $data['upcomingWithdrawal'] - $data['upcomingSavings'];
         $data['expectedSavings'] = $data['savings'] + $data['upcomingSavings'];
 
         /** @var User $user */
         $user = $this->security->getUser();
         $householdUser = $this->householdUserRepository->findOneByUserAndHousehold($user, $household);
 
-        foreach(array_merge($transactionsArray, $periodicTransactionsArray) as $transaction) {
+        foreach($transactionsArray as $transaction) {
             $data['table'][] = $this->getAsArray($transaction, $householdUser);
+        }
+
+        foreach($periodicTransactionsArray as $transaction) {
+            $data['table'][] = $this->getAsArray($transaction, $householdUser, true);
         }
 
         return $data;
     }
 
 
-    protected function getAsArray($transaction, HouseholdUser $householdUser): array|null
+    protected function getAsArray($transaction, HouseholdUser $householdUser, bool $isPeriodic = false): array|null
     {
         $result = null;
 
-        if($transaction instanceof DepositTransaction) {
+        if($transaction instanceof DepositTransaction && !$isPeriodic) {
             $result['bookingType'] = "deposit";
-        }elseif ($transaction instanceof WithdrawalTransaction) {
+        }elseif ($transaction instanceof WithdrawalTransaction && !$isPeriodic) {
             $result['bookingType'] = "withdrawal";
-        }elseif ($transaction instanceof TransferTransaction) {
+        }elseif ($transaction instanceof TransferTransaction && !$isPeriodic) {
             $result['bookingType'] = "transfer";
-        }elseif ($transaction instanceof PeriodicDepositTransaction) {
+        }elseif ($transaction instanceof DepositTransaction && $isPeriodic) {
             $result['bookingType'] = "periodicDeposit";
-        }elseif ($transaction instanceof PeriodicWithdrawalTransaction) {
+        }elseif ($transaction instanceof WithdrawalTransaction && $isPeriodic) {
             $result['bookingType'] = "periodicWithdrawal";
-        }elseif ($transaction instanceof PeriodicTransferTransaction) {
+        }elseif ($transaction instanceof TransferTransaction && $isPeriodic) {
             $result['bookingType'] = "periodicTransfer";
         }else {
             //TODO: do some error handling
