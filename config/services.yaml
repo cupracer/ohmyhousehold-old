@@ -54,6 +54,6 @@ services:
         arguments:
             $siteName: '%app.site_name%'
 
-    App\DataFixtures\AppFixtures:
+    App\DataFixtures\DemoFixtures:
         arguments:
             $superAdminEmail: '%app.super_admin_email%'
