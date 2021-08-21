@@ -3,10 +3,12 @@
 namespace App\Entity\DTO;
 
 use App\Entity\AccountHolder;
+use App\Entity\AssetAccount;
 use App\Entity\BookingCategory;
+use App\Repository\BookingCategoryRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DynamicBookingDTO
+class WithdrawalTransactionDTO
 {
     /**
      * @var \DateTimeInterface
@@ -22,10 +24,16 @@ class DynamicBookingDTO
     private $bookingCategory;
 
     /**
+     * @var AssetAccount
+     */
+    #[Assert\NotBlank]
+    private $source;
+
+    /**
      * @var AccountHolder
      */
     #[Assert\NotBlank]
-    private $accountHolder;
+    private $destination;
 
     #[Assert\NotBlank]
     private $amount;
@@ -33,6 +41,13 @@ class DynamicBookingDTO
     private $description;
 
     private $private;
+
+    private int $bookingPeriodOffset;
+
+    public function __construct()
+    {
+        $this->bookingPeriodOffset = 0;
+    }
 
     /**
      * @return \DateTimeInterface
@@ -44,9 +59,9 @@ class DynamicBookingDTO
 
     /**
      * @param \DateTimeInterface $bookingDate
-     * @return DynamicBookingDTO
+     * @return WithdrawalTransactionDTO
      */
-    public function setBookingDate(\DateTimeInterface $bookingDate): DynamicBookingDTO
+    public function setBookingDate(\DateTimeInterface $bookingDate): WithdrawalTransactionDTO
     {
         $this->bookingDate = $bookingDate;
         return $this;
@@ -62,29 +77,47 @@ class DynamicBookingDTO
 
     /**
      * @param BookingCategory $bookingCategory
-     * @return DynamicBookingDTO
+     * @return WithdrawalTransactionDTO
      */
-    public function setBookingCategory(BookingCategory $bookingCategory): DynamicBookingDTO
+    public function setBookingCategory(BookingCategory $bookingCategory): WithdrawalTransactionDTO
     {
         $this->bookingCategory = $bookingCategory;
         return $this;
     }
 
     /**
-     * @return AccountHolder
+     * @return AssetAccount|null
      */
-    public function getAccountHolder(): ?AccountHolder
+    public function getSource(): ?AssetAccount
     {
-        return $this->accountHolder;
+        return $this->source;
     }
 
     /**
-     * @param AccountHolder $accountHolder
-     * @return DynamicBookingDTO
+     * @param AssetAccount $source
+     * @return WithdrawalTransactionDTO
      */
-    public function setAccountHolder(AccountHolder $accountHolder): DynamicBookingDTO
+    public function setSource(AssetAccount $source): WithdrawalTransactionDTO
     {
-        $this->accountHolder = $accountHolder;
+        $this->source = $source;
+        return $this;
+    }
+
+    /**
+     * @return AccountHolder|null
+     */
+    public function getDestination(): ?AccountHolder
+    {
+        return $this->destination;
+    }
+
+    /**
+     * @param AccountHolder $destination
+     * @return WithdrawalTransactionDTO
+     */
+    public function setDestination(AccountHolder $destination): WithdrawalTransactionDTO
+    {
+        $this->destination = $destination;
         return $this;
     }
 
@@ -98,7 +131,7 @@ class DynamicBookingDTO
 
     /**
      * @param mixed $amount
-     * @return DynamicBookingDTO
+     * @return WithdrawalTransactionDTO
      */
     public function setAmount($amount)
     {
@@ -116,7 +149,7 @@ class DynamicBookingDTO
 
     /**
      * @param mixed $description
-     * @return DynamicBookingDTO
+     * @return WithdrawalTransactionDTO
      */
     public function setDescription($description)
     {
@@ -134,11 +167,29 @@ class DynamicBookingDTO
 
     /**
      * @param mixed $private
-     * @return DynamicBookingDTO
+     * @return WithdrawalTransactionDTO
      */
     public function setPrivate($private)
     {
         $this->private = $private;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBookingPeriodOffset(): int
+    {
+        return $this->bookingPeriodOffset;
+    }
+
+    /**
+     * @param int $bookingPeriodOffset
+     * @return WithdrawalTransactionDTO
+     */
+    public function setBookingPeriodOffset(int $bookingPeriodOffset): WithdrawalTransactionDTO
+    {
+        $this->bookingPeriodOffset = $bookingPeriodOffset;
         return $this;
     }
 }
