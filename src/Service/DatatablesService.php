@@ -4,7 +4,7 @@ namespace App\Service;
 
 class DatatablesService
 {
-    protected function getOrderingData($fakeObject, array $requestColumns, array $requestOrders, $defaultDirection = 'asc'): array
+    protected function getOrderingData(array $sortableColumns, array $requestColumns, array $requestOrders, $defaultDirection = 'asc'): array
     {
         $columns = [];
         $orderColumns = [];
@@ -14,9 +14,9 @@ class DatatablesService
             // We're on interested in the "data" value, which should be a key of the object's jsonSerialize array,
             // so we initialize a fake class instance to get the keys from it.
             // Each request column name is only accepted if it matches one of these keys.
-            foreach($requestColumns as $requestColumn) {
-                if(in_array($requestColumn['data'], array_keys($fakeObject->jsonSerialize()))) {
-                    $columns[] = $requestColumn['data'];
+            foreach($requestColumns as $index => $requestColumn) {
+                if(in_array($requestColumn['data'], $sortableColumns)) {
+                    $columns[$index] = $requestColumn['data'];
                 }
             }
         }
@@ -42,13 +42,15 @@ class DatatablesService
         }
 
         // Example return:
-        // array:1 [
-        //  0 => array:3 [
-        //    "num" => 0
-        //    "name" => "name"
-        //    "dir" => "asc"
-        //  ]
-        // ]
+        // Array
+        //(
+        //    [0] => Array
+        //        (
+        //            [num] => 2
+        //            [name] => bookingCategory
+        //            [dir] => desc
+        //        )
+        //)
 
         return $orderColumns;
     }
