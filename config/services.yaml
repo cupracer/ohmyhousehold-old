@@ -48,3 +48,7 @@ services:
     App\Controller\Admin\DashboardController:
         arguments:
             $siteName: '%app.site_name%'
+
+    App\DataFixtures\AppFixtures:
+        arguments:
+            $superAdminEmail: '%app.super_admin_email%'
