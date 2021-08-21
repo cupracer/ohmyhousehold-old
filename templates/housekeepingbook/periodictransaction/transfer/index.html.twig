@@ -1,0 +1,53 @@
+{% extends 'theme/base-datatables.html.twig' %}
+
+{% block page_header_buttons %}
+    {% if is_granted('createPeriodicTransferTransaction', household) %}
+        <a href="{{ path('housekeepingbook_periodic_transfer_transaction_new') }}" class="btn btn-outline-primary btn-sm btn-icon-split ml-3">
+            <span class="icon text-primary mr-1">
+              <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">{{ 'Add periodic transfer transaction...'|trans }}</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'Periodic transfer transactions'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    <table id="periodicTransferTransactions" class="table table-hover dataTable" role="grid"
+                           data-json-url="{{ path('housekeepingbook_periodic_transfer_transaction_datatables') }}">
+                        <thead>
+                        <tr>
+                            <th>{{ 'Start'|trans }}</th>
+                            <th>{{ 'End'|trans }}</th>
+                            <th>{{ 'Interval'|trans }}</th>
+                            <th>{{ 'DOM'|trans }}</th>
+                            <th>{{ 'User'|trans }}</th>
+                            <th>{{ 'Category'|trans }}</th>
+                            <th>{{ 'Source'|trans }}</th>
+                            <th>{{ 'Destination'|trans }}</th>
+                            <th>{{ 'Description'|trans }}</th>
+                            <th>{{ 'Amount'|trans }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('housekeepingbook_periodic_transfer_transaction_index') }}
+{% endblock javascripts %}
