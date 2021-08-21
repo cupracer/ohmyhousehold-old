@@ -30,7 +30,7 @@ class HouseholdSubscriber implements EventSubscriberInterface
         // TODO: Make current_household configurable via user preferences.
         $households = $this->householdRepository->findByAdmin($user);
 
-        if(is_array($households)) {
+        if(is_array($households) && sizeof($households) > 0) {
             $this->session->set('current_household', $households[0]->getId());
         }
     }
