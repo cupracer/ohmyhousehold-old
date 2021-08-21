@@ -102,7 +102,7 @@ $(document).ready(function () {
                             case "deposit":
                                 return '<span class="text-green">' + data + '</span>';
                             case "withdrawal":
-                                return '<span class="red">' + data + '</span>';
+                                return '<span class="text-red">' + data + '</span>';
                             case "transfer":
                                 return '<span class="text-black">' + data + '</span>';
                             case "periodicDeposit":
