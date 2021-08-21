@@ -30,14 +30,35 @@ Encore
     .addEntry('omh', './assets/js/omh.js')
     .addEntry('omh_user_settings_households', './assets/js/user/settings/households.js')
 
-    .addEntry('housekeepingbook_dynamicbooking_index', './assets/js/housekeepingbook/dynamicbooking_index.js')
-    .addEntry('housekeepingbook_dynamicbooking_form', './assets/js/housekeepingbook/dynamicbooking_form.js')
-
     .addEntry('housekeepingbook_periodicbooking_index', './assets/js/housekeepingbook/periodicbooking_index.js')
     .addEntry('housekeepingbook_periodicbooking_form', './assets/js/housekeepingbook/periodicbooking_form.js')
 
     .addEntry('housekeepingbook_accountholder_index', './assets/js/housekeepingbook/accountholder_index.js')
     .addEntry('housekeepingbook_bookingcategory_index', './assets/js/housekeepingbook/bookingcategory_index.js')
+
+    .addEntry('housekeepingbook_asset_account_index', './assets/js/housekeepingbook/account/asset_index.js')
+    .addEntry('housekeepingbook_asset_account_form', './assets/js/housekeepingbook/account/asset_form.js')
+
+    .addEntry('housekeepingbook_revenue_account_index', './assets/js/housekeepingbook/account/revenue_index.js')
+    .addEntry('housekeepingbook_expense_account_index', './assets/js/housekeepingbook/account/expense_index.js')
+
+    .addEntry('housekeepingbook_deposit_transaction_index', './assets/js/housekeepingbook/transaction/deposit_index.js')
+    .addEntry('housekeepingbook_withdrawal_transaction_index', './assets/js/housekeepingbook/transaction/withdrawal_index.js')
+    .addEntry('housekeepingbook_transfer_transaction_index', './assets/js/housekeepingbook/transaction/transfer_index.js')
+
+    .addEntry('housekeepingbook_deposit_transaction_form', './assets/js/housekeepingbook/transaction/deposit_form.js')
+    .addEntry('housekeepingbook_withdrawal_transaction_form', './assets/js/housekeepingbook/transaction/withdrawal_form.js')
+    .addEntry('housekeepingbook_transfer_transaction_form', './assets/js/housekeepingbook/transaction/transfer_form.js')
+
+    .addEntry('housekeepingbook_periodic_deposit_transaction_index', './assets/js/housekeepingbook/periodictransaction/deposit_index.js')
+    .addEntry('housekeepingbook_periodic_withdrawal_transaction_index', './assets/js/housekeepingbook/periodictransaction/withdrawal_index.js')
+    .addEntry('housekeepingbook_periodic_transfer_transaction_index', './assets/js/housekeepingbook/periodictransaction/transfer_index.js')
+
+    .addEntry('housekeepingbook_periodic_deposit_transaction_form', './assets/js/housekeepingbook/periodictransaction/deposit_form.js')
+    .addEntry('housekeepingbook_periodic_withdrawal_transaction_form', './assets/js/housekeepingbook/periodictransaction/withdrawal_form.js')
+    .addEntry('housekeepingbook_periodic_transfer_transaction_form', './assets/js/housekeepingbook/periodictransaction/transfer_form.js')
+
+    .addEntry('housekeepingbook_report_current_period', './assets/js/housekeepingbook/report/currentperiod.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
