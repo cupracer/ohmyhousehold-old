@@ -136,11 +136,15 @@ class AssetAccountService extends DatatablesService
 
     public function getBalance(AssetAccount $assetAccount)
     {
+        $today = (new \DateTime())->modify('midnight');
+
         $balance = $assetAccount->getInitialBalance();
 
         /** @var DepositTransaction $transaction */
         foreach($assetAccount->getDepositTransactions() as $transaction) {
-            $balance+= $transaction->getAmount();
+            if($transaction->getBookingDate() <= $today) {
+                $balance += $transaction->getAmount();
+            }
         }
 //        foreach($this->depositTransactionRepository->findBy(['destination' => $assetAccount]) as $transaction) {
 //            $balance+= $transaction->getAmount();
@@ -148,7 +152,9 @@ class AssetAccountService extends DatatablesService
 
         /** @var WithdrawalTransaction $transaction */
         foreach($assetAccount->getWithdrawalTransactions() as $transaction) {
-            $balance-= $transaction->getAmount();
+            if($transaction->getBookingDate() <= $today) {
+                $balance -= $transaction->getAmount();
+            }
         }
 //        foreach($this->withdrawalTransactionRepository->findBy(['source' => $assetAccount]) as $transaction) {
 //            $balance-= $transaction->getAmount();
@@ -156,7 +162,9 @@ class AssetAccountService extends DatatablesService
 
         /** @var TransferTransaction $transaction */
         foreach($assetAccount->getIncomingTransferTransactions() as $transaction) {
-            $balance+= $transaction->getAmount();
+            if($transaction->getBookingDate() <= $today) {
+                $balance += $transaction->getAmount();
+            }
         }
 //        foreach($this->transferTransactionRepository->findBy(['destination' => $assetAccount]) as $transaction) {
 //            $balance+= $transaction->getAmount();
@@ -164,7 +172,9 @@ class AssetAccountService extends DatatablesService
 
         /** @var TransferTransaction $transaction */
         foreach($assetAccount->getOutgoingTransferTransactions() as $transaction) {
-            $balance-= $transaction->getAmount();
+            if($transaction->getBookingDate() <= $today) {
+                $balance -= $transaction->getAmount();
+            }
         }
 //        foreach($this->transferTransactionRepository->findBy(['source' => $assetAccount]) as $transaction) {
 //            $balance-= $transaction->getAmount();
