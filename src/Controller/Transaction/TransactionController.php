@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Transaction;
 
 use App\Repository\HouseholdRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
