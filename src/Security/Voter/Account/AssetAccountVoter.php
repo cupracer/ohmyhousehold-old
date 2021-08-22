@@ -15,7 +15,6 @@ class AssetAccountVoter extends Voter
     const VIEW = 'view';
     const EDIT = 'edit';
     const DELETE = 'delete';
-    const USE = 'use';
 
     private HouseholdUserRepository $householdUserRepository;
 
@@ -27,7 +26,7 @@ class AssetAccountVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::USE])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])) {
             return false;
         }
 
@@ -69,8 +68,6 @@ class AssetAccountVoter extends Voter
                 return $this->canEdit($householdUser, $assetAccount);
             case self::DELETE:
                 return $this->canDelete($householdUser, $assetAccount);
-            case self::USE:
-                return $this->canUse($householdUser, $assetAccount);
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -90,12 +87,6 @@ class AssetAccountVoter extends Voter
     private function canDelete(HouseholdUser $householdUser, AssetAccount $assetAccount): bool
     {
         // if users can edit, they can delete as well
-        return $this->canEdit($householdUser, $assetAccount);
-    }
-
-    private function canUse(HouseholdUser $householdUser, AssetAccount $assetAccount): bool
-    {
-        // if users can edit, they can use as well
         return $this->canEdit($householdUser, $assetAccount);
     }
 }

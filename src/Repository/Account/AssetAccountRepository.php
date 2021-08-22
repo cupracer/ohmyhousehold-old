@@ -4,6 +4,7 @@ namespace App\Repository\Account;
 
 use App\Entity\AssetAccount;
 use App\Entity\Household;
+use App\Entity\HouseholdUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -47,19 +48,24 @@ class AssetAccountRepository extends ServiceEntityRepository
     /**
      * @return AssetAccount[] Returns an array of AssetAccount objects
      */
-    public function findAllUsableByHousehold(Household $household): array
+    public function findAllUsableByHousehold(Household $household, HouseholdUser $householdUser): array
     {
-        $accounts = $this->createQueryBuilder('a')
+        $qb = $this->createQueryBuilder('a');
+
+        return $qb
+            ->leftJoin('a.household', 'hh')
+            ->leftJoin('hh.householdUsers', 'hhu')
             ->andWhere('a.household = :household')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->eq('hhu.isAdmin', 'true'),
+                $qb->expr()->isMemberOf(':householdUser', 'a.owners')
+            ))
             ->setParameter('household', $household)
+            ->setParameter('householdUser', $householdUser)
             ->orderBy('LOWER(a.name)', 'ASC')
             ->getQuery()
             ->execute()
         ;
-
-        return array_filter($accounts, function (AssetAccount $account) {
-            return $this->security->isGranted('use', $account);
-        });
     }
 
     /**

@@ -8,10 +8,12 @@ use App\Entity\BookingCategory;
 use App\Entity\DTO\AccountHolderDTO;
 use App\Entity\DTO\DepositTransactionDTO;
 use App\Entity\Household;
+use App\Entity\HouseholdUser;
 use App\Repository\Account\AssetAccountRepository;
 use App\Repository\AccountHolderRepository;
 use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
+use App\Repository\HouseholdUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -25,6 +27,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function Symfony\Component\Translation\t;
 
@@ -33,37 +36,47 @@ class DepositTransactionType extends AbstractType
     private SessionInterface $session;
 
     private HouseholdRepository $householdRepository;
+    private HouseholdUserRepository $householdUserRepository;
     private BookingCategoryRepository $bookingCategoryRepository;
     private AssetAccountRepository $assetAccountRepository;
     private AccountHolderRepository $accountHolderRepository;
-    private Household $household;
     private EntityManagerInterface $entityManager;
     private ValidatorInterface $validator;
+    private Security $security;
+
+    private Household $household;
+    private HouseholdUser $householdUser;
 
     public function __construct(
         SessionInterface $session,
         HouseholdRepository $householdRepository,
+        HouseholdUserRepository $householdUserRepository,
         BookingCategoryRepository $bookingCategoryRepository,
         AssetAccountRepository $assetAccountRepository,
         AccountHolderRepository $accountHolderRepository,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        Security $security
     )
     {
         $this->session = $session;
         $this->householdRepository = $householdRepository;
+        $this->householdUserRepository = $householdUserRepository;
         $this->bookingCategoryRepository = $bookingCategoryRepository;
         $this->assetAccountRepository = $assetAccountRepository;
         $this->accountHolderRepository = $accountHolderRepository;
 
         $this->entityManager = $entityManager;
         $this->validator = $validator;
+        $this->security = $security;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if($this->session->has('current_household')) {
             $this->household = $this->householdRepository->find($this->session->get('current_household'));
+            $this->householdUser = $this->householdUserRepository->findOneByUserAndHousehold(
+                $this->security->getUser(), $this->household);
         }
 
         $builder
@@ -94,7 +107,7 @@ class DepositTransactionType extends AbstractType
             ->add('destination', EntityType::class, [
                 'placeholder' => '',
                 'class' => AssetAccount::class,
-                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($this->household),
+                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($this->household, $this->householdUser),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],

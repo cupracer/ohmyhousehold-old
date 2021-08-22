@@ -5,9 +5,12 @@ namespace App\Form\PeriodicTransaction;
 use App\Entity\AssetAccount;
 use App\Entity\BookingCategory;
 use App\Entity\DTO\PeriodicTransferTransactionDTO;
+use App\Entity\Household;
+use App\Entity\HouseholdUser;
 use App\Repository\Account\AssetAccountRepository;
 use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
+use App\Repository\HouseholdUserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -17,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 use function Symfony\Component\Translation\t;
 
 class PeriodicTransferTransactionType extends AbstractType
@@ -24,28 +28,39 @@ class PeriodicTransferTransactionType extends AbstractType
     private SessionInterface $session;
 
     private HouseholdRepository $householdRepository;
+    private HouseholdUserRepository $householdUserRepository;
     private BookingCategoryRepository $bookingCategoryRepository;
     private AssetAccountRepository $assetAccountRepository;
+    private Security $security;
+
+    private Household $household;
+    private HouseholdUser $householdUser;
+
 
     public function __construct(
         SessionInterface $session,
         HouseholdRepository $householdRepository,
+        HouseholdUserRepository $householdUserRepository,
         BookingCategoryRepository $bookingCategoryRepository,
-        AssetAccountRepository $assetAccountRepository
+        AssetAccountRepository $assetAccountRepository,
+        Security $security
     )
     {
         $this->session = $session;
         $this->householdRepository = $householdRepository;
+        $this->householdUserRepository = $householdUserRepository;
         $this->bookingCategoryRepository = $bookingCategoryRepository;
         $this->assetAccountRepository = $assetAccountRepository;
+
+        $this->security = $security;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $household = null;
-
         if($this->session->has('current_household')) {
-            $household = $this->householdRepository->find($this->session->get('current_household'));
+            $this->household = $this->householdRepository->find($this->session->get('current_household'));
+            $this->householdUser = $this->householdUserRepository->findOneByUserAndHousehold(
+                $this->security->getUser(), $this->household);
         }
 
         $builder
@@ -74,7 +89,7 @@ class PeriodicTransferTransactionType extends AbstractType
             ->add('bookingCategory', EntityType::class, [
                 'placeholder' => '',
                 'class' => BookingCategory::class,
-                'choices' => $this->bookingCategoryRepository->findAllGrantedByHousehold($household),
+                'choices' => $this->bookingCategoryRepository->findAllGrantedByHousehold($this->household),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],
@@ -82,7 +97,7 @@ class PeriodicTransferTransactionType extends AbstractType
             ->add('source', EntityType::class, [
                 'placeholder' => '',
                 'class' => AssetAccount::class,
-                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($household),
+                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($this->household, $this->householdUser),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],
@@ -90,7 +105,7 @@ class PeriodicTransferTransactionType extends AbstractType
             ->add('destination', EntityType::class, [
                 'placeholder' => '',
                 'class' => AssetAccount::class,
-                'choices' => $this->assetAccountRepository->findAllViewableByHousehold($household),
+                'choices' => $this->assetAccountRepository->findAllViewableByHousehold($this->household),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],

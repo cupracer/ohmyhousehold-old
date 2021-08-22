@@ -12,6 +12,7 @@ use App\Repository\Account\AssetAccountRepository;
 use App\Repository\AccountHolderRepository;
 use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
+use App\Repository\HouseholdUserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,6 +27,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function Symfony\Component\Translation\t;
 
@@ -34,31 +36,37 @@ class WithdrawalTransactionType extends AbstractType
     private SessionInterface $session;
 
     private HouseholdRepository $householdRepository;
+    private HouseholdUserRepository $householdUserRepository;
     private BookingCategoryRepository $bookingCategoryRepository;
     private AssetAccountRepository $assetAccountRepository;
     private AccountHolderRepository $accountHolderRepository;
     private Household $household;
     private EntityManagerInterface $entityManager;
     private ValidatorInterface $validator;
+    private Security $security;
 
     public function __construct(
         SessionInterface $session,
         HouseholdRepository $householdRepository,
+        HouseholdUserRepository $householdUserRepository,
         BookingCategoryRepository $bookingCategoryRepository,
         AssetAccountRepository $assetAccountRepository,
         AccountHolderRepository $accountHolderRepository,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        Security $security
     )
     {
         $this->session = $session;
         $this->householdRepository = $householdRepository;
+        $this->householdUserRepository = $householdUserRepository;
         $this->bookingCategoryRepository = $bookingCategoryRepository;
         $this->assetAccountRepository = $assetAccountRepository;
         $this->accountHolderRepository = $accountHolderRepository;
 
         $this->entityManager = $entityManager;
         $this->validator = $validator;
+        $this->security = $security;
 
     }
 
@@ -66,6 +74,8 @@ class WithdrawalTransactionType extends AbstractType
     {
         if($this->session->has('current_household')) {
             $this->household = $this->householdRepository->find($this->session->get('current_household'));
+            $this->householdUser = $this->householdUserRepository->findOneByUserAndHousehold(
+                $this->security->getUser(), $this->household);
         }
 
         $builder
@@ -88,7 +98,7 @@ class WithdrawalTransactionType extends AbstractType
             ->add('source', EntityType::class, [
                 'placeholder' => '',
                 'class' => AssetAccount::class,
-                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($this->household),
+                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($this->household, $this->householdUser),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],

@@ -31,17 +31,13 @@ class AccountHolderRepository extends ServiceEntityRepository
      */
     public function findAllGrantedByHousehold(Household $household): array
     {
-        $accountHolders = $this->createQueryBuilder('a')
+        return $this->createQueryBuilder('a')
             ->andWhere('a.household = :household')
             ->setParameter('household', $household)
             ->orderBy('LOWER(a.name)', 'ASC')
             ->getQuery()
             ->execute()
         ;
-
-        return array_filter($accountHolders, function (AccountHolder $accountHolder) {
-            return $this->security->isGranted('view', $accountHolder);
-        });
     }
 
     /**
