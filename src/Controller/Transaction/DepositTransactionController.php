@@ -94,6 +94,7 @@ class DepositTransactionController extends AbstractController
                     $revenueAccount = new RevenueAccount();
                     $revenueAccount->setHousehold($household);
                     $revenueAccount->setInitialBalance(0);
+                    $revenueAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
                     $revenueAccount->setAccountHolder($createDepositTransaction->getSource());
 
                     $entityManager->persist($revenueAccount);
@@ -160,6 +161,7 @@ class DepositTransactionController extends AbstractController
                     $revenueAccount = new RevenueAccount();
                     $revenueAccount->setHousehold($depositTransaction->getHousehold());
                     $revenueAccount->setInitialBalance(0);
+                    $revenueAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
                     $revenueAccount->setAccountHolder($editDepositTransaction->getSource());
 
                     $entityManager->persist($revenueAccount);

@@ -94,6 +94,7 @@ class WithdrawalTransactionController extends AbstractController
                     $expenseAccount = new ExpenseAccount();
                     $expenseAccount->setHousehold($household);
                     $expenseAccount->setInitialBalance(0);
+                    $expenseAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
                     $expenseAccount->setAccountHolder($createWithdrawalTransaction->getDestination());
 
                     $entityManager->persist($expenseAccount);
@@ -160,6 +161,7 @@ class WithdrawalTransactionController extends AbstractController
                     $expenseAccount = new ExpenseAccount();
                     $expenseAccount->setHousehold($withdrawalTransaction->getHousehold());
                     $expenseAccount->setInitialBalance(0);
+                    $expenseAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
                     $expenseAccount->setAccountHolder($editWithdrawalTransaction->getDestination());
 
                     $entityManager->persist($expenseAccount);
