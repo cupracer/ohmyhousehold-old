@@ -63,7 +63,7 @@ class DepositTransactionRepository extends ServiceEntityRepository
             ->setParameter('household', $household)
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
-            ->orderBy('LOWER(a.bookingDate)', 'ASC')
+            ->orderBy('a.bookingDate', 'ASC')
             ->getQuery()
             ->execute()
         ;

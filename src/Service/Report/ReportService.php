@@ -11,6 +11,7 @@ use App\Entity\RevenueAccount;
 use App\Entity\TransferTransaction;
 use App\Entity\User;
 use App\Entity\WithdrawalTransaction;
+use App\Repository\Account\AssetAccountRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Repository\PeriodicTransaction\PeriodicDepositTransactionRepository;
 use App\Repository\PeriodicTransaction\PeriodicTransferTransactionRepository;
@@ -24,6 +25,7 @@ use Symfony\Component\Security\Core\Security;
 
 class ReportService extends DatatablesService
 {
+    private AssetAccountRepository $assetAccountRepository;
     private DepositTransactionRepository $depositTransactionRepository;
     private TransferTransactionRepository $transferTransactionRepository;
     private WithdrawalTransactionRepository $withdrawalTransactionRepository;
@@ -34,7 +36,8 @@ class ReportService extends DatatablesService
     private Security $security;
     private MoneyCalculationService $moneyCalc;
 
-    public function __construct(DepositTransactionRepository         $depositTransactionRepository,
+    public function __construct(AssetAccountRepository $assetAccountRepository,
+                                DepositTransactionRepository         $depositTransactionRepository,
                                 TransferTransactionRepository        $transferTransactionRepository,
                                 WithdrawalTransactionRepository      $withdrawalTransactionRepository,
                                 PeriodicDepositTransactionRepository $periodicDepositTransactionRepository,
@@ -44,6 +47,7 @@ class ReportService extends DatatablesService
                                 Security                             $security,
                                 MoneyCalculationService $moneyCalculationService)
     {
+        $this->assetAccountRepository = $assetAccountRepository;
         $this->depositTransactionRepository = $depositTransactionRepository;
         $this->transferTransactionRepository = $transferTransactionRepository;
         $this->withdrawalTransactionRepository = $withdrawalTransactionRepository;
@@ -79,10 +83,20 @@ class ReportService extends DatatablesService
             'expectedSavings' => "0",
         ];
 
-        $transactionsArray = $this->getTransactions($household, $currentPeriodStart, $currentPeriodEnd);
-        $periodicTransactionsArray = $this->getPeriodicTransactions($household, $currentPeriodStart, $currentPeriodEnd);
+        $assetAccounts = $this->getAssetAccounts($household, $currentPeriodStart, $currentPeriodEnd);
+        $transactions = $this->getTransactions($household, $currentPeriodStart, $currentPeriodEnd);
+        $periodicTransactions = $this->getPeriodicTransactions($household, $currentPeriodStart, $currentPeriodEnd);
 
-        foreach($transactionsArray as $transaction) {
+        /** @var AssetAccount $assetAccount */
+        foreach($assetAccounts as $assetAccount) {
+            if($assetAccount->getAccountType() === AssetAccount::TYPE_CURRENT) {
+                $data['deposit'] = $this->moneyCalc->add($data['deposit'], $assetAccount->getInitialBalance());
+            }
+        }
+
+        //TODO: initial Balance von Savings in Report berücksichtigen?
+
+        foreach($transactions as $transaction) {
             switch(true) {
                 case $transaction instanceof DepositTransaction:
                     if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
@@ -116,7 +130,7 @@ class ReportService extends DatatablesService
             }
         }
 
-        foreach($periodicTransactionsArray as $transaction) {
+        foreach($periodicTransactions as $transaction) {
             switch(true) {
                 case $transaction instanceof DepositTransaction:
                     $data['upcomingDeposit'] = $this->moneyCalc->add($data['upcomingDeposit'], $transaction->getAmount());
@@ -147,11 +161,11 @@ class ReportService extends DatatablesService
         $user = $this->security->getUser();
         $householdUser = $this->householdUserRepository->findOneByUserAndHousehold($user, $household);
 
-        foreach($transactionsArray as $transaction) {
+        foreach($transactions as $transaction) {
             $data['table'][] = $this->getAsArray($transaction, $householdUser);
         }
 
-        foreach($periodicTransactionsArray as $transaction) {
+        foreach($periodicTransactions as $transaction) {
             $data['table'][] = $this->getAsArray($transaction, $householdUser, true);
         }
 
@@ -218,6 +232,19 @@ class ReportService extends DatatablesService
         }
 
         return $result;
+    }
+
+    /**
+     * @param Household $household
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @return array
+     *
+     * Get AssetAccounts that have their initial balance date within the specified range.
+     */
+    public function getAssetAccounts(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    {
+        return $this->assetAccountRepository->findAllByHouseholdAndInitialBalanceDateInRange($household, $startDate, $endDate);
     }
 
 
