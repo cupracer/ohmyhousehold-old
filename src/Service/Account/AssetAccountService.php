@@ -14,6 +14,7 @@ use App\Repository\Transaction\DepositTransactionRepository;
 use App\Repository\Transaction\TransferTransactionRepository;
 use App\Repository\Transaction\WithdrawalTransactionRepository;
 use App\Service\DatatablesService;
+use App\Service\MoneyCalculationService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -26,13 +27,15 @@ class AssetAccountService extends DatatablesService
     private WithdrawalTransactionRepository $withdrawalTransactionRepository;
     private UrlGeneratorInterface $urlGenerator;
     private Security $security;
+    private MoneyCalculationService $moneyCalc;
 
     public function __construct(AssetAccountRepository $assetAccountRepository,
                                 DepositTransactionRepository $depositTransactionRepository,
                                 TransferTransactionRepository $transferTransactionRepository,
                                 WithdrawalTransactionRepository $withdrawalTransactionRepository,
                                 UrlGeneratorInterface $urlGenerator,
-                                Security $security)
+                                Security $security,
+                                MoneyCalculationService $moneyCalculationService)
     {
         $this->assetAccountRepository = $assetAccountRepository;
         $this->depositTransactionRepository = $depositTransactionRepository;
@@ -40,6 +43,7 @@ class AssetAccountService extends DatatablesService
         $this->withdrawalTransactionRepository = $withdrawalTransactionRepository;
         $this->urlGenerator = $urlGenerator;
         $this->security = $security;
+        $this->moneyCalc = $moneyCalculationService;
     }
 
     public function getAssetAccountsAsDatatablesArray(Request $request, Household $household): array
@@ -76,7 +80,8 @@ class AssetAccountService extends DatatablesService
                 'name' => $row->getName(),
                 'accountType' => $row->getAccountType(),
                 'iban' => $row->getIban(),
-                'balance' => $numberFormatter->formatCurrency(floatval($this->getBalance($row)), 'EUR'),
+                'initialBalance' => $numberFormatter->formatCurrency($row->getInitialBalance(), 'EUR'),
+                'balance' => $numberFormatter->formatCurrency($this->getBalance($row), 'EUR'),
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
                 'editLink' => $this->urlGenerator->generate('housekeepingbook_asset_account_edit', ['id' => $row->getId()]),
             ];
@@ -143,7 +148,8 @@ class AssetAccountService extends DatatablesService
         /** @var DepositTransaction $transaction */
         foreach($assetAccount->getDepositTransactions() as $transaction) {
             if($transaction->getBookingDate() <= $today) {
-                $balance += $transaction->getAmount();
+//                $balance += $transaction->getAmount();
+                $balance = $this->moneyCalc->add($balance, $transaction->getAmount());
             }
         }
 //        foreach($this->depositTransactionRepository->findBy(['destination' => $assetAccount]) as $transaction) {
@@ -153,7 +159,8 @@ class AssetAccountService extends DatatablesService
         /** @var WithdrawalTransaction $transaction */
         foreach($assetAccount->getWithdrawalTransactions() as $transaction) {
             if($transaction->getBookingDate() <= $today) {
-                $balance -= $transaction->getAmount();
+//                $balance -= $transaction->getAmount();
+                $balance = $this->moneyCalc->subtract($balance, $transaction->getAmount());
             }
         }
 //        foreach($this->withdrawalTransactionRepository->findBy(['source' => $assetAccount]) as $transaction) {
@@ -163,7 +170,8 @@ class AssetAccountService extends DatatablesService
         /** @var TransferTransaction $transaction */
         foreach($assetAccount->getIncomingTransferTransactions() as $transaction) {
             if($transaction->getBookingDate() <= $today) {
-                $balance += $transaction->getAmount();
+//                $balance += $transaction->getAmount();
+                $balance = $this->moneyCalc->add($balance, $transaction->getAmount());
             }
         }
 //        foreach($this->transferTransactionRepository->findBy(['destination' => $assetAccount]) as $transaction) {
@@ -173,7 +181,8 @@ class AssetAccountService extends DatatablesService
         /** @var TransferTransaction $transaction */
         foreach($assetAccount->getOutgoingTransferTransactions() as $transaction) {
             if($transaction->getBookingDate() <= $today) {
-                $balance -= $transaction->getAmount();
+//                $balance -= $transaction->getAmount();
+                $balance = $this->moneyCalc->subtract($balance, $transaction->getAmount());
             }
         }
 //        foreach($this->transferTransactionRepository->findBy(['source' => $assetAccount]) as $transaction) {

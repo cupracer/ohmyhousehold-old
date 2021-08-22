@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\Account\ExpenseAccountRepository;
 use App\Repository\Transaction\WithdrawalTransactionRepository;
 use App\Service\DatatablesService;
+use App\Service\MoneyCalculationService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -18,16 +19,19 @@ class ExpenseAccountService extends DatatablesService
     private WithdrawalTransactionRepository $withdrawalTransactionRepository;
     private UrlGeneratorInterface $urlGenerator;
     private Security $security;
+    private MoneyCalculationService $moneyCalc;
 
     public function __construct(ExpenseAccountRepository $expenseAccountRepository,
                                 WithdrawalTransactionRepository $withdrawalTransactionRepository,
                                 UrlGeneratorInterface $urlGenerator,
-                                Security $security)
+                                Security $security,
+                                MoneyCalculationService $moneyCalculationService)
     {
         $this->expenseAccountRepository = $expenseAccountRepository;
         $this->withdrawalTransactionRepository = $withdrawalTransactionRepository;
         $this->urlGenerator = $urlGenerator;
         $this->security = $security;
+        $this->moneyCalc = $moneyCalculationService;
     }
 
     public function getExpenseAccountsAsDatatablesArray(Request $request, Household $household): array
@@ -62,7 +66,7 @@ class ExpenseAccountService extends DatatablesService
         foreach($result['data'] as $row) {
             $rowData = [
                 'name' => $row->getAccountHolder()->getName(),
-                'balance' => $numberFormatter->formatCurrency(floatval($this->getBalance($row)), 'EUR'),
+                'balance' => $numberFormatter->formatCurrency($this->getBalance($row), 'EUR'),
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
                 'editLink' => $this->urlGenerator->generate('housekeepingbook_asset_account_edit', ['id' => $row->getId()]),
             ];
@@ -125,7 +129,7 @@ class ExpenseAccountService extends DatatablesService
         $balance = $expenseAccount->getInitialBalance();
 
         foreach($this->withdrawalTransactionRepository->findBy(['destination' => $expenseAccount]) as $transaction) {
-            $balance+= $transaction->getAmount();
+            $balance = $this->moneyCalc->add($balance, $transaction->getAmount());
         }
 
         return $balance;

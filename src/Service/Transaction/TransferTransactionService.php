@@ -71,7 +71,7 @@ class TransferTransactionService extends DatatablesService
                 'source' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getSource()->getName(),
                 'destination' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getDestination()->getName(),
                 'description' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getDescription(),
-                'amount' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $numberFormatter->formatCurrency(floatval($row->getAmount()), 'EUR'),
+                'amount' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $numberFormatter->formatCurrency($row->getAmount(), 'EUR'),
                 'private' => $row->getPrivate(),
                 'hidden' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser,
                 'editLink' => $this->security->isGranted('edit', $row) ? $this->urlGenerator->generate('housekeepingbook_transfer_transaction_edit', ['id' => $row->getId()]) : null,

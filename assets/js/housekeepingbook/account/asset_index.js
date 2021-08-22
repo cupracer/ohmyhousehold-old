@@ -44,6 +44,12 @@ $(document).ready(function () {
                 },
             },
             {
+                data: "initialBalance",
+                class: "text-right min",
+                defaultContent: "-",
+                orderable: false,
+            },
+            {
                 data: "balance",
                 class: "text-right min",
                 defaultContent: "-",

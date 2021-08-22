@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\Transaction\DepositTransactionRepository;
 use App\Repository\Account\RevenueAccountRepository;
 use App\Service\DatatablesService;
+use App\Service\MoneyCalculationService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -18,16 +19,19 @@ class RevenueAccountService extends DatatablesService
     private DepositTransactionRepository $depositTransactionRepository;
     private UrlGeneratorInterface $urlGenerator;
     private Security $security;
+    private MoneyCalculationService $moneyCalc;
 
     public function __construct(RevenueAccountRepository $revenueAccountRepository,
                                 DepositTransactionRepository $depositTransactionRepository,
                                 UrlGeneratorInterface $urlGenerator,
-                                Security $security)
+                                Security $security,
+                                MoneyCalculationService $moneyCalculationService)
     {
         $this->revenueAccountRepository = $revenueAccountRepository;
         $this->depositTransactionRepository = $depositTransactionRepository;
         $this->urlGenerator = $urlGenerator;
         $this->security = $security;
+        $this->moneyCalc = $moneyCalculationService;
     }
 
     public function getRevenueAccountsAsDatatablesArray(Request $request, Household $household): array
@@ -62,7 +66,7 @@ class RevenueAccountService extends DatatablesService
         foreach($result['data'] as $row) {
             $rowData = [
                 'name' => $row->getAccountHolder()->getName(),
-                'balance' => $numberFormatter->formatCurrency(floatval($this->getBalance($row)), 'EUR'),
+                'balance' => $numberFormatter->formatCurrency($this->getBalance($row), 'EUR'),
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
                 'editLink' => $this->urlGenerator->generate('housekeepingbook_asset_account_edit', ['id' => $row->getId()]),
             ];
@@ -125,7 +129,7 @@ class RevenueAccountService extends DatatablesService
         $balance = $revenueAccount->getInitialBalance();
 
         foreach($this->depositTransactionRepository->findBy(['source' => $revenueAccount]) as $transaction) {
-            $balance-= $transaction->getAmount();
+            $balance = $this->moneyCalc->subtract($balance, $transaction->getAmount());
         }
 
         return $balance;

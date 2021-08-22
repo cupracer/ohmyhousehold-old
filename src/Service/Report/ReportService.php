@@ -19,6 +19,7 @@ use App\Repository\Transaction\DepositTransactionRepository;
 use App\Repository\Transaction\TransferTransactionRepository;
 use App\Repository\Transaction\WithdrawalTransactionRepository;
 use App\Service\DatatablesService;
+use App\Service\MoneyCalculationService;
 use Symfony\Component\Security\Core\Security;
 
 class ReportService extends DatatablesService
@@ -31,6 +32,7 @@ class ReportService extends DatatablesService
     private PeriodicTransferTransactionRepository $periodicTransferTransactionRepository;
     private HouseholdUserRepository $householdUserRepository;
     private Security $security;
+    private MoneyCalculationService $moneyCalc;
 
     public function __construct(DepositTransactionRepository         $depositTransactionRepository,
                                 TransferTransactionRepository        $transferTransactionRepository,
@@ -39,7 +41,8 @@ class ReportService extends DatatablesService
                                 PeriodicWithdrawalTransactionRepository $periodicWithdrawalTransactionRepository,
                                 PeriodicTransferTransactionRepository $periodicTransferTransactionRepository,
                                 HouseholdUserRepository              $householdUserRepository,
-                                Security                             $security)
+                                Security                             $security,
+                                MoneyCalculationService $moneyCalculationService)
     {
         $this->depositTransactionRepository = $depositTransactionRepository;
         $this->transferTransactionRepository = $transferTransactionRepository;
@@ -49,6 +52,7 @@ class ReportService extends DatatablesService
         $this->periodicTransferTransactionRepository = $periodicTransferTransactionRepository;
         $this->householdUserRepository = $householdUserRepository;
         $this->security = $security;
+        $this->moneyCalc = $moneyCalculationService;
     }
 
 
@@ -64,15 +68,15 @@ class ReportService extends DatatablesService
             'startDate' => $currentPeriodStart,
             'endDate' => $currentPeriodEnd,
             'table' => [],
-            'deposit' => 0,
-            'upcomingDeposit' => 0,
-            'withdrawal' => 0,
-            'upcomingWithdrawal' => 0,
-            'balance' => 0,
-            'expectedBalance' => 0,
-            'savings' => 0,
-            'upcomingSavings' => 0,
-            'expectedSavings' => 0,
+            'deposit' => "0",
+            'upcomingDeposit' => "0",
+            'withdrawal' => "0",
+            'upcomingWithdrawal' => "0",
+            'balance' => "0",
+            'expectedBalance' => "0",
+            'savings' => "0",
+            'upcomingSavings' => "0",
+            'expectedSavings' => "0",
         ];
 
         $transactionsArray = $this->getTransactions($household, $currentPeriodStart, $currentPeriodEnd);
@@ -82,30 +86,30 @@ class ReportService extends DatatablesService
             switch(true) {
                 case $transaction instanceof DepositTransaction:
                     if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
-                        $data['deposit'] += $transaction->getAmount();
+                        $data['deposit'] = $this->moneyCalc->add($data['deposit'], $transaction->getAmount());
                     }else {
-                        $data['upcomingDeposit'] += $transaction->getAmount();
+                        $data['upcomingDeposit'] = $this->moneyCalc->add($data['upcomingDeposit'], $transaction->getAmount());
                     }
                     break;
                 case $transaction instanceof WithdrawalTransaction:
                     if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
-                        $data['withdrawal'] += $transaction->getAmount();
+                        $data['withdrawal'] = $this->moneyCalc->add($data['withdrawal'], $transaction->getAmount());
                     }else {
-                        $data['upcomingWithdrawal'] += $transaction->getAmount();
+                        $data['upcomingWithdrawal'] = $this->moneyCalc->add($data['upcomingWithdrawal'], $transaction->getAmount());
                     }
                     break;
                 case $transaction instanceof TransferTransaction:
                     if($transaction->getSource()->getAccountType() === AssetAccount::TYPE_CURRENT && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
                         if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
-                            $data['savings'] += $transaction->getAmount();
+                            $data['savings'] = $this->moneyCalc->add($data['savings'], $transaction->getAmount());
                         }else {
-                            $data['upcomingSavings'] += $transaction->getAmount();
+                            $data['upcomingSavings'] = $this->moneyCalc->add($data['upcomingSavings'], $transaction->getAmount());
                         }
                     }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_CURRENT) {
                         if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
-                            $data['savings'] -= $transaction->getAmount();
+                            $data['savings'] = $this->moneyCalc->subtract($data['savings'], $transaction->getAmount());
                         }else {
-                            $data['upcomingSavings'] -= $transaction->getAmount();
+                            $data['upcomingSavings'] = $this->moneyCalc->subtract($data['upcomingSavings'], $transaction->getAmount());
                         }
                     }
                     break;
@@ -115,24 +119,29 @@ class ReportService extends DatatablesService
         foreach($periodicTransactionsArray as $transaction) {
             switch(true) {
                 case $transaction instanceof DepositTransaction:
-                    $data['upcomingDeposit'] += $transaction->getAmount();
+                    $data['upcomingDeposit'] = $this->moneyCalc->add($data['upcomingDeposit'], $transaction->getAmount());
                     break;
                 case $transaction instanceof WithdrawalTransaction:
-                    $data['upcomingWithdrawal'] += $transaction->getAmount();
+                    $data['upcomingWithdrawal'] = $this->moneyCalc->add($data['upcomingWithdrawal'], $transaction->getAmount());
                     break;
                 case $transaction instanceof TransferTransaction:
                     if($transaction->getSource()->getAccountType() === AssetAccount::TYPE_CURRENT && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
-                        $data['upcomingSavings'] += $transaction->getAmount();
+                        $data['upcomingSavings'] = $this->moneyCalc->add($data['upcomingSavings'], $transaction->getAmount());
                     }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_CURRENT) {
-                        $data['upcomingSavings'] -= $transaction->getAmount();
+                        $data['upcomingSavings'] = $this->moneyCalc->subtract($data['upcomingSavings'], $transaction->getAmount());
                     }
                     break;
             }
         }
 
-        $data['balance'] = $data['deposit'] - $data['withdrawal'] - $data['savings'];
-        $data['expectedBalance'] = $data['balance'] + $data['upcomingDeposit'] - $data['upcomingWithdrawal'] - $data['upcomingSavings'];
-        $data['expectedSavings'] = $data['savings'] + $data['upcomingSavings'];
+        $data['balance'] = $this->moneyCalc->subtract($data['deposit'], $data['withdrawal']);
+        $data['balance'] = $this->moneyCalc->subtract($data['balance'], $data['savings']);
+
+        $data['expectedBalance'] = $this->moneyCalc->add($data['balance'], $data['upcomingDeposit']);
+        $data['expectedBalance'] = $this->moneyCalc->subtract($data['expectedBalance'], $data['upcomingWithdrawal']);
+        $data['expectedBalance'] = $this->moneyCalc->subtract($data['expectedBalance'], $data['upcomingSavings']);
+
+        $data['expectedSavings'] = $this->moneyCalc->add($data['savings'], $data['upcomingSavings']);
 
         /** @var User $user */
         $user = $this->security->getUser();
@@ -183,8 +192,8 @@ class ReportService extends DatatablesService
         if($this->security->isGranted('view', $transaction)) {
             $result['bookingCategory'] = $transaction->getBookingCategory()->getName();
             $result['description'] = $transaction->getDescription();
-            $result['amount'] = $numberFormatter->formatCurrency(floatval($transaction->getAmount()), 'EUR');
-            $result['amount_filter'] = floatval($transaction->getAmount());
+            $result['amount'] = $numberFormatter->formatCurrency($transaction->getAmount(), 'EUR');
+            $result['amount_filter'] = $transaction->getAmount();
             $result['hidden'] = false;
 
             if($transaction->getSource() instanceof RevenueAccount || $transaction->getSource() instanceof ExpenseAccount) {

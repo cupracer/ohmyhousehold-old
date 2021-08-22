@@ -22,7 +22,7 @@ class AssetAccountDTO
     private string $accountType;
 
     #[Assert\NotBlank]
-    private float $initialBalance;
+    private string $initialBalance;
 
     /**
      * @var string
@@ -72,18 +72,18 @@ class AssetAccountDTO
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getInitialBalance(): float
+    public function getInitialBalance(): string
     {
         return $this->initialBalance;
     }
 
     /**
-     * @param float $initialBalance
+     * @param string $initialBalance
      * @return AssetAccountDTO
      */
-    public function setInitialBalance(float $initialBalance): AssetAccountDTO
+    public function setInitialBalance(string $initialBalance): AssetAccountDTO
     {
         $this->initialBalance = $initialBalance;
         return $this;

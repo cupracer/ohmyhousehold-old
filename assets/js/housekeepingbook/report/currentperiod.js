@@ -20,7 +20,7 @@ $(document).ready(function () {
                     }
 
                     if(rowData[0] === 'periodicDeposit' || rowData[0] === 'periodicWithdrawal' || rowData[0] === 'periodicTransfer' ) {
-                        $(td).css('color', 'lightgray');
+                        $(td).css('color', 'gray');
                     }
 
                     if(rowData[2] > Math.round(+new Date()/1000)) {
@@ -57,7 +57,7 @@ $(document).ready(function () {
                                 output+= '<i class="text-lightred far fa-frown"></i>';
                                 break;
                             case "periodicTransfer":
-                                output+= '<i class="text-lightgray far fa-meh"></i>';
+                                output+= '<i class="text-gray far fa-meh"></i>';
                                 break;
                             default:
                                 output+= data;
@@ -110,7 +110,7 @@ $(document).ready(function () {
                             case "periodicWithdrawal":
                                 return '<span class="text-lightred">' + data + '</span>';
                             case "periodicTransfer":
-                                return '<span class="text-lightgray">' + data + '</span>';
+                                return '<span class="text-gray">' + data + '</span>';
                             default:
                                 return data;
                         }
