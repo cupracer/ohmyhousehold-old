@@ -73,6 +73,7 @@ class AssetAccountService extends DatatablesService
         /** @var User $user */
         $user = $this->security->getUser();
         $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), \NumberFormatter::CURRENCY);
+        $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
 
         /** @var AssetAccount $row */
         foreach($result['data'] as $row) {
@@ -81,6 +82,7 @@ class AssetAccountService extends DatatablesService
                 'accountType' => $row->getAccountType(),
                 'iban' => $row->getIban(),
                 'initialBalance' => $numberFormatter->formatCurrency($row->getInitialBalance(), 'EUR'),
+                'initialBalanceDate' => $dateFormatter->format($row->getInitialBalanceDate()),
                 'balance' => $numberFormatter->formatCurrency($this->getBalance($row), 'EUR'),
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
                 'editLink' => $this->urlGenerator->generate('housekeepingbook_asset_account_edit', ['id' => $row->getId()]),

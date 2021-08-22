@@ -29,6 +29,11 @@ abstract class BaseAccount implements \JsonSerializable
     private $initialBalance;
 
     /**
+     * @ORM\Column(type="date")
+     */
+    private $initialBalanceDate;
+
+    /**
      * @ORM\Column(type="string", length=34, nullable=true)
      */
     private $iban;
@@ -44,6 +49,7 @@ abstract class BaseAccount implements \JsonSerializable
         return [
             "iban" => $this->iban,
             "initialBalance" => $this->initialBalance,
+            "initialBalanceDate" => $this->initialBalanceDate,
             "createdAt" => $this->createdAt,
         ];
     }
@@ -61,6 +67,18 @@ abstract class BaseAccount implements \JsonSerializable
     public function setInitialBalance(string $initialBalance): self
     {
         $this->initialBalance = $initialBalance;
+
+        return $this;
+    }
+
+    public function getInitialBalanceDate(): ?\DateTimeInterface
+    {
+        return $this->initialBalanceDate;
+    }
+
+    public function setInitialBalanceDate(\DateTimeInterface $initialBalanceDate): self
+    {
+        $this->initialBalanceDate = $initialBalanceDate;
 
         return $this;
     }

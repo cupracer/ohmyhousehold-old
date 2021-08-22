@@ -73,6 +73,11 @@ class AssetAccountController extends AbstractController
                 $account->setIban($createAccount->getIban());
                 $account->setInitialBalance($createAccount->getInitialBalance());
 
+                /** @var \DateTime $initialBalanceDate */
+                $initialBalanceDate = $createAccount->getInitialBalanceDate();
+                $initialBalanceDate->modify('midnight');
+                $account->setInitialBalanceDate($initialBalanceDate);
+
                 foreach($createAccount->getOwners() as $owner) {
                     $account->addOwner($owner);
                 }
@@ -107,6 +112,7 @@ class AssetAccountController extends AbstractController
         $editAssetAccount->setAccountType($assetAccount->getAccountType());
         $editAssetAccount->setIban($assetAccount->getIban());
         $editAssetAccount->setInitialBalance($assetAccount->getInitialBalance());
+        $editAssetAccount->setInitialBalanceDate($assetAccount->getInitialBalanceDate());
         $editAssetAccount->setOwners($assetAccount->getOwners());
 
         $form = $this->createForm(AssetAccountType::class, $editAssetAccount);
@@ -120,6 +126,11 @@ class AssetAccountController extends AbstractController
                 $assetAccount->setAccountType($editAssetAccount->getAccountType());
                 $assetAccount->setIban($editAssetAccount->getIban());
                 $assetAccount->setInitialBalance($editAssetAccount->getInitialBalance());
+
+                /** @var \DateTime $initialBalanceDate */
+                $initialBalanceDate = $editAssetAccount->getInitialBalanceDate();
+                $initialBalanceDate->modify('midnight');
+                $assetAccount->setInitialBalanceDate($initialBalanceDate);
 
                 foreach($editAssetAccount->getOwners() as $owner) {
                     $assetAccount->addOwner($owner);

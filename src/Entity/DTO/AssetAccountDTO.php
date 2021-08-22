@@ -2,8 +2,6 @@
 
 namespace App\Entity\DTO;
 
-use App\Entity\HouseholdUser;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -23,6 +21,13 @@ class AssetAccountDTO
 
     #[Assert\NotBlank]
     private string $initialBalance;
+
+    /**
+     * @var \DateTimeInterface
+     */
+    #[Assert\NotBlank]
+    #[Assert\Type("\DateTimeInterface")]
+    private $initialBalanceDate;
 
     /**
      * @var string
@@ -86,6 +91,24 @@ class AssetAccountDTO
     public function setInitialBalance(string $initialBalance): AssetAccountDTO
     {
         $this->initialBalance = $initialBalance;
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeInterface
+     */
+    public function getInitialBalanceDate(): \DateTimeInterface
+    {
+        return $this->initialBalanceDate;
+    }
+
+    /**
+     * @param \DateTimeInterface $initialBalanceDate
+     * @return AssetAccountDTO
+     */
+    public function setInitialBalanceDate(\DateTimeInterface $initialBalanceDate): AssetAccountDTO
+    {
+        $this->initialBalanceDate = $initialBalanceDate;
         return $this;
     }
 

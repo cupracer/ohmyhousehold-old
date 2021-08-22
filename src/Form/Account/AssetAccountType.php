@@ -9,6 +9,7 @@ use App\Repository\HouseholdRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -67,6 +68,13 @@ class AssetAccountType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => '8,88',
+                ],
+            ])
+            ->add('initialBalanceDate', DateType::class, [
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr' => [
+                    'class' => 'text-center',
                 ],
             ])
             ->add('owners', EntityType::class, [

@@ -50,6 +50,12 @@ $(document).ready(function () {
                 orderable: false,
             },
             {
+                data: "initialBalanceDate",
+                class: "text-center min",
+                defaultContent: "-",
+                orderable: false,
+            },
+            {
                 data: "balance",
                 class: "text-right min",
                 defaultContent: "-",
