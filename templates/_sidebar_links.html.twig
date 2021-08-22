@@ -15,32 +15,32 @@
     </ul>
 </li>
 
-<li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_account_index') %}menu-open{% endif %}">
-    <a href="#" class="nav-link">
-        <i class="nav-icon fa fa-credit-card"></i>
-        <p>Accounts <i class="right fas fa-angle-left"></i></p>
-    </a>
-    <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_account_index') %}block{% else %}none{% endif %};">
-        <li class="nav-item">
-            <a href="{{ path('housekeepingbook_asset_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_asset_account_index') %}active{% endif %}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Asset</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ path('housekeepingbook_revenue_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_revenue_account_index') %}active{% endif %}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Revenue</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ path('housekeepingbook_expense_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_expense_account_index') %}active{% endif %}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Expense</p>
-            </a>
-        </li>
-    </ul>
-</li>
+{#<li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_account_index') %}menu-open{% endif %}">#}
+{#    <a href="#" class="nav-link">#}
+{#        <i class="nav-icon fa fa-credit-card"></i>#}
+{#        <p>Accounts <i class="right fas fa-angle-left"></i></p>#}
+{#    </a>#}
+{#    <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_account_index') %}block{% else %}none{% endif %};">#}
+{#        <li class="nav-item">#}
+{#            <a href="{{ path('housekeepingbook_asset_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_asset_account_index') %}active{% endif %}">#}
+{#                <i class="far fa-circle nav-icon"></i>#}
+{#                <p>Asset</p>#}
+{#            </a>#}
+{#        </li>#}
+{#        <li class="nav-item">#}
+{#            <a href="{{ path('housekeepingbook_revenue_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_revenue_account_index') %}active{% endif %}">#}
+{#                <i class="far fa-circle nav-icon"></i>#}
+{#                <p>Revenue</p>#}
+{#            </a>#}
+{#        </li>#}
+{#        <li class="nav-item">#}
+{#            <a href="{{ path('housekeepingbook_expense_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_expense_account_index') %}active{% endif %}">#}
+{#                <i class="far fa-circle nav-icon"></i>#}
+{#                <p>Expense</p>#}
+{#            </a>#}
+{#        </li>#}
+{#    </ul>#}
+{#</li>#}
 
 <li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_transaction_index') %}menu-open{% endif %}">
     <a href="#" class="nav-link">
