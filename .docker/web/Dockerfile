@@ -41,6 +41,9 @@ RUN curl https://pecl.php.net/get/APCu -o /tmp/apcu.tar.gz \
 RUN docker-php-ext-install intl \
         && docker-php-ext-enable intl \
 
+RUN docker-php-ext-install bcmath \
+        && docker-php-ext-enable bcmath \
+
 #RUN curl https://pecl.php.net/get/xdebug -o /tmp/xdebug.tar.gz \
 #        && mkdir -p /usr/src/php/ext/xdebug \
 #        && tar xf /tmp/xdebug.tar.gz -C /usr/src/php/ext/xdebug --strip-components=1 \
