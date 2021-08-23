@@ -1,6 +1,7 @@
 FROM node:latest AS stage-npm
 RUN npm install -g zip
 
+
 FROM php:8-apache AS stage-php-build
 
 RUN apt-get update && apt-get install -y \
