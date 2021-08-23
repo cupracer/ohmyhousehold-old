@@ -6,15 +6,15 @@ FROM php:8-apache
 RUN apt-get update && apt-get install -y \
 	apt-transport-https \
 	apt-utils \
-        g++ \
-        git \
-        gnupg \
-        libicu-dev \
-        locales-all \
-        lsb-release \
-        unzip \
-        vim \
-        zlib1g-dev
+    g++ \
+    git \
+    gnupg \
+    libicu-dev \
+    locales-all \
+    lsb-release \
+    unzip \
+    vim \
+    zlib1g-dev
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -24,25 +24,25 @@ RUN apt-get update && apt-get install -y \
 	yarn
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-        && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-        && php -r "unlink('composer-setup.php');" \
-        && chmod 755 /usr/local/bin/composer
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');" \
+    && chmod 755 /usr/local/bin/composer
 
 RUN docker-php-ext-install pdo_mysql \
     && docker-php-ext-enable opcache
 
 RUN curl https://pecl.php.net/get/APCu -o /tmp/apcu.tar.gz \
-        && mkdir -p /usr/src/php/ext/apcu \
-        && tar xf /tmp/apcu.tar.gz -C /usr/src/php/ext/apcu --strip-components=1 \
-        && docker-php-ext-configure apcu \
-        && docker-php-ext-install apcu \
-        && rm /tmp/apcu.tar.gz
+    && mkdir -p /usr/src/php/ext/apcu \
+    && tar xf /tmp/apcu.tar.gz -C /usr/src/php/ext/apcu --strip-components=1 \
+    && docker-php-ext-configure apcu \
+    && docker-php-ext-install apcu \
+    && rm /tmp/apcu.tar.gz
 
 RUN docker-php-ext-install intl \
-        && docker-php-ext-enable intl
+    && docker-php-ext-enable intl
 
 RUN docker-php-ext-install bcmath \
-        && docker-php-ext-enable bcmath
+    && docker-php-ext-enable bcmath
 
 #RUN curl https://pecl.php.net/get/xdebug -o /tmp/xdebug.tar.gz \
 #        && mkdir -p /usr/src/php/ext/xdebug \
@@ -72,8 +72,8 @@ RUN chown -R www-data: /var/www/html
 
 #RUN su www-data --shell=/bin/bash -c "COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --no-scripts" \
 RUN su www-data --shell=/bin/bash -c "COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --no-dev --optimize-autoloader --no-scripts" \
-        && su www-data --shell=/bin/bash -c "composer config extra.symfony.allow-contrib true" \
-        && su www-data --shell=/bin/bash -c "composer require symfony/apache-pack"
+    && su www-data --shell=/bin/bash -c "composer config extra.symfony.allow-contrib true" \
+    && su www-data --shell=/bin/bash -c "composer require symfony/apache-pack"
 
 RUN mkdir /var/www/.yarn \
 	&& chown www-data: /var/www/.yarn \
@@ -87,16 +87,16 @@ RUN chmod 755 /var/www/html/.docker/web/start.sh \
 
 # Clean up:
 RUN apt-get remove -y \
-        gcc \
-        gcc-9-base \
-        gcc-10 \
-        g++ \
-        git \
-        icu-devtools \
-        unzip \
-        yarn \
-        zlib1g-dev \
-        && apt autoremove -y \
-        && find /var/www/html/var -mindepth 1 -delete
+    gcc \
+    gcc-9-base \
+    gcc-10 \
+    g++ \
+    git \
+    icu-devtools \
+    unzip \
+    yarn \
+    zlib1g-dev \
+    && apt autoremove -y \
+    && find /var/www/html/var -mindepth 1 -delete
 
 CMD [ "/start.sh" ]
