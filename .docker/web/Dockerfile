@@ -85,12 +85,18 @@ RUN mkdir /var/www/.yarn \
 RUN chmod 755 /var/www/html/.docker/web/start.sh \
     && ln -s /var/www/html/.docker/web/start.sh /start.sh
 
+# Clean up:
 RUN apt-get remove -y \
+        gcc \
+        gcc-9-base \
+        gcc-10 \
         g++ \
         git \
-        libicu-dev \
+        icu-devtools \
         unzip \
+        yarn \
         zlib1g-dev \
-        && apt autoremove -y
+        && apt autoremove -y \
+        && find /var/www/html/var -mindepth 1 -delete
 
 CMD [ "/start.sh" ]
