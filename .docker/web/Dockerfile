@@ -6,12 +6,15 @@ FROM php:8-apache
 RUN apt-get update && apt-get install -y \
 	apt-transport-https \
 	apt-utils \
+        g++ \
         git \
         gnupg \
+        libicu-dev \
         locales-all \
         lsb-release \
         unzip \
-        vim
+        vim \
+        zlib1g-dev
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -34,6 +37,9 @@ RUN curl https://pecl.php.net/get/APCu -o /tmp/apcu.tar.gz \
         && docker-php-ext-configure apcu \
         && docker-php-ext-install apcu \
         && rm /tmp/apcu.tar.gz
+
+RUN docker-php-ext-install intl \
+        && docker-php-ext-enable intl \
 
 #RUN curl https://pecl.php.net/get/xdebug -o /tmp/xdebug.tar.gz \
 #        && mkdir -p /usr/src/php/ext/xdebug \
