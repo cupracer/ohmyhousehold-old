@@ -73,7 +73,8 @@ COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200
 COPY .docker/web/target/etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/web/target/etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
-RUN docker-php-ext-enable opcache \
+RUN docker-php-ext-enable pdo_mysql \
+    && docker-php-ext-enable opcache \
     && docker-php-ext-enable intl \
     && docker-php-ext-enable bcmath \
     && docker-php-ext-enable apcu
