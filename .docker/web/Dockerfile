@@ -18,10 +18,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-	&& apt-get update
-
-RUN apt-get update && apt-get install -y \
-	yarn
+	&& apt-get update \
+    && apt-get install -y yarn
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
@@ -51,7 +49,8 @@ RUN docker-php-ext-install bcmath \
 #        && docker-php-ext-install xdebug \
 #        && rm /tmp/xdebug.tar.gz
 
-RUN mkdir /certs /var/www/.composer /var/www/.config /var/www/.cache /var/www/.local && chown www-data: /var/www/.composer /var/www/.config /var/www/.cache /var/www/.local
+RUN mkdir /certs /var/www/.composer /var/www/.config /var/www/.cache /var/www/.local \
+    && chown www-data: /var/www/.composer /var/www/.config /var/www/.cache /var/www/.local
 
 COPY --from=0 /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm
 COPY --from=0 /usr/local/lib/node_modules/zip /usr/local/lib/node_modules/zip
