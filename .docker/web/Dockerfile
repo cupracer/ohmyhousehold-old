@@ -86,6 +86,7 @@ RUN chmod 755 /var/www/html/.docker/web/start.sh \
     && ln -s /var/www/html/.docker/web/start.sh /start.sh
 
 RUN apt-get remove -y \
+        g++ \
         git \
         && apt autoremove -y
 
