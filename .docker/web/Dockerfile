@@ -88,6 +88,9 @@ RUN chmod 755 /var/www/html/.docker/web/start.sh \
 RUN apt-get remove -y \
         g++ \
         git \
+        libicu-dev \
+        unzip \
+        zlib1g-dev \
         && apt autoremove -y
 
 CMD [ "/start.sh" ]
