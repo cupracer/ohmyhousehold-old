@@ -1,4 +1,4 @@
-name: publish
+name: publish web image
 
 on:
   push:
@@ -29,8 +29,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: .docker/Dockerfile
+          file: .docker/web/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           # tags: ${{ steps.meta.outputs.tags }}
           # labels: ${{ steps.meta.outputs.labels }}
-          tags: ${{ github.repository_owner }}/${{ github.repository }}:latest
+          tags: ${{ github.repository }}:latest
