@@ -97,6 +97,10 @@ RUN apt-get remove -y \
     yarn \
     zlib1g-dev \
     && apt autoremove -y \
-    && find /var/www/html/var -mindepth 1 -delete
+    && find /tmp -mindepth 1 -delete \
+    && find /var/cache -mindepth 1 -delete \
+    && find /var/log -mindepth 1 -type f -delete \
+    && find /var/www/html/var -mindepth 1 -delete \
+    && find /var/www/.cache -mindepth 1 -delete
 
 CMD [ "/start.sh" ]
