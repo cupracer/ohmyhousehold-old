@@ -104,7 +104,13 @@ class CreatePeriodicDepositTransactionsCommand extends Command
                         continue;
                     }
 
-                    $bookingDate->modify('+' . $periodicTransaction->getBookingDayOfMonth() - 1 . ' days');
+                    // ensure that we don't miss the end of a month
+                    if($periodicTransaction->getBookingDayOfMonth() >
+                        cal_days_in_month(CAL_GREGORIAN, intval($bookingDate->format('m')), intval($bookingDate->format('Y')))) {
+                        $bookingDate->modify('last day of this month');
+                    }else {
+                        $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $periodicTransaction->getBookingDayOfMonth());
+                    }
 
                     if ($bookingDate > ($dateInPeriod)) {
                         $io->info('skipping future booking: ' .
@@ -163,7 +169,13 @@ class CreatePeriodicDepositTransactionsCommand extends Command
                         continue;
                     }
 
-                    $bookingDate->modify('+' . $periodicTransaction->getBookingDayOfMonth() - 1 . ' days');
+                    // ensure that we don't miss the end of a month
+                    if($periodicTransaction->getBookingDayOfMonth() >
+                        cal_days_in_month(CAL_GREGORIAN, intval($bookingDate->format('m')), intval($bookingDate->format('Y')))) {
+                        $bookingDate->modify('last day of this month');
+                    }else {
+                        $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $periodicTransaction->getBookingDayOfMonth());
+                    }
 
                     if ($bookingDate > ($dateInPeriod)) {
                         $io->info('skipping future booking: ' .
@@ -222,7 +234,13 @@ class CreatePeriodicDepositTransactionsCommand extends Command
                         continue;
                     }
 
-                    $bookingDate->modify('+' . $periodicTransaction->getBookingDayOfMonth() - 1 . ' days');
+                    // ensure that we don't miss the end of a month
+                    if($periodicTransaction->getBookingDayOfMonth() >
+                        cal_days_in_month(CAL_GREGORIAN, intval($bookingDate->format('m')), intval($bookingDate->format('Y')))) {
+                        $bookingDate->modify('last day of this month');
+                    }else {
+                        $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $periodicTransaction->getBookingDayOfMonth());
+                    }
 
                     if ($bookingDate > ($dateInPeriod)) {
                         $io->info('skipping future booking: ' .
