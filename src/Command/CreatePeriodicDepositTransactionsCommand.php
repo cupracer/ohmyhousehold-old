@@ -65,105 +65,192 @@ class CreatePeriodicDepositTransactionsCommand extends Command
             $dateInPeriod = new \DateTime();
         }
 
-        $currentPeriodStart = (clone $dateInPeriod)->modify('first day of this month')->modify('midnight');
-        $currentPeriodEnd = (clone $dateInPeriod)->modify('first day of next month')->modify('midnight')->modify('-1 second');
+        $dateInPeriod->modify('midnight');
+        $selectedPeriodStart = (clone $dateInPeriod)->modify('first day of this month');
+        $selectedPeriodEnd = (clone $dateInPeriod)->modify('first day of next month')->modify('-1 second');
 
-        foreach($this->householdRepository->findAll() as $household) {
-            $io->info($household->getTitle());
+        foreach([0, 1] as $periodOffset) {
+            $currentPeriodStart = (clone $selectedPeriodStart)->modify($periodOffset . ' months');
+            $currentPeriodEnd = (clone $currentPeriodStart)->modify('first day of next month')->modify('-1 second');
 
-            $periodicDepositTransactions = $this->periodicDepositTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $currentPeriodStart, $currentPeriodEnd);
+            foreach ($this->householdRepository->findAll() as $household) {
+                $io->info($household->getTitle());
 
-            foreach($periodicDepositTransactions as $periodicTransaction) {
-                $bookingDate = (clone $currentPeriodStart)->modify('- ' . $periodicTransaction->getBookingPeriodOffset() . ' months')->modify('+' . $periodicTransaction->getBookingDayOfMonth()-1 . ' days');
+                $periodicDepositTransactions = $this->periodicDepositTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $currentPeriodStart, $currentPeriodEnd);
 
-                if($bookingDate > (new \DateTime())->modify('midnight')) {
-                    $io->info('skipping future booking');
-                    continue;
+                foreach ($periodicDepositTransactions as $periodicTransaction) {
+                    if($periodicTransaction->getBookingPeriodOffset() !== $periodOffset) {
+                        continue;
+                    }
+
+                    $intervalStart = clone $periodicTransaction->getStartDate();
+                    $loopEndDate = clone $selectedPeriodEnd;
+
+                    /** @var \DateTime $currentLoopDate */
+                    $currentLoopDate = clone $intervalStart;
+                    $bookingDate = null;
+
+                    while ($currentLoopDate <= $loopEndDate) {
+                        if ($currentLoopDate >= $selectedPeriodStart && $currentLoopDate <= $selectedPeriodEnd) {
+                            $bookingDate = $currentLoopDate;
+                            break;
+                        }
+                        $currentLoopDate->modify($periodicTransaction->getBookingInterval() . ' months');
+                    }
+
+                    if (!$bookingDate) {
+                        $io->info('Buchung ist nicht dran: ' .
+                            $periodicTransaction->getDescription());
+                        continue;
+                    }
+
+                    $bookingDate->modify('+' . $periodicTransaction->getBookingDayOfMonth() - 1 . ' days');
+
+                    if ($bookingDate > ($dateInPeriod)) {
+                        $io->info('skipping future booking: ' .
+                            '(' . $bookingDate->format('d.m.Y') . ') ' . $periodicTransaction->getDescription());
+                        continue;
+                    }
+
+                    $transaction = new DepositTransaction();
+                    $transaction->setHousehold($household);
+                    $transaction->setHouseholdUser($periodicTransaction->getHouseholdUser());
+                    $transaction->setBookingDate($bookingDate);
+                    $transaction->setBookingCategory($periodicTransaction->getBookingCategory());
+                    $transaction->setSource($periodicTransaction->getSource());
+                    $transaction->setDestination($periodicTransaction->getDestination());
+                    $transaction->setDescription($periodicTransaction->getDescription());
+                    $transaction->setAmount($periodicTransaction->getAmount());
+                    $transaction->setPrivate($periodicTransaction->getPrivate());
+                    $transaction->setBookingPeriodOffset($periodicTransaction->getBookingPeriodOffset());
+                    $transaction->setPeriodicDepositTransaction($periodicTransaction);
+
+                    if ($input->getOption('dry-run')) {
+                        $io->info("faking new object: " .
+                            '(' . $bookingDate->format('d.m.Y') . ') ' . $transaction->getDescription());
+                    } else {
+                        $this->entityManager->persist($transaction);
+                        $this->entityManager->flush();
+                        $io->info("saved: " . $transaction->getDescription());
+                    }
                 }
 
-                $transaction = new DepositTransaction();
-                $transaction->setHousehold($household);
-                $transaction->setHouseholdUser($periodicTransaction->getHouseholdUser());
-                $transaction->setBookingDate($bookingDate);
-                $transaction->setBookingCategory($periodicTransaction->getBookingCategory());
-                $transaction->setSource($periodicTransaction->getSource());
-                $transaction->setDestination($periodicTransaction->getDestination());
-                $transaction->setDescription($periodicTransaction->getDescription());
-                $transaction->setAmount($periodicTransaction->getAmount());
-                $transaction->setPrivate($periodicTransaction->getPrivate());
-                $transaction->setBookingPeriodOffset($periodicTransaction->getBookingPeriodOffset());
-                $transaction->setPeriodicDepositTransaction($periodicTransaction);
+                $periodicWithdrawalTransactions = $this->periodicWithdrawalTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $currentPeriodStart, $currentPeriodEnd);
 
-                if ($input->getOption('dry-run')) {
-                    $io->info("faking new object: " . $transaction->getDescription());
-                }else {
-                    $this->entityManager->persist($transaction);
-                    $this->entityManager->flush();
-                    $io->info("saved: " . $transaction->getDescription());
-                }
-            }
+                foreach ($periodicWithdrawalTransactions as $periodicTransaction) {
+                    if($periodicTransaction->getBookingPeriodOffset() !== $periodOffset) {
+                        continue;
+                    }
 
-            $periodicWithdrawalTransactions = $this->periodicWithdrawalTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $currentPeriodStart, $currentPeriodEnd);
+                    $intervalStart = clone $periodicTransaction->getStartDate();
+                    $loopEndDate = clone $selectedPeriodEnd;
 
-            foreach($periodicWithdrawalTransactions as $periodicTransaction) {
-                $bookingDate = (clone $currentPeriodStart)->modify('- ' . $periodicTransaction->getBookingPeriodOffset() . ' months')->modify('+' . $periodicTransaction->getBookingDayOfMonth()-1 . ' days');
+                    /** @var \DateTime $currentLoopDate */
+                    $currentLoopDate = clone $intervalStart;
+                    $bookingDate = null;
 
-                if($bookingDate > (new \DateTime())->modify('midnight')) {
-                    $io->info('skipping future booking');
-                    continue;
-                }
+                    while ($currentLoopDate <= $loopEndDate) {
+                        if ($currentLoopDate >= $selectedPeriodStart && $currentLoopDate <= $selectedPeriodEnd) {
+                            $bookingDate = $currentLoopDate;
+                            break;
+                        }
+                        $currentLoopDate->modify($periodicTransaction->getBookingInterval() . ' months');
+                    }
 
-                $transaction = new WithdrawalTransaction();
-                $transaction->setHousehold($household);
-                $transaction->setHouseholdUser($periodicTransaction->getHouseholdUser());
-                $transaction->setBookingDate($bookingDate);
-                $transaction->setBookingCategory($periodicTransaction->getBookingCategory());
-                $transaction->setSource($periodicTransaction->getSource());
-                $transaction->setDestination($periodicTransaction->getDestination());
-                $transaction->setDescription($periodicTransaction->getDescription());
-                $transaction->setAmount($periodicTransaction->getAmount());
-                $transaction->setPrivate($periodicTransaction->getPrivate());
-                $transaction->setBookingPeriodOffset($periodicTransaction->getBookingPeriodOffset());
-                $transaction->setPeriodicWithdrawalTransaction($periodicTransaction);
+                    if (!$bookingDate) {
+                        $io->info('Buchung ist nicht dran: ' .
+                            $periodicTransaction->getDescription());
+                        continue;
+                    }
 
-                if ($input->getOption('dry-run')) {
-                    $io->info("faking new object: " . $transaction->getDescription());
-                }else {
-                    $this->entityManager->persist($transaction);
-                    $this->entityManager->flush();
-                    $io->info("saved: " . $transaction->getDescription());
-                }
-            }
+                    $bookingDate->modify('+' . $periodicTransaction->getBookingDayOfMonth() - 1 . ' days');
 
-            $periodicTransferTransactions = $this->periodicTransferTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $currentPeriodStart, $currentPeriodEnd);
+                    if ($bookingDate > ($dateInPeriod)) {
+                        $io->info('skipping future booking: ' .
+                            '(' . $bookingDate->format('d.m.Y') . ') ' . $periodicTransaction->getDescription());
+                        continue;
+                    }
 
-            foreach($periodicTransferTransactions as $periodicTransaction) {
-                $bookingDate = (clone $currentPeriodStart)->modify('- ' . $periodicTransaction->getBookingPeriodOffset() . ' months')->modify('+' . $periodicTransaction->getBookingDayOfMonth()-1 . ' days');
+                    $transaction = new WithdrawalTransaction();
+                    $transaction->setHousehold($household);
+                    $transaction->setHouseholdUser($periodicTransaction->getHouseholdUser());
+                    $transaction->setBookingDate($bookingDate);
+                    $transaction->setBookingCategory($periodicTransaction->getBookingCategory());
+                    $transaction->setSource($periodicTransaction->getSource());
+                    $transaction->setDestination($periodicTransaction->getDestination());
+                    $transaction->setDescription($periodicTransaction->getDescription());
+                    $transaction->setAmount($periodicTransaction->getAmount());
+                    $transaction->setPrivate($periodicTransaction->getPrivate());
+                    $transaction->setBookingPeriodOffset($periodicTransaction->getBookingPeriodOffset());
+                    $transaction->setPeriodicWithdrawalTransaction($periodicTransaction);
 
-                if($bookingDate > (new \DateTime())->modify('midnight')) {
-                    $io->info('skipping future booking');
-                    continue;
+                    if ($input->getOption('dry-run')) {
+                        $io->info("faking new object: " .
+                            '(' . $bookingDate->format('d.m.Y') . ') ' . $transaction->getDescription());
+                    } else {
+                        $this->entityManager->persist($transaction);
+                        $this->entityManager->flush();
+                        $io->info("saved: " . $transaction->getDescription());
+                    }
                 }
 
-                $transaction = new TransferTransaction();
-                $transaction->setHousehold($household);
-                $transaction->setHouseholdUser($periodicTransaction->getHouseholdUser());
-                $transaction->setBookingDate($bookingDate);
-                $transaction->setBookingCategory($periodicTransaction->getBookingCategory());
-                $transaction->setSource($periodicTransaction->getSource());
-                $transaction->setDestination($periodicTransaction->getDestination());
-                $transaction->setDescription($periodicTransaction->getDescription());
-                $transaction->setAmount($periodicTransaction->getAmount());
-                $transaction->setPrivate($periodicTransaction->getPrivate());
-                $transaction->setBookingPeriodOffset($periodicTransaction->getBookingPeriodOffset());
-                $transaction->setPeriodicTransferTransaction($periodicTransaction);
+                $periodicTransferTransactions = $this->periodicTransferTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $currentPeriodStart, $currentPeriodEnd);
 
-                if ($input->getOption('dry-run')) {
-                    $io->info("faking new object: " . $transaction->getDescription());
-                }else {
-                    $this->entityManager->persist($transaction);
-                    $this->entityManager->flush();
-                    $io->info("saved: " . $transaction->getDescription());
+                foreach ($periodicTransferTransactions as $periodicTransaction) {
+                    if($periodicTransaction->getBookingPeriodOffset() !== $periodOffset) {
+                        continue;
+                    }
+
+                    $intervalStart = clone $periodicTransaction->getStartDate();
+                    $loopEndDate = clone $selectedPeriodEnd;
+
+                    /** @var \DateTime $currentLoopDate */
+                    $currentLoopDate = clone $intervalStart;
+                    $bookingDate = null;
+
+                    while ($currentLoopDate <= $loopEndDate) {
+                        if ($currentLoopDate >= $selectedPeriodStart && $currentLoopDate <= $selectedPeriodEnd) {
+                            $bookingDate = $currentLoopDate;
+                            break;
+                        }
+                        $currentLoopDate->modify($periodicTransaction->getBookingInterval() . ' months');
+                    }
+
+                    if (!$bookingDate) {
+                        $io->info('Buchung ist nicht dran: ' .
+                            $periodicTransaction->getDescription());
+                        continue;
+                    }
+
+                    $bookingDate->modify('+' . $periodicTransaction->getBookingDayOfMonth() - 1 . ' days');
+
+                    if ($bookingDate > ($dateInPeriod)) {
+                        $io->info('skipping future booking: ' .
+                            '(' . $bookingDate->format('d.m.Y') . ') ' . $periodicTransaction->getDescription());
+                        continue;
+                    }
+
+                    $transaction = new TransferTransaction();
+                    $transaction->setHousehold($household);
+                    $transaction->setHouseholdUser($periodicTransaction->getHouseholdUser());
+                    $transaction->setBookingDate($bookingDate);
+                    $transaction->setBookingCategory($periodicTransaction->getBookingCategory());
+                    $transaction->setSource($periodicTransaction->getSource());
+                    $transaction->setDestination($periodicTransaction->getDestination());
+                    $transaction->setDescription($periodicTransaction->getDescription());
+                    $transaction->setAmount($periodicTransaction->getAmount());
+                    $transaction->setPrivate($periodicTransaction->getPrivate());
+                    $transaction->setBookingPeriodOffset($periodicTransaction->getBookingPeriodOffset());
+                    $transaction->setPeriodicTransferTransaction($periodicTransaction);
+
+                    if ($input->getOption('dry-run')) {
+                        $io->info("faking new object: " .
+                            '(' . $bookingDate->format('d.m.Y') . ') ' . $transaction->getDescription());
+                    } else {
+                        $this->entityManager->persist($transaction);
+                        $this->entityManager->flush();
+                        $io->info("saved: " . $transaction->getDescription());
+                    }
                 }
             }
         }
