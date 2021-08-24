@@ -15,9 +15,10 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 	&& apt-get update \
     && apt-get install -y yarn
 
-RUN docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install bcmath \
-    && docker-php-ext-install intl
+RUN docker-php-ext-install bcmath \
+    && docker-php-ext-install calendar \
+    && docker-php-ext-install intl \
+    && docker-php-ext-install pdo_mysql
 
 RUN curl https://pecl.php.net/get/APCu -o /tmp/apcu.tar.gz \
     && mkdir -p /usr/src/php/ext/apcu \
@@ -68,17 +69,19 @@ RUN mkdir /certs
 
 COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/apcu.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
 COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
+COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/calendar.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
 COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/intl.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
 COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/pdo_mysql.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
 
 COPY .docker/web/target/etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/web/target/etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 
-RUN docker-php-ext-enable pdo_mysql \
-    && docker-php-ext-enable opcache \
-    && docker-php-ext-enable intl \
+RUN docker-php-ext-enable apcu \
     && docker-php-ext-enable bcmath \
-    && docker-php-ext-enable apcu
+    && docker-php-ext-enable calendar \
+    && docker-php-ext-enable intl \
+    && docker-php-ext-enable opcache \
+    && docker-php-ext-enable pdo_mysql
 
 RUN /usr/sbin/a2enmod rewrite \
 	&& /usr/sbin/a2enmod ssl
