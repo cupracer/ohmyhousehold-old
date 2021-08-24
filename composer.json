@@ -7,6 +7,8 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
+        "ext-bcmath": "*",
+        "ext-calendar": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
