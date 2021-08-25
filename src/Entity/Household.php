@@ -60,6 +60,11 @@ class Household
      */
     private $revenueAccounts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Brand::class, mappedBy="household")
+     */
+    private $brands;
+
     public function __construct()
     {
         $this->householdUsers = new ArrayCollection();
@@ -68,6 +73,7 @@ class Household
         $this->assetAccounts = new ArrayCollection();
         $this->expenseAccounts = new ArrayCollection();
         $this->revenueAccounts = new ArrayCollection();
+        $this->brands = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -196,6 +202,36 @@ class Household
             // set the owning side to null (unless already changed)
             if ($bookingCategory->getHousehold() === $this) {
                 $bookingCategory->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Brand[]
+     */
+    public function getBrands(): Collection
+    {
+        return $this->brands;
+    }
+
+    public function addBrand(Brand $brand): self
+    {
+        if (!$this->brands->contains($brand)) {
+            $this->brands[] = $brand;
+            $brand->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBrand(Brand $brand): self
+    {
+        if ($this->brands->removeElement($brand)) {
+            // set the owning side to null (unless already changed)
+            if ($brand->getHousehold() === $this) {
+                $brand->setHousehold(null);
             }
         }
 
