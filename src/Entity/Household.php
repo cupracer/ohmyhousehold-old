@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Supplies\Brand;
+use App\Entity\Supplies\SupplyCategory;
 use App\Repository\HouseholdRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -65,6 +67,11 @@ class Household
      */
     private $brands;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SupplyCategory::class, mappedBy="household")
+     */
+    private $supplyCategories;
+
     public function __construct()
     {
         $this->householdUsers = new ArrayCollection();
@@ -74,6 +81,7 @@ class Household
         $this->expenseAccounts = new ArrayCollection();
         $this->revenueAccounts = new ArrayCollection();
         $this->brands = new ArrayCollection();
+        $this->supplyCategories = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -232,6 +240,36 @@ class Household
             // set the owning side to null (unless already changed)
             if ($brand->getHousehold() === $this) {
                 $brand->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSupplyCategories(): Collection
+    {
+        return $this->supplyCategories;
+    }
+
+    public function addSupplyCategory(SupplyCategory $supplyCategory): self
+    {
+        if (!$this->supplyCategories->contains($supplyCategory)) {
+            $this->supplyCategories[] = $supplyCategory;
+            $supplyCategory->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplyCategory(SupplyCategory $supplyCategory): self
+    {
+        if ($this->supplyCategories->removeElement($supplyCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($supplyCategory->getHousehold() === $this) {
+                $supplyCategory->setHousehold(null);
             }
         }
 
