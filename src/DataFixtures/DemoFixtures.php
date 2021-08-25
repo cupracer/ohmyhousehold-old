@@ -82,24 +82,30 @@ class DemoFixtures extends Fixture
 
         $assetAccount1 = (new AssetAccount())
             ->setInitialBalance(0)
+            ->setInitialBalanceDate(new \DateTime())
             ->setName('Giro1')
+            ->setAccountType(AssetAccount::TYPE_CURRENT)
             ->setHousehold($household)
             ->addOwner($adminHouseholdUser);
 
         $assetAccount2 = (new AssetAccount())
             ->setInitialBalance(0)
+            ->setInitialBalanceDate(new \DateTime())
             ->setName('Spar1')
+            ->setAccountType(AssetAccount::TYPE_SAVINGS)
             ->setHousehold($household)
             ->addOwner($adminHouseholdUser);
 
         $revenueAccount = (new RevenueAccount())
             ->setHousehold($household)
             ->setInitialBalance(0)
+            ->setInitialBalanceDate(new \DateTime())
             ->setAccountHolder($accountHolder1);
 
         $expenseAccount = (new ExpenseAccount())
             ->setHousehold($household)
             ->setInitialBalance(0)
+            ->setInitialBalanceDate(new \DateTime())
             ->setAccountHolder($accountHolder2);
 
         $depositTransaction = (new DepositTransaction())
@@ -109,6 +115,7 @@ class DemoFixtures extends Fixture
             ->setDestination($assetAccount1)
             ->setAmount(1000)
             ->setBookingDate(new \DateTime())
+            ->setBookingPeriodOffset(0)
             ->setBookingCategory($bookingCategory1)
             ->setDescription('income1')
             ->setPrivate(false);
@@ -120,6 +127,7 @@ class DemoFixtures extends Fixture
             ->setDestination($expenseAccount)
             ->setAmount(22,88)
             ->setBookingDate(new \DateTime())
+            ->setBookingPeriodOffset(0)
             ->setBookingCategory($bookingCategory2)
             ->setDescription('expense1')
             ->setPrivate(false);
@@ -131,6 +139,7 @@ class DemoFixtures extends Fixture
             ->setDestination($assetAccount2)
             ->setAmount(290)
             ->setBookingDate(new \DateTime())
+            ->setBookingPeriodOffset(0)
             ->setBookingCategory($bookingCategory3)
             ->setDescription('transfer1')
             ->setPrivate(false);
