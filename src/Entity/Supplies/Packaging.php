@@ -2,15 +2,15 @@
 
 namespace App\Entity\Supplies;
 
-use App\Repository\Supplies\BrandRepository;
+use App\Entity\Household;
+use App\Repository\Supplies\PackagingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use App\Entity\Household;
 
 /**
- * @ORM\Entity(repositoryClass=BrandRepository::class)
+ * @ORM\Entity(repositoryClass=PackagingRepository::class)
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"name", "household"},
@@ -18,7 +18,7 @@ use App\Entity\Household;
  *     message="This name is already in use in this household."
  *     )
  */
-class Brand
+class Packaging
 {
     /**
      * @ORM\Id
@@ -38,13 +38,13 @@ class Brand
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="brands")
+     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="supplyPackagings")
      * @ORM\JoinColumn(nullable=false)
      */
     private $household;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand")
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="packaging")
      */
     private $products;
 
@@ -114,7 +114,7 @@ class Brand
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->setBrand($this);
+            $product->setPackaging($this);
         }
 
         return $this;
@@ -124,8 +124,8 @@ class Brand
     {
         if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
-            if ($product->getBrand() === $this) {
-                $product->setBrand(null);
+            if ($product->getPackaging() === $this) {
+                $product->setPackaging(null);
             }
         }
 

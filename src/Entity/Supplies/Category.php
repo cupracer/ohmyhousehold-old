@@ -2,7 +2,7 @@
 
 namespace App\Entity\Supplies;
 
-use App\Repository\Supplies\BrandRepository;
+use App\Repository\Supplies\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use App\Entity\Household;
 
 /**
- * @ORM\Entity(repositoryClass=BrandRepository::class)
+ * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"name", "household"},
@@ -18,7 +18,7 @@ use App\Entity\Household;
  *     message="This name is already in use in this household."
  *     )
  */
-class Brand
+class Category
 {
     /**
      * @ORM\Id
@@ -38,19 +38,19 @@ class Brand
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="brands")
+     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="supplyCategories")
      * @ORM\JoinColumn(nullable=false)
      */
     private $household;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand")
+     * @ORM\OneToMany(targetEntity=Resource::class, mappedBy="category")
      */
-    private $products;
+    private $resources;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->resources = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,29 +103,29 @@ class Brand
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection|Resource[]
      */
-    public function getProducts(): Collection
+    public function getResources(): Collection
     {
-        return $this->products;
+        return $this->resources;
     }
 
-    public function addProduct(Product $product): self
+    public function addResource(Resource $resource): self
     {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setBrand($this);
+        if (!$this->resources->contains($resource)) {
+            $this->resources[] = $resource;
+            $resource->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeProduct(Product $product): self
+    public function removeResource(Resource $resource): self
     {
-        if ($this->products->removeElement($product)) {
+        if ($this->resources->removeElement($resource)) {
             // set the owning side to null (unless already changed)
-            if ($product->getBrand() === $this) {
-                $product->setBrand(null);
+            if ($resource->getCategory() === $this) {
+                $resource->setCategory(null);
             }
         }
 

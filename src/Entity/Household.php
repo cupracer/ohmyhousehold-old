@@ -2,8 +2,13 @@
 
 namespace App\Entity;
 
-use App\Entity\Supplies\Brand;
-use App\Entity\Supplies\SupplyCategory;
+use App\Entity\Supplies\Brand as SupplyBrand;
+use App\Entity\Supplies\Category as SupplyCategory;
+use App\Entity\Supplies\Item;
+use App\Entity\Supplies\Measure as SupplyMeasure;
+use App\Entity\Supplies\Packaging as SupplyPackaging;
+use App\Entity\Supplies\Product as SupplyProduct;
+use App\Entity\Supplies\Resource as SupplyResource;
 use App\Repository\HouseholdRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -63,7 +68,7 @@ class Household
     private $revenueAccounts;
 
     /**
-     * @ORM\OneToMany(targetEntity=Brand::class, mappedBy="household")
+     * @ORM\OneToMany(targetEntity=SupplyBrand::class, mappedBy="household")
      */
     private $brands;
 
@@ -71,6 +76,31 @@ class Household
      * @ORM\OneToMany(targetEntity=SupplyCategory::class, mappedBy="household")
      */
     private $supplyCategories;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SupplyResource::class, mappedBy="household")
+     */
+    private $supplyResources;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SupplyPackaging::class, mappedBy="household")
+     */
+    private $supplyPackagings;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SupplyMeasure::class, mappedBy="household")
+     */
+    private $supplyMeasures;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SupplyProduct::class, mappedBy="household")
+     */
+    private $supplyProducts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Item::class, mappedBy="household")
+     */
+    private $supplyItems;
 
     public function __construct()
     {
@@ -82,6 +112,11 @@ class Household
         $this->revenueAccounts = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->supplyCategories = new ArrayCollection();
+        $this->supplyResources = new ArrayCollection();
+        $this->supplyPackagings = new ArrayCollection();
+        $this->supplyMeasures = new ArrayCollection();
+        $this->supplyProducts = new ArrayCollection();
+        $this->supplyItems = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -217,14 +252,14 @@ class Household
     }
 
     /**
-     * @return Collection|Brand[]
+     * @return Collection|SupplyBrand[]
      */
-    public function getBrands(): Collection
+    public function getSupplyBrands(): Collection
     {
         return $this->brands;
     }
 
-    public function addBrand(Brand $brand): self
+    public function addSupplyBrand(SupplyBrand $brand): self
     {
         if (!$this->brands->contains($brand)) {
             $this->brands[] = $brand;
@@ -234,7 +269,7 @@ class Household
         return $this;
     }
 
-    public function removeBrand(Brand $brand): self
+    public function removeSupplyBrand(SupplyBrand $brand): self
     {
         if ($this->brands->removeElement($brand)) {
             // set the owning side to null (unless already changed)
@@ -270,6 +305,156 @@ class Household
             // set the owning side to null (unless already changed)
             if ($supplyCategory->getHousehold() === $this) {
                 $supplyCategory->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSupplyResources(): Collection
+    {
+        return $this->supplyResources;
+    }
+
+    public function addSupplyResource(SupplyResource $supplyResource): self
+    {
+        if (!$this->supplyResources->contains($supplyResource)) {
+            $this->supplyResources[] = $supplyResource;
+            $supplyResource->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplyResource(SupplyResource $supplyResource): self
+    {
+        if ($this->supplyResources->removeElement($supplyResource)) {
+            // set the owning side to null (unless already changed)
+            if ($supplyResource->getHousehold() === $this) {
+                $supplyResource->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSupplyPackagings(): Collection
+    {
+        return $this->supplyPackagings;
+    }
+
+    public function addSupplyPackaging(SupplyPackaging $supplyPackaging): self
+    {
+        if (!$this->supplyPackagings->contains($supplyPackaging)) {
+            $this->supplyPackagings[] = $supplyPackaging;
+            $supplyPackaging->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplyPackaging(SupplyPackaging $supplyPackaging): self
+    {
+        if ($this->supplyPackagings->removeElement($supplyPackaging)) {
+            // set the owning side to null (unless already changed)
+            if ($supplyPackaging->getHousehold() === $this) {
+                $supplyPackaging->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSupplyMeasures(): Collection
+    {
+        return $this->supplyMeasures;
+    }
+
+    public function addSupplyMeasure(SupplyMeasure $supplyMeasure): self
+    {
+        if (!$this->supplyMeasures->contains($supplyMeasure)) {
+            $this->supplyMeasures[] = $supplyMeasure;
+            $supplyMeasure->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplyMeasure(SupplyMeasure $supplyMeasure): self
+    {
+        if ($this->supplyMeasures->removeElement($supplyMeasure)) {
+            // set the owning side to null (unless already changed)
+            if ($supplyMeasure->getHousehold() === $this) {
+                $supplyMeasure->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSupplyProducts(): Collection
+    {
+        return $this->supplyProducts;
+    }
+
+    public function addSupplyProduct(SupplyProduct $supplyProduct): self
+    {
+        if (!$this->supplyProducts->contains($supplyProduct)) {
+            $this->supplyProducts[] = $supplyProduct;
+            $supplyProduct->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplyProduct(SupplyProduct $supplyProduct): self
+    {
+        if ($this->supplyProducts->removeElement($supplyProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($supplyProduct->getHousehold() === $this) {
+                $supplyProduct->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Item[]
+     */
+    public function getSupplyItems(): Collection
+    {
+        return $this->supplyItems;
+    }
+
+    public function addSupplyItem(Item $supplyItem): self
+    {
+        if (!$this->supplyItems->contains($supplyItem)) {
+            $this->supplyItems[] = $supplyItem;
+            $supplyItem->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplyItem(Item $supplyItem): self
+    {
+        if ($this->supplyItems->removeElement($supplyItem)) {
+            // set the owning side to null (unless already changed)
+            if ($supplyItem->getHousehold() === $this) {
+                $supplyItem->setHousehold(null);
             }
         }
 

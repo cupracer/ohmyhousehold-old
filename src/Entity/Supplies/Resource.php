@@ -2,23 +2,28 @@
 
 namespace App\Entity\Supplies;
 
-use App\Repository\Supplies\BrandRepository;
+use App\Entity\Household;
+use App\Repository\ResourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use App\Entity\Household;
 
 /**
- * @ORM\Entity(repositoryClass=BrandRepository::class)
+ * @ORM\Entity(repositoryClass=ResourceRepository::class)
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"name", "household"},
  *     errorPath="name",
  *     message="This name is already in use in this household."
  *     )
+ * @UniqueEntity(
+ *     fields={"name", "category"},
+ *     errorPath="name",
+ *     message="This name already exists for the chosen category."
+ *     )
  */
-class Brand
+class Resource
 {
     /**
      * @ORM\Id
@@ -38,13 +43,24 @@ class Brand
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="brands")
+     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="supplyResources")
      * @ORM\JoinColumn(nullable=false)
      */
     private $household;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="resources")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $minimumNumber;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="resource")
      */
     private $products;
 
@@ -102,6 +118,30 @@ class Brand
         return $this;
     }
 
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getMinimumNumber(): ?int
+    {
+        return $this->minimumNumber;
+    }
+
+    public function setMinimumNumber(?int $minimumNumber): self
+    {
+        $this->minimumNumber = $minimumNumber;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Product[]
      */
@@ -114,7 +154,7 @@ class Brand
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->setBrand($this);
+            $product->setResource($this);
         }
 
         return $this;
@@ -124,8 +164,8 @@ class Brand
     {
         if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
-            if ($product->getBrand() === $this) {
-                $product->setBrand(null);
+            if ($product->getResource() === $this) {
+                $product->setResource(null);
             }
         }
 
