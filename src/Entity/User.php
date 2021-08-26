@@ -22,6 +22,7 @@ class User implements UserInterface
         'ROLE_SUPER_ADMIN' => 'ROLE_SUPER_ADMIN',
         'ROLE_API' => 'ROLE_API',
         'ROLE_HOUSEKEEPINGBOOK' => 'ROLE_HOUSEKEEPINGBOOK',
+        'ROLE_SUPPLIES' => 'ROLE_SUPPLIES',
     );
 
     /**

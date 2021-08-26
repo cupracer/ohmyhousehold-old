@@ -28,6 +28,8 @@ class HouseholdVoter extends Voter
     const CREATE_ACCOUNTHOLDER = 'createAccountHolder';
     const CREATE_BOOKINGCATEGORY = 'createBookingCategory';
 
+    const CREATE_SUPPLIES_BRAND = 'createSuppliesBrand';
+
     private HouseholdUserRepository $householdUserRepository;
 
     public function __construct(HouseholdUserRepository $householdUserRepository)
@@ -49,7 +51,8 @@ class HouseholdVoter extends Voter
             self::CREATE_PERIODIC_WITHDRAWAL_TRANSACTION,
             self::CREATE_PERIODIC_TRANSFER_TRANSACTION,
             self::CREATE_ACCOUNTHOLDER,
-            self::CREATE_BOOKINGCATEGORY
+            self::CREATE_BOOKINGCATEGORY,
+            self::CREATE_SUPPLIES_BRAND,
         ])) {
             return false;
         }
@@ -105,6 +108,8 @@ class HouseholdVoter extends Voter
                 return $this->canCreateAccountHolder($householdUser);
             case self::CREATE_BOOKINGCATEGORY:
                 return $this->canCreateBookingCategory($householdUser);
+            case self::CREATE_SUPPLIES_BRAND:
+                return $this->canCreateSuppliesBrand($householdUser);
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -174,5 +179,11 @@ class HouseholdVoter extends Voter
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return $householdUser->getIsAdmin();
+    }
+
+    private function canCreateSuppliesBrand(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
     }
 }
