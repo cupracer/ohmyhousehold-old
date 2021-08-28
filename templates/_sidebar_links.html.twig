@@ -98,16 +98,19 @@
 
 <li class="nav-item">
     <a href="{{ path('housekeepingbook_asset_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_asset_account_index') %}active{% endif %}">
-        <i class="nav-icon fas fa-credit-card"></i> Asset accounts
+        <i class="nav-icon fas fa-credit-card"></i>
+        <p>Asset accounts</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ path('housekeepingbook_accountholder_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_accountholder_index') %}active{% endif %}">
-        <i class="nav-icon fas fa-handshake"></i> Account holders
+        <i class="nav-icon fas fa-handshake"></i>
+        <p>Account holders</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ path('housekeepingbook_bookingcategory_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_bookingcategory_index') %}active{% endif %}">
-        <i class="nav-icon fas fa-database"></i> Booking categories
+        <i class="nav-icon fas fa-database"></i>
+        <p>Booking categories</p>
     </a>
 </li>
