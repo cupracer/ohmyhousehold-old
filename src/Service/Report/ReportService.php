@@ -284,9 +284,18 @@ class ReportService extends DatatablesService
 
             while($intervalDate <= $loopEndDate) {
                 if($intervalDate >= $startDate && $intervalDate <= $endDate) {
+
+                    // ensure that we don't miss the end of a month
+                    if($row->getBookingDayOfMonth() >
+                        cal_days_in_month(CAL_GREGORIAN, intval($bookingDate->format('m')), intval($bookingDate->format('Y')))) {
+                        $bookingDate->modify('last day of this month');
+                    }else {
+                        $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $row->getBookingDayOfMonth());
+                    }
+
                     $transaction = new DepositTransaction();
                     $transaction->setHousehold($row->getHousehold());
-                    $transaction->setBookingDate(clone $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $row->getBookingDayOfMonth()));
+                    $transaction->setBookingDate(clone $bookingDate);
                     $transaction->setHouseholdUser($row->getHouseholdUser());
                     $transaction->setBookingCategory($row->getBookingCategory());
                     $transaction->setSource($row->getSource());
@@ -324,9 +333,17 @@ class ReportService extends DatatablesService
             while($intervalDate <= $loopEndDate) {
                 if($intervalDate >= $startDate && $intervalDate <= $endDate) {
 
+                    // ensure that we don't miss the end of a month
+                    if($row->getBookingDayOfMonth() >
+                        cal_days_in_month(CAL_GREGORIAN, intval($bookingDate->format('m')), intval($bookingDate->format('Y')))) {
+                        $bookingDate->modify('last day of this month');
+                    }else {
+                        $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $row->getBookingDayOfMonth());
+                    }
+
                     $transaction = new WithdrawalTransaction();
                     $transaction->setHousehold($row->getHousehold());
-                    $transaction->setBookingDate(clone $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $row->getBookingDayOfMonth()));
+                    $transaction->setBookingDate(clone $bookingDate);
                     $transaction->setHouseholdUser($row->getHouseholdUser());
                     $transaction->setBookingCategory($row->getBookingCategory());
                     $transaction->setSource($row->getSource());
@@ -364,9 +381,17 @@ class ReportService extends DatatablesService
             while($intervalDate <= $loopEndDate) {
                 if($intervalDate >= $startDate && $intervalDate <= $endDate) {
 
+                    // ensure that we don't miss the end of a month
+                    if($row->getBookingDayOfMonth() >
+                        cal_days_in_month(CAL_GREGORIAN, intval($bookingDate->format('m')), intval($bookingDate->format('Y')))) {
+                        $bookingDate->modify('last day of this month');
+                    }else {
+                        $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $row->getBookingDayOfMonth());
+                    }
+
                     $transaction = new TransferTransaction();
                     $transaction->setHousehold($row->getHousehold());
-                    $transaction->setBookingDate(clone $bookingDate->setDate($bookingDate->format('Y'), $bookingDate->format('m'), $row->getBookingDayOfMonth()));
+                    $transaction->setBookingDate(clone $bookingDate);
                     $transaction->setHouseholdUser($row->getHouseholdUser());
                     $transaction->setBookingCategory($row->getBookingCategory());
                     $transaction->setSource($row->getSource());
