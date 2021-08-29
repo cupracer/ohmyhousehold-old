@@ -8,7 +8,7 @@ use App\Entity\Supplies\Item;
 use App\Entity\Supplies\Measure as SupplyMeasure;
 use App\Entity\Supplies\Packaging as SupplyPackaging;
 use App\Entity\Supplies\Product as SupplyProduct;
-use App\Entity\Supplies\Resource as SupplyResource;
+use App\Entity\Supplies\Supply;
 use App\Repository\HouseholdRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -78,9 +78,9 @@ class Household
     private $supplyCategories;
 
     /**
-     * @ORM\OneToMany(targetEntity=SupplyResource::class, mappedBy="household")
+     * @ORM\OneToMany(targetEntity=Supply::class, mappedBy="household")
      */
-    private $supplyResources;
+    private $supplies;
 
     /**
      * @ORM\OneToMany(targetEntity=SupplyPackaging::class, mappedBy="household")
@@ -112,7 +112,7 @@ class Household
         $this->revenueAccounts = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->supplyCategories = new ArrayCollection();
-        $this->supplyResources = new ArrayCollection();
+        $this->supplies = new ArrayCollection();
         $this->supplyPackagings = new ArrayCollection();
         $this->supplyMeasures = new ArrayCollection();
         $this->supplyProducts = new ArrayCollection();
@@ -314,27 +314,27 @@ class Household
     /**
      * @return Collection
      */
-    public function getSupplyResources(): Collection
+    public function getSupplies(): Collection
     {
-        return $this->supplyResources;
+        return $this->supplies;
     }
 
-    public function addSupplyResource(SupplyResource $supplyResource): self
+    public function addSupply(Supply $supply): self
     {
-        if (!$this->supplyResources->contains($supplyResource)) {
-            $this->supplyResources[] = $supplyResource;
-            $supplyResource->setHousehold($this);
+        if (!$this->supplies->contains($supply)) {
+            $this->supplies[] = $supply;
+            $supply->setHousehold($this);
         }
 
         return $this;
     }
 
-    public function removeSupplyResource(SupplyResource $supplyResource): self
+    public function removeSupply(Supply $supply): self
     {
-        if ($this->supplyResources->removeElement($supplyResource)) {
+        if ($this->supplies->removeElement($supply)) {
             // set the owning side to null (unless already changed)
-            if ($supplyResource->getHousehold() === $this) {
-                $supplyResource->setHousehold(null);
+            if ($supply->getHousehold() === $this) {
+                $supply->setHousehold(null);
             }
         }
 

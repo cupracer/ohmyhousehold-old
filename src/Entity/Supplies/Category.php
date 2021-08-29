@@ -45,13 +45,18 @@ class Category
     private $household;
 
     /**
-     * @ORM\OneToMany(targetEntity=Resource::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity=Supply::class, mappedBy="category")
      */
-    private $resources;
+    private $supplies;
 
     public function __construct()
     {
-        $this->resources = new ArrayCollection();
+        $this->supplies = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -104,29 +109,29 @@ class Category
     }
 
     /**
-     * @return Collection|Resource[]
+     * @return Collection|Supply[]
      */
-    public function getResources(): Collection
+    public function getSupplies(): Collection
     {
-        return $this->resources;
+        return $this->supplies;
     }
 
-    public function addResource(Resource $resource): self
+    public function addSupply(Supply $supply): self
     {
-        if (!$this->resources->contains($resource)) {
-            $this->resources[] = $resource;
-            $resource->setCategory($this);
+        if (!$this->supplies->contains($supply)) {
+            $this->supplies[] = $supply;
+            $supply->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeResource(Resource $resource): self
+    public function removeSupply(Supply $supply): self
     {
-        if ($this->resources->removeElement($resource)) {
+        if ($this->supplies->removeElement($supply)) {
             // set the owning side to null (unless already changed)
-            if ($resource->getCategory() === $this) {
-                $resource->setCategory(null);
+            if ($supply->getCategory() === $this) {
+                $supply->setCategory(null);
             }
         }
 

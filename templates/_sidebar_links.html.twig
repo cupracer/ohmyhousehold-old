@@ -144,3 +144,10 @@
         <p>Measures</p>
     </a>
 </li>
+
+<li class="nav-item">
+    <a href="{{ path('supplies_supply_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_supply_index') %}active{% endif %}">
+        <i class="nav-icon fas fa-cubes"></i>
+        <p>Supplies</p>
+    </a>
+</li>

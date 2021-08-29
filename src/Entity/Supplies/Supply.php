@@ -3,14 +3,14 @@
 namespace App\Entity\Supplies;
 
 use App\Entity\Household;
-use App\Repository\ResourceRepository;
+use App\Repository\Supplies\SupplyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=ResourceRepository::class)
+ * @ORM\Entity(repositoryClass=SupplyRepository::class)
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"name", "household"},
@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="This name already exists for the chosen category."
  *     )
  */
-class Resource
+class Supply
 {
     /**
      * @ORM\Id
@@ -43,13 +43,13 @@ class Resource
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="supplyResources")
+     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="supplies")
      * @ORM\JoinColumn(nullable=false)
      */
     private $household;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="resources")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="supplies")
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
@@ -60,7 +60,7 @@ class Resource
     private $minimumNumber;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="resource")
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="supply")
      */
     private $products;
 
@@ -154,7 +154,7 @@ class Resource
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->setResource($this);
+            $product->setSupply($this);
         }
 
         return $this;
@@ -164,8 +164,8 @@ class Resource
     {
         if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
-            if ($product->getResource() === $this) {
-                $product->setResource(null);
+            if ($product->getSupply() === $this) {
+                $product->setSupply(null);
             }
         }
 

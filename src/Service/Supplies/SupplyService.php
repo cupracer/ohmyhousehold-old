@@ -3,24 +3,24 @@
 namespace App\Service\Supplies;
 
 use App\Entity\Household;
-use App\Entity\Supplies\Category;
-use App\Repository\Supplies\CategoryRepository;
+use App\Entity\Supplies\Supply;
+use App\Repository\Supplies\SupplyRepository;
 use App\Service\DatatablesService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class CategoryService extends DatatablesService
+class SupplyService extends DatatablesService
 {
-    private CategoryRepository $categoryRepository;
+    private SupplyRepository $supplyRepository;
     private UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(CategoryRepository $categoryRepository, UrlGeneratorInterface $urlGenerator)
+    public function __construct(SupplyRepository $supplyRepository, UrlGeneratorInterface $urlGenerator)
     {
-        $this->categoryRepository = $categoryRepository;
+        $this->supplyRepository = $supplyRepository;
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getCategoriesAsDatatablesArray(Request $request, Household $household): array
+    public function getSuppliesAsDatatablesArray(Request $request, Household $household): array
     {
         $draw = $request->query->getInt('draw', 1);
         $start = $request->query->getInt('start');
@@ -34,27 +34,29 @@ class CategoryService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'createdAt', ],
+            ['name', 'category', 'minimumNumber', 'createdAt', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
 
-        $result = $this->categoryRepository->getFilteredDataByHousehold(
+        $result = $this->supplyRepository->getFilteredDataByHousehold(
             $household, $start, $length, $orderingData, $search);
 
         $tableData = [];
 
-        /** @var Category $row */
+        /** @var Supply $row */
         foreach($result['data'] as $row) {
             $rowData = [
                 'id' => $row->getId(),
                 'name' => $row->getName(),
+                'category' => $row->getCategory()->getName(),
+                'minimumNumber' => $row->getMinimumNumber(),
                 'usageCount' => $this->getUsageCount($row),
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(
-                'supplies_category_edit', ['id' => $row->getId()]);
+                'supplies_supply_edit', ['id' => $row->getId()]);
 
             $tableData[] = $rowData;
         }
@@ -105,10 +107,10 @@ class CategoryService extends DatatablesService
 //    }
 
     /**
-     * @param Category $category
+     * @param Supply $supply
      * @return int
      */
-    protected function getUsageCount(Category $category): int {
-        return count($category->getSupplies());
+    protected function getUsageCount(Supply $supply): int {
+        return count($supply->getProducts());
     }
 }

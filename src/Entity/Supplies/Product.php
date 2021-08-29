@@ -33,10 +33,10 @@ class Product
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Resource::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Supply::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $resource;
+    private $supply;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -107,14 +107,14 @@ class Product
         return $this->id;
     }
 
-    public function getResource(): ?Resource
+    public function getSupply(): ?Supply
     {
-        return $this->resource;
+        return $this->supply;
     }
 
-    public function setResource(?Resource $resource): self
+    public function setSupply(?Supply $supply): self
     {
-        $this->resource = $resource;
+        $this->supply = $supply;
 
         return $this;
     }
