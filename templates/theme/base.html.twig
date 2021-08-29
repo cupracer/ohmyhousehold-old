@@ -20,8 +20,23 @@
 
 
 {% block body_tag %}
-<body class="hold-transition sidebar-mini text-sm layout-navbar-fixed">
+    <body class="hold-transition sidebar-mini layout-navbar-fixed">
 {% endblock body_tag %}
+
+
+{#
+    Using text-sm in the body tag leads to a gap at the bottom of the sidebar.
+    As a workaround, text-sm is instead set on navbar_tag, sidebar_tag and main_content_tag
+#}
+
+{% block navbar_tag %}
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light text-sm">
+{% endblock navbar_tag %}
+
+
+{% block sidebar_tag %}
+    <aside class="main-sidebar sidebar-dark-primary elevation-4 text-sm">
+{% endblock sidebar_tag %}
 
 
 {% block sidebar_logo %}
@@ -43,10 +58,6 @@
 {% block sidebar_links %}
     {% include '_sidebar_links.html.twig' %}
 {% endblock %}
-
-
-{% block sidebar_toggle %}
-{% endblock sidebar_toggle %}
 
 
 {% block navbar_left_items %}
@@ -147,16 +158,17 @@
 {% endblock login_logout_button %}
 
 
-{% block content_page_title %}{% endblock content_page_title %}
-
-
-{% block page_breadcrumb %}
-{% endblock page_breadcrumb %}
+{% block content_page_header %}{% endblock content_page_header %}
 
 
 {% block page_messages %}
     {{ include('theme/_page_messages.html.twig') }}
 {% endblock page_messages %}
+
+
+{% block main_content_tag %}
+    <section class="content text-sm">
+{% endblock main_content_tag %}
 
 
 {% block page_body %}
@@ -249,6 +261,9 @@
 
 
 {% block footer %}
+    <footer class="main-footer text-sm">
+        <small>Theme powered by <a href="https://adminlte.io" target="_blank">AdminLTE.io</a>.</small>
+    </footer>
 {% endblock footer %}
 
 

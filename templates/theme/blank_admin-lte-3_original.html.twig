@@ -24,7 +24,9 @@
 <!-- Site wrapper -->
 <div class="wrapper">
   <!-- Navbar -->
+  {% block navbar_tag %}
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  {% endblock navbar_tag %}
     <!-- Left navbar links -->
     <ul class="navbar-nav">
 {% block sidebar_toggle %}
@@ -71,7 +73,7 @@
 
 {% block navbar_messages_dropdown %}
       <!-- Messages Dropdown Menu -->
-    <li class="nav-item dropdown">
+      <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-comments"></i>
           <span class="badge badge-danger navbar-badge">3</span>
@@ -179,7 +181,9 @@
 
 {% block sidebar_block %}
   <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  {% block sidebar_tag %}
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  {% endblock sidebar_tag %}
 {% block sidebar_logo %}
     <!-- Brand Logo -->
     <a href="../../index3.html" class="brand-link">
@@ -216,8 +220,8 @@
       </div>
 {% endblock sidebar_search %}
 
-    <!-- Sidebar Menu -->
-    <nav class="mt-2">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
@@ -867,6 +871,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
+        {% block content_page_header %}
         <div class="row mb-2">
           <div class="col-sm-6">
 {% block content_page_title %}
@@ -882,11 +887,14 @@
 {% endblock page_breadcrumb %}
           </div>
         </div>
+        {% endblock content_page_header %}
       </div><!-- /.container-fluid -->
     </section>
 
     <!-- Main content -->
+    {% block main_content_tag %}
     <section class="content">
+    {% endblock main_content_tag %}
 {% block page_messages %}{% endblock page_messages %}
 {% block page_body %}
 
