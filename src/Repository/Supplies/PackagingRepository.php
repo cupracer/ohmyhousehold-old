@@ -106,6 +106,24 @@ class PackagingRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return Packaging[] Returns an array of Packaging objects
+     */
+    public function findAllGrantedByHousehold(Household $household): array
+    {
+        $packagings = $this->createQueryBuilder('p')
+            ->andWhere('p.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('LOWER(p.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($packagings, function (Packaging $packaging) {
+            return $this->security->isGranted('view', $packaging);
+        });
+    }
+
     // /**
     //  * @return Packaging[] Returns an array of Packaging objects
     //  */

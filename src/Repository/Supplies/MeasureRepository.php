@@ -106,6 +106,24 @@ class MeasureRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return Measure[] Returns an array of Measure objects
+     */
+    public function findAllGrantedByHousehold(Household $household): array
+    {
+        $measures = $this->createQueryBuilder('m')
+            ->andWhere('m.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('LOWER(m.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($measures, function (Measure $measure) {
+            return $this->security->isGranted('view', $measure);
+        });
+    }
+
     // /**
     //  * @return Measure[] Returns an array of Measure objects
     //  */

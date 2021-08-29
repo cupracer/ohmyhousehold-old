@@ -106,6 +106,24 @@ class SupplyRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return Supply[] Returns an array of Supply objects
+     */
+    public function findAllGrantedByHousehold(Household $household): array
+    {
+        $supplies = $this->createQueryBuilder('s')
+            ->andWhere('s.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('LOWER(s.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($supplies, function (Supply $supply) {
+            return $this->security->isGranted('view', $supply);
+        });
+    }
+
     // /**
     //  * @return Supply[] Returns an array of Supply objects
     //  */

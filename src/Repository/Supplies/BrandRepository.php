@@ -106,6 +106,24 @@ class BrandRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return Brand[] Returns an array of Brand objects
+     */
+    public function findAllGrantedByHousehold(Household $household): array
+    {
+        $brands = $this->createQueryBuilder('b')
+            ->andWhere('b.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('LOWER(b.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($brands, function (Brand $brand) {
+            return $this->security->isGranted('view', $brand);
+        });
+    }
+
 
     // /**
     //  * @return Brand[] Returns an array of Brand objects

@@ -151,3 +151,10 @@
         <p>Supplies</p>
     </a>
 </li>
+
+<li class="nav-item">
+    <a href="{{ path('supplies_product_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_product_index') %}active{% endif %}">
+        <i class="nav-icon fas fa-barcode"></i>
+        <p>Products</p>
+    </a>
+</li>
