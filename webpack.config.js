@@ -63,6 +63,7 @@ Encore
     .addEntry('supplies_brand_index', './assets/js/supplies/brand_index.js')
     .addEntry('supplies_category_index', './assets/js/supplies/category_index.js')
     .addEntry('supplies_packaging_index', './assets/js/supplies/packaging_index.js')
+    .addEntry('supplies_measure_index', './assets/js/supplies/measure_index.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

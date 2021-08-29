@@ -30,6 +30,7 @@ class HouseholdVoter extends Voter
 
     const CREATE_SUPPLIES_BRAND = 'createSuppliesBrand';
     const CREATE_SUPPLIES_CATEGORY = 'createSuppliesCategory';
+    const CREATE_SUPPLIES_MEASURE = 'createSuppliesMeasure';
     const CREATE_SUPPLIES_PACKAGING = 'createSuppliesPackaging';
 
     private HouseholdUserRepository $householdUserRepository;
@@ -56,6 +57,7 @@ class HouseholdVoter extends Voter
             self::CREATE_BOOKINGCATEGORY,
             self::CREATE_SUPPLIES_BRAND,
             self::CREATE_SUPPLIES_CATEGORY,
+            self::CREATE_SUPPLIES_MEASURE,
             self::CREATE_SUPPLIES_PACKAGING,
         ])) {
             return false;
@@ -116,6 +118,8 @@ class HouseholdVoter extends Voter
                 return $this->canCreateSuppliesBrand($householdUser);
             case self::CREATE_SUPPLIES_CATEGORY:
                 return $this->canCreateSuppliesCategory($householdUser);
+            case self::CREATE_SUPPLIES_MEASURE:
+                return $this->canCreateSuppliesMeasure($householdUser);
             case self::CREATE_SUPPLIES_PACKAGING:
                 return $this->canCreateSuppliesPackaging($householdUser);
         }
@@ -196,6 +200,12 @@ class HouseholdVoter extends Voter
     }
 
     private function canCreateSuppliesCategory(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCreateSuppliesMeasure(HouseholdUser $householdUser): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return (bool)$householdUser;
