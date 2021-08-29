@@ -61,6 +61,7 @@ Encore
     .addEntry('housekeepingbook_report_current_period', './assets/js/housekeepingbook/report/currentperiod.js')
 
     .addEntry('supplies_brand_index', './assets/js/supplies/brand_index.js')
+    .addEntry('supplies_category_index', './assets/js/supplies/category_index.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
