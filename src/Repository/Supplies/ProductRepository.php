@@ -113,7 +113,9 @@ class ProductRepository extends ServiceEntityRepository
         foreach($orderingData as $order) {
             switch ($order['name']) {
                 case "name":
-                    $query->addOrderBy('LOWER(p.name)', $order['dir']);
+                    $query
+                        ->addSelect('CASE WHEN p.name IS NULL THEN LOWER(s.name) ELSE LOWER(p.name) END AS HIDDEN nameColumn')
+                        ->addOrderBy('nameColumn', $order['dir']);
                     break;
                 case "brand":
                     $query->addOrderBy('LOWER(b.name)', $order['dir']);
