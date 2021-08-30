@@ -42,6 +42,7 @@ class DemoFixtures extends Fixture
                 User::ROLES['ROLE_SUPER_ADMIN'],
                 User::ROLES['ROLE_API'],
                 User::ROLES['ROLE_HOUSEKEEPINGBOOK'],
+                User::ROLES['ROLE_SUPPLIES'],
             ])
             ->setIsVerified(true)
             ->setEmail(strtolower($this->superAdminEmail))
@@ -155,6 +156,7 @@ class DemoFixtures extends Fixture
         $member1
             ->setRoles([
                 User::ROLES['ROLE_HOUSEKEEPINGBOOK'],
+                User::ROLES['ROLE_SUPPLIES'],
             ])
             ->setIsVerified(true)
             ->setEmail(strtolower('member1@example.com'))
