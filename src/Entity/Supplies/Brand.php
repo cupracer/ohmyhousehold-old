@@ -11,6 +11,7 @@ use App\Entity\Household;
 
 /**
  * @ORM\Entity(repositoryClass=BrandRepository::class)
+ * @ORM\Table(name="supplies_brand")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"name", "household"},

@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=SupplyRepository::class)
+ * @ORM\Table(name="supplies_supply")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"name", "household"},

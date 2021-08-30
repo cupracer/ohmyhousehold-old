@@ -11,7 +11,7 @@ use App\Entity\Household;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
- * @ORM\Table(name="supply_category")
+ * @ORM\Table(name="supplies_category")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
  *     fields={"name", "household"},

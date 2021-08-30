@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ItemRepository::class)
+ * @ORM\Table(name="supplies_item")
  * @ORM\HasLifecycleCallbacks()
  */
 class Item
