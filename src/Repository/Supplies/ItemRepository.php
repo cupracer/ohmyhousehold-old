@@ -8,7 +8,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Item|null find($id, $lockMode = null, $lockVersion = null)
@@ -96,11 +95,19 @@ class ItemRepository extends ServiceEntityRepository
 
         foreach($orderingData as $order) {
             switch ($order['name']) {
-                case "name":
-                    $query->addOrderBy('LOWER(i.name)', $order['dir']);
+                case "purchaseDate":
+                    $query->addOrderBy('i.purchaseDate', $order['dir']);
                     break;
-                case "createdAt":
-                    $query->addOrderBy('i.createdAt', $order['dir']);
+                case "product":
+                    $query
+                        ->innerJoin('i.product', 'p')
+                        ->innerJoin('p.supply', 's')
+                        ->select('i')
+                        ->addSelect('CASE WHEN p.name IS NULL THEN LOWER(s.name) ELSE LOWER(p.name) END AS HIDDEN nameOrderColumn')
+                        ->addOrderBy('nameOrderColumn', $order['dir']);
+                    break;
+                case "bestBeforeDate":
+                    $query->addOrderBy('i.bestBeforeDate', $order['dir']);
                     break;
             }
         }

@@ -38,7 +38,7 @@ class ItemService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['product', 'createdAt', ],
+            ['purchaseDate', 'product', 'bestBeforeDate', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -56,7 +56,7 @@ class ItemService extends DatatablesService
         foreach($result['data'] as $row) {
             $rowData = [
                 'id' => $row->getId(),
-                'purchaseDate' => $dateFormatter->format($row->getPurchaseDate()),
+                'purchaseDate' => $row->getPurchaseDate() ? $dateFormatter->format($row->getPurchaseDate()) : null,
                 'product' => $row->getProduct()->getName() ?: $row->getProduct()->getSupply()->getName(),
                 'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
