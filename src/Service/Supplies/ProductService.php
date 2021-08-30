@@ -50,7 +50,7 @@ class ProductService extends DatatablesService
         foreach($result['data'] as $row) {
             $rowData = [
                 'id' => $row->getId(),
-                'name' => $row->getName() ?: $row->getSupply()->getName(),
+                'name' => $row->getSupply()->getName() . ($row->getName() ? ' - ' . $row->getName() : ''),
                 'brand' => $row->getBrand()->getName(),
                 'ean' => $row->getEan(),
                 'category' => $row->getSupply()->getCategory()->getName(),
@@ -97,7 +97,10 @@ class ProductService extends DatatablesService
         foreach($result['data'] as $row) {
             $rowData = [
                 'id' => $row->getId(),
-                'text' => $row->getName(),
+                'text' => $row->getSupply()->getName() .
+                    ($row->getName() ? ' - ' . $row->getName() : '') .
+                    ' - ' . $row->getBrand()->getName() .
+                    ' - ' . $row->getQuantity() . $row->getMeasure()->getName(),
             ];
 
             $tableData[] = $rowData;
