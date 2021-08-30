@@ -39,14 +39,18 @@ class SupplyRepository extends ServiceEntityRepository
             ->andWhere('s.household = :household')
             ->innerJoin('s.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
+            ->innerJoin('s.category', 'c')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $user)
         ;
 
         if($search) {
-            $query->andWhere('s.name LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->like('s.name', ':search'),
+                $query->expr()->like('c.name', ':search'),
+            ))
+            ->setParameter('search', '%' . $search . '%');
         }
 
         return $query
@@ -75,6 +79,7 @@ class SupplyRepository extends ServiceEntityRepository
             ->andWhere('s.household = :household')
             ->innerJoin('s.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
+            ->innerJoin('s.category', 'c')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $this->security->getUser())
@@ -82,8 +87,10 @@ class SupplyRepository extends ServiceEntityRepository
             ->setMaxResults($length);
 
         if($search) {
-            // TODO: enable searching for more columns (as defined by Datatables)
-            $query->andWhere('s.name LIKE :search')
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->like('s.name', ':search'),
+                $query->expr()->like('c.name', ':search'),
+            ))
                 ->setParameter('search', '%' . $search . '%');
         }
 
@@ -94,7 +101,6 @@ class SupplyRepository extends ServiceEntityRepository
                     break;
                 case "category":
                     $query
-                        ->innerJoin('s.category', 'c')
                         ->addOrderBy('LOWER(c.name)', $order['dir']);
                     break;
                 case "minimumNumber":

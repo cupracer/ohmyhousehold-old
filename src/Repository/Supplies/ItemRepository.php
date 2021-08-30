@@ -41,6 +41,8 @@ class ItemRepository extends ServiceEntityRepository
             ->andWhere('i.household = :household')
             ->innerJoin('i.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
+            ->innerJoin('i.product', 'p')
+            ->innerJoin('p.supply', 's')
             ->andWhere('hhu.user = :user')
             ->andWhere($query->expr()->isNull('i.withdrawalDate'))
             ->setParameter('household', $household)
@@ -48,7 +50,13 @@ class ItemRepository extends ServiceEntityRepository
         ;
 
         if($search) {
-            $query->andWhere('i.name LIKE :search')
+            $query
+                ->andWhere(
+                    $query->expr()->orX(
+                        $query->expr()->like('p.name', ':search'),
+                        $query->expr()->like('s.name', ':search'),
+                    )
+                )
                 ->setParameter('search', '%' . $search . '%');
         }
 
@@ -80,6 +88,8 @@ class ItemRepository extends ServiceEntityRepository
             ->andWhere('i.household = :household')
             ->innerJoin('i.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
+            ->innerJoin('i.product', 'p')
+            ->innerJoin('p.supply', 's')
             ->andWhere('hhu.user = :user')
             ->andWhere($query->expr()->isNull('i.withdrawalDate'))
             ->setParameter('household', $household)
@@ -88,8 +98,13 @@ class ItemRepository extends ServiceEntityRepository
             ->setMaxResults($length);
 
         if($search) {
-            // TODO: enable searching for more columns (as defined by Datatables)
-            $query->andWhere('i.name LIKE :search')
+            $query
+                ->andWhere(
+                    $query->expr()->orX(
+                        $query->expr()->like('p.name', ':search'),
+                        $query->expr()->like('s.name', ':search'),
+                    )
+                )
                 ->setParameter('search', '%' . $search . '%');
         }
 
@@ -100,11 +115,8 @@ class ItemRepository extends ServiceEntityRepository
                     break;
                 case "product":
                     $query
-                        ->innerJoin('i.product', 'p')
-                        ->innerJoin('p.supply', 's')
-                        ->select('i')
-                        ->addSelect('CASE WHEN p.name IS NULL THEN LOWER(s.name) ELSE LOWER(p.name) END AS HIDDEN nameOrderColumn')
-                        ->addOrderBy('nameOrderColumn', $order['dir']);
+                        ->addSelect('CASE WHEN p.name IS NULL THEN LOWER(s.name) ELSE LOWER(p.name) END AS HIDDEN nameColumn')
+                        ->addOrderBy('nameColumn', $order['dir']);
                     break;
                 case "bestBeforeDate":
                     $query->addOrderBy('i.bestBeforeDate', $order['dir']);

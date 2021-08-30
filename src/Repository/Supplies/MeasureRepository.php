@@ -45,8 +45,11 @@ class MeasureRepository extends ServiceEntityRepository
         ;
 
         if($search) {
-            $query->andWhere('m.name LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->like('m.name', ':search'),
+                $query->expr()->like('m.physicalQuantity', ':search'),
+            ))
+            ->setParameter('search', '%' . $search . '%');
         }
 
         return $query
@@ -82,8 +85,10 @@ class MeasureRepository extends ServiceEntityRepository
             ->setMaxResults($length);
 
         if($search) {
-            // TODO: enable searching for more columns (as defined by Datatables)
-            $query->andWhere('m.name LIKE :search')
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->like('m.name', ':search'),
+                $query->expr()->like('m.physicalQuantity', ':search'),
+            ))
                 ->setParameter('search', '%' . $search . '%');
         }
 

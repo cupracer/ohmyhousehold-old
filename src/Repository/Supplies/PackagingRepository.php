@@ -82,7 +82,6 @@ class PackagingRepository extends ServiceEntityRepository
             ->setMaxResults($length);
 
         if($search) {
-            // TODO: enable searching for more columns (as defined by Datatables)
             $query->andWhere('p.name LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }

@@ -40,6 +40,9 @@ class ProductRepository extends ServiceEntityRepository
             ->innerJoin('p.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
             ->innerJoin('p.supply', 's')
+            ->innerJoin('p.brand', 'b')
+            ->innerJoin('s.category', 'c')
+            ->innerJoin('p.packaging', 'pkg')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $user)
@@ -49,7 +52,10 @@ class ProductRepository extends ServiceEntityRepository
             $query->andWhere($query->expr()->orX(
                 $query->expr()->like('p.name', ':search'),
                 $query->expr()->like('s.name', ':search'),
+                $query->expr()->like('b.name', ':search'),
                 $query->expr()->like('p.ean', ':search'),
+                $query->expr()->like('c.name', ':search'),
+                $query->expr()->like('pkg.name', ':search'),
             ));
 
             $query->setParameter('search', '%' . $search . '%');
@@ -82,6 +88,9 @@ class ProductRepository extends ServiceEntityRepository
             ->innerJoin('p.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
             ->innerJoin('p.supply', 's')
+            ->innerJoin('p.brand', 'b')
+            ->innerJoin('s.category', 'c')
+            ->innerJoin('p.packaging', 'pkg')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $this->security->getUser())
@@ -92,7 +101,10 @@ class ProductRepository extends ServiceEntityRepository
             $query->andWhere($query->expr()->orX(
                 $query->expr()->like('p.name', ':search'),
                 $query->expr()->like('s.name', ':search'),
+                $query->expr()->like('b.name', ':search'),
                 $query->expr()->like('p.ean', ':search'),
+                $query->expr()->like('c.name', ':search'),
+                $query->expr()->like('pkg.name', ':search'),
             ));
 
             $query->setParameter('search', '%' . $search . '%');
@@ -104,19 +116,16 @@ class ProductRepository extends ServiceEntityRepository
                     $query->addOrderBy('LOWER(p.name)', $order['dir']);
                     break;
                 case "brand":
-                    $query->innerJoin('p.brand', 'b')
-                        ->addOrderBy('LOWER(b.name)', $order['dir']);
+                    $query->addOrderBy('LOWER(b.name)', $order['dir']);
                     break;
                 case "ean":
                     $query->addOrderBy('ABS(p.ean)', $order['dir']);
                     break;
                 case "category":
-                    $query->innerJoin('s.category', 'c')
-                        ->addOrderBy('LOWER(c.name)', $order['dir']);
+                    $query->addOrderBy('LOWER(c.name)', $order['dir']);
                     break;
                 case "packaging":
-                    $query->innerJoin('p.packaging', 'pkg')
-                        ->addOrderBy('LOWER(pkg.name)', $order['dir']);
+                    $query->addOrderBy('LOWER(pkg.name)', $order['dir']);
                     break;
             }
         }
