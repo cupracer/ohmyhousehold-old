@@ -23,11 +23,6 @@ $(document).ready(function () {
                 defaultContent: "-",
             },
             {
-                data: "createdAt",
-                defaultContent: "-",
-                class: "min",
-            },
-            {
                 class: "min",
                 searchable: false,
                 orderable: false,

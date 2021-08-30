@@ -34,11 +34,6 @@ $(document).ready(function () {
                 orderable: false,
             },
             {
-                data: "createdAt",
-                defaultContent: "-",
-                class: "min",
-            },
-            {
                 class: "min",
                 searchable: false,
                 orderable: false,

@@ -92,8 +92,8 @@ class MeasureRepository extends ServiceEntityRepository
                 case "name":
                     $query->addOrderBy('LOWER(m.name)', $order['dir']);
                     break;
-                case "createdAt":
-                    $query->addOrderBy('m.createdAt', $order['dir']);
+                case "physicalQuantity":
+                    $query->addOrderBy('LOWER(m.physicalQuantity)', $order['dir']);
                     break;
             }
         }

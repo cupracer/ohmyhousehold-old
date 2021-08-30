@@ -92,9 +92,6 @@ class BrandRepository extends ServiceEntityRepository
                 case "name":
                     $query->addOrderBy('LOWER(a.name)', $order['dir']);
                     break;
-                case "createdAt":
-                    $query->addOrderBy('a.createdAt', $order['dir']);
-                    break;
             }
         }
 

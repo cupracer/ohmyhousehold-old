@@ -92,9 +92,6 @@ class PackagingRepository extends ServiceEntityRepository
                 case "name":
                     $query->addOrderBy('LOWER(p.name)', $order['dir']);
                     break;
-                case "createdAt":
-                    $query->addOrderBy('p.createdAt', $order['dir']);
-                    break;
             }
         }
 

@@ -92,8 +92,13 @@ class SupplyRepository extends ServiceEntityRepository
                 case "name":
                     $query->addOrderBy('LOWER(s.name)', $order['dir']);
                     break;
-                case "createdAt":
-                    $query->addOrderBy('s.createdAt', $order['dir']);
+                case "category":
+                    $query
+                        ->innerJoin('s.category', 'c')
+                        ->addOrderBy('LOWER(c.name)', $order['dir']);
+                    break;
+                case "minimumNumber":
+                    $query->addOrderBy('s.minimumNumber', $order['dir']);
                     break;
             }
         }

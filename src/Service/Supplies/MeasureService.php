@@ -34,7 +34,7 @@ class MeasureService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'physicalQuantity', 'createdAt', ],
+            ['name', 'physicalQuantity', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -50,7 +50,6 @@ class MeasureService extends DatatablesService
                 'id' => $row->getId(),
                 'name' => $row->getName(),
                 'physicalQuantity' => $row->getPhysicalQuantity(),
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(

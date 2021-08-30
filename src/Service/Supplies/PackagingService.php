@@ -34,7 +34,7 @@ class PackagingService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'createdAt', ],
+            ['name', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -50,7 +50,6 @@ class PackagingService extends DatatablesService
                 'id' => $row->getId(),
                 'name' => $row->getName(),
                 'usageCount' => $this->getUsageCount($row),
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(

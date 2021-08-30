@@ -103,8 +103,20 @@ class ProductRepository extends ServiceEntityRepository
                 case "name":
                     $query->addOrderBy('LOWER(p.name)', $order['dir']);
                     break;
-                case "createdAt":
-                    $query->addOrderBy('p.createdAt', $order['dir']);
+                case "brand":
+                    $query->innerJoin('p.brand', 'b')
+                        ->addOrderBy('LOWER(b.name)', $order['dir']);
+                    break;
+                case "ean":
+                    $query->addOrderBy('ABS(p.ean)', $order['dir']);
+                    break;
+                case "category":
+                    $query->innerJoin('s.category', 'c')
+                        ->addOrderBy('LOWER(c.name)', $order['dir']);
+                    break;
+                case "packaging":
+                    $query->innerJoin('p.packaging', 'pkg')
+                        ->addOrderBy('LOWER(pkg.name)', $order['dir']);
                     break;
             }
         }

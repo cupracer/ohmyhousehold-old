@@ -37,6 +37,7 @@ $(document).ready(function () {
             {
                 data: "amount",
                 defaultContent: "-",
+                orderable: false,
             },
             {
                 data: "usageCount",

@@ -93,9 +93,6 @@ class CategoryRepository extends ServiceEntityRepository
                 case "name":
                     $query->addOrderBy('LOWER(c.name)', $order['dir']);
                     break;
-                case "createdAt":
-                    $query->addOrderBy('c.createdAt', $order['dir']);
-                    break;
             }
         }
 

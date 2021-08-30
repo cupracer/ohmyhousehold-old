@@ -12,7 +12,7 @@ $(document).ready(function () {
         info: true,
         autoWidth: false,
         responsive: true,
-        order: [[ 0, "asc" ]],
+        order: [[ 1, "asc" ]],
         columns: [
             {
                 data: "purchaseDate",

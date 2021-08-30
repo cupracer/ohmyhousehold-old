@@ -36,7 +36,7 @@ class ProductService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'createdAt', ],
+            ['name', 'brand', 'ean', 'category', 'packaging', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );

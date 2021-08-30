@@ -34,7 +34,7 @@ class SupplyService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'category', 'minimumNumber', 'createdAt', ],
+            ['name', 'category', 'minimumNumber', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -52,7 +52,6 @@ class SupplyService extends DatatablesService
                 'category' => $row->getCategory()->getName(),
                 'minimumNumber' => $row->getMinimumNumber(),
                 'usageCount' => $this->getUsageCount($row),
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(
