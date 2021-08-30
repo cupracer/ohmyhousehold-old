@@ -71,6 +71,10 @@ Encore
     .addEntry('supplies_product_index', './assets/js/supplies/product_index.js')
     .addEntry('supplies_product_form', './assets/js/supplies/product_form.js')
 
+    .addEntry('supplies_item_index', './assets/js/supplies/item_index.js')
+    .addEntry('supplies_item_form_new', './assets/js/supplies/item_form_new.js')
+    .addEntry('supplies_item_form_edit', './assets/js/supplies/item_form_edit.js')
+
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 

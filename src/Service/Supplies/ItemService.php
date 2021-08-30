@@ -3,24 +3,28 @@
 namespace App\Service\Supplies;
 
 use App\Entity\Household;
-use App\Entity\Supplies\Supply;
-use App\Repository\Supplies\SupplyRepository;
+use App\Entity\Supplies\Item;
+use App\Entity\User;
+use App\Repository\Supplies\ItemRepository;
 use App\Service\DatatablesService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
-class SupplyService extends DatatablesService
+class ItemService extends DatatablesService
 {
-    private SupplyRepository $supplyRepository;
+    private ItemRepository $itemRepository;
     private UrlGeneratorInterface $urlGenerator;
+    private Security $security;
 
-    public function __construct(SupplyRepository $supplyRepository, UrlGeneratorInterface $urlGenerator)
+    public function __construct(ItemRepository $itemRepository, UrlGeneratorInterface $urlGenerator, Security $security)
     {
-        $this->supplyRepository = $supplyRepository;
+        $this->itemRepository = $itemRepository;
         $this->urlGenerator = $urlGenerator;
+        $this->security = $security;
     }
 
-    public function getSuppliesAsDatatablesArray(Request $request, Household $household): array
+    public function getItemsAsDatatablesArray(Request $request, Household $household): array
     {
         $draw = $request->query->getInt('draw', 1);
         $start = $request->query->getInt('start');
@@ -34,29 +38,32 @@ class SupplyService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'category', 'minimumNumber', 'createdAt', ],
+            ['product', 'createdAt', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
 
-        $result = $this->supplyRepository->getFilteredDataByHousehold(
+        $result = $this->itemRepository->getFilteredDataByHousehold(
             $household, $start, $length, $orderingData, $search);
 
         $tableData = [];
 
-        /** @var Supply $row */
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+
+        /** @var Item $row */
         foreach($result['data'] as $row) {
             $rowData = [
                 'id' => $row->getId(),
-                'name' => $row->getName(),
-                'category' => $row->getCategory()->getName(),
-                'minimumNumber' => $row->getMinimumNumber(),
-                'usageCount' => $this->getUsageCount($row),
+                'purchaseDate' => $dateFormatter->format($row->getPurchaseDate()),
+                'product' => $row->getProduct()->getName() ?: $row->getProduct()->getSupply()->getName(),
+                'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(
-                'supplies_supply_edit', ['id' => $row->getId()]);
+                'supplies_item_edit', ['id' => $row->getId()]);
 
             $tableData[] = $rowData;
         }
@@ -105,18 +112,4 @@ class SupplyService extends DatatablesService
 //            ]
 //        ];
 //    }
-
-    /**
-     * @param Supply $supply
-     * @return int
-     */
-    protected function getUsageCount(Supply $supply): int {
-        $count = 0;
-
-        foreach($supply->getProducts() as $product) {
-            $count+= count($product->getItems());
-        }
-
-        return $count;
-    }
 }

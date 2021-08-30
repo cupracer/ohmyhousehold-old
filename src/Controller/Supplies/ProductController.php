@@ -40,15 +40,15 @@ class ProductController extends AbstractController
         );
     }
 
-//    #[Route('/select2', name: 'housekeepingbook_accountholder_select2', methods: ['GET'])]
-//    public function getAsSelect2(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
-//    {
-//        $currentHousehold = $householdRepository->find($session->get('current_household'));
-//
-//        return $this->json(
-//            $accountHolderService->getAccountHoldersAsSelect2Array($request, $currentHousehold)
-//        );
-//    }
+    #[Route('/select2', name: 'supplies_product_select2', methods: ['GET'])]
+    public function getAsSelect2(Request $request, ProductService $productService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    {
+        $currentHousehold = $householdRepository->find($session->get('current_household'));
+
+        return $this->json(
+            $productService->getProductsAsSelect2Array($request, $currentHousehold)
+        );
+    }
 
     #[Route('/new', name: 'supplies_product_new', methods: ['GET', 'POST'])]
     public function new(

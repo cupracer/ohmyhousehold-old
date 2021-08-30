@@ -39,14 +39,20 @@ class ProductRepository extends ServiceEntityRepository
             ->andWhere('p.household = :household')
             ->innerJoin('p.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
+            ->innerJoin('p.supply', 's')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $user)
         ;
 
         if($search) {
-            $query->andWhere('p.name LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->like('p.name', ':search'),
+                $query->expr()->like('s.name', ':search'),
+                $query->expr()->like('p.ean', ':search'),
+            ));
+
+            $query->setParameter('search', '%' . $search . '%');
         }
 
         return $query
@@ -75,6 +81,7 @@ class ProductRepository extends ServiceEntityRepository
             ->andWhere('p.household = :household')
             ->innerJoin('p.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
+            ->innerJoin('p.supply', 's')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $this->security->getUser())
@@ -82,9 +89,13 @@ class ProductRepository extends ServiceEntityRepository
             ->setMaxResults($length);
 
         if($search) {
-            // TODO: enable searching for more columns (as defined by Datatables)
-            $query->andWhere('p.name LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->like('p.name', ':search'),
+                $query->expr()->like('s.name', ':search'),
+                $query->expr()->like('p.ean', ':search'),
+            ));
+
+            $query->setParameter('search', '%' . $search . '%');
         }
 
         foreach($orderingData as $order) {

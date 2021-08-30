@@ -158,3 +158,10 @@
         <p>Products</p>
     </a>
 </li>
+
+<li class="nav-item">
+    <a href="{{ path('supplies_item_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_item_index') %}active{% endif %}">
+        <i class="nav-icon fas fa-shopping-cart"></i>
+        <p>Items</p>
+    </a>
+</li>

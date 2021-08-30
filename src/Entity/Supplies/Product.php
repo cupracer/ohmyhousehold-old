@@ -102,6 +102,11 @@ class Product
         $this->items = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->name ?: $this->getSupply()->getName();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
