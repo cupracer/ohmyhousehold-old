@@ -28,18 +28,18 @@ class ItemEditDTO
 
 
     /**
-     * @return \DateTimeInterface
+     * @return \DateTimeInterface|null
      */
-    public function getPurchaseDate(): \DateTimeInterface
+    public function getPurchaseDate(): ?\DateTimeInterface
     {
         return $this->purchaseDate;
     }
 
     /**
-     * @param \DateTimeInterface $purchaseDate
+     * @param \DateTimeInterface|null $purchaseDate
      * @return ItemEditDTO
      */
-    public function setPurchaseDate(\DateTimeInterface $purchaseDate): ItemEditDTO
+    public function setPurchaseDate(?\DateTimeInterface $purchaseDate): ItemEditDTO
     {
         $this->purchaseDate = $purchaseDate;
         return $this;
