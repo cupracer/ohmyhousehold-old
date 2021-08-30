@@ -54,7 +54,7 @@ class ProductService extends DatatablesService
                 'brand' => $row->getBrand()->getName(),
                 'ean' => $row->getEan(),
                 'category' => $row->getSupply()->getCategory()->getName(),
-                'packaging' => $row->getPackaging()->getName(),
+                'packaging' => $row->getPackaging() ? $row->getPackaging()->getName() : null,
                 'amount' => $row->getQuantity() . ' ' . $row->getMeasure()->getName(),
                 'usageCount' => $this->getUsageCount($row),
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())

@@ -72,7 +72,7 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity=Packaging::class, inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $packaging;
 
