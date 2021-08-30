@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Item|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,11 +36,14 @@ class ItemRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('i');
 
-        $query = $qb->select($qb->expr()->count('i'))
+        $query = $qb->select($qb->expr()->count('i'));
+
+        $query
             ->andWhere('i.household = :household')
             ->innerJoin('i.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
             ->andWhere('hhu.user = :user')
+            ->andWhere($query->expr()->isNull('i.withdrawalDate'))
             ->setParameter('household', $household)
             ->setParameter('user', $user)
         ;
@@ -71,11 +75,14 @@ class ItemRepository extends ServiceEntityRepository
             $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $search) :
             $result['recordsTotal'];
 
-        $query = $this->createQueryBuilder('i')
+        $query = $this->createQueryBuilder('i');
+
+        $query
             ->andWhere('i.household = :household')
             ->innerJoin('i.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
             ->andWhere('hhu.user = :user')
+            ->andWhere($query->expr()->isNull('i.withdrawalDate'))
             ->setParameter('household', $household)
             ->setParameter('user', $this->security->getUser())
             ->setFirstResult($start)
