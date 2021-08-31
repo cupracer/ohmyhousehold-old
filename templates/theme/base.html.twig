@@ -37,7 +37,8 @@
 {% block sidebar_logo %}
     <!-- Brand Logo -->
     <a href="{{ path('homepage') }}" class="brand-link">
-        <i class="brand-text font-weight-light fas fa-house-user"></i> {{ siteName }}
+        <img src="{{ asset('build/images/OhMyHousehold_166x166.png') }}" alt="{{ siteName}} Logo" class="brand-image img-circle elevation-3" style="opacity: .8; width: 32px;">
+        <span class="brand-text font-weight-light">{{ siteName }}</span>
     </a>
 {% endblock sidebar_logo %}
 
