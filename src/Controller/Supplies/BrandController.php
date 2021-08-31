@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
 #[IsGranted("ROLE_SUPPLIES")]
-#[Route('/{_locale<%app.supported_locales%>}/supplies/brand')]
+#[Route('/{_locale<%app.supported_locales%>}/supplies/components/brand')]
 class BrandController extends AbstractController
 {
     #[Route('/', name: 'supplies_brand_index', methods: ['GET'])]

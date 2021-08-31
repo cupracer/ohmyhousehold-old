@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
 #[IsGranted("ROLE_SUPPLIES")]
-#[Route('/{_locale<%app.supported_locales%>}/supplies/category')]
+#[Route('/{_locale<%app.supported_locales%>}/supplies/components/category')]
 class CategoryController extends AbstractController
 {
     #[Route('/', name: 'supplies_category_index', methods: ['GET'])]

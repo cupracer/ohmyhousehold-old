@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
 #[IsGranted("ROLE_SUPPLIES")]
-#[Route('/{_locale<%app.supported_locales%>}/supplies/measure')]
+#[Route('/{_locale<%app.supported_locales%>}/supplies/components/measure')]
 class MeasureController extends AbstractController
 {
     #[Route('/', name: 'supplies_measure_index', methods: ['GET'])]
