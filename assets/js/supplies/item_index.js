@@ -6,6 +6,7 @@ $(document).ready(function () {
         paging: true,
         serverSide: true,
         lengthChange: true,
+        lengthMenu: [[50, 100, 250, 500, -1], [50, 100, 250, 500, "All"]],
         searching: true,
         ajax: datatable.data('jsonUrl'),
         ordering: true,
