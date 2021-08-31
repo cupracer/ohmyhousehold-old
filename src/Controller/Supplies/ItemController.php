@@ -96,7 +96,7 @@ class ItemController extends AbstractController
                     $this->addFlash('success', t('Item %itemNumber% was added.', ['%itemNumber%' => $i]));
                 }
 
-                return $this->redirectToRoute('supplies_item_index');
+                return $this->redirectToRoute('supplies_item_new');
             }catch (\Exception) {
                 $this->addFlash('error', t('Item could not be created.'));
             }

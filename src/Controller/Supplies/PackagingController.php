@@ -82,7 +82,7 @@ class PackagingController extends AbstractController
 
                 $this->addFlash('success', t('Packaging was added.'));
 
-                return $this->redirectToRoute('supplies_packaging_index');
+                return $this->redirectToRoute('supplies_packaging_new');
             }catch (\Exception) {
                 $this->addFlash('error', t('Packaging could not be created.'));
             }

@@ -86,7 +86,7 @@ class BrandController extends AbstractController
 
                 $this->addFlash('success', t('Brand was added.'));
 
-                return $this->redirectToRoute('supplies_brand_index');
+                return $this->redirectToRoute('supplies_brand_new');
             }catch (\Exception) {
                 $this->addFlash('error', t('Brand could not be created.'));
             }

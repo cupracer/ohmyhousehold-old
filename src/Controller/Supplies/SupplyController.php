@@ -84,7 +84,7 @@ class SupplyController extends AbstractController
 
                 $this->addFlash('success', t('Supply was added.'));
 
-                return $this->redirectToRoute('supplies_supply_index');
+                return $this->redirectToRoute('supplies_supply_new');
             }catch (\Exception) {
                 $this->addFlash('error', t('Supply could not be created.'));
             }

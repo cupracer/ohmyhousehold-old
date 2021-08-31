@@ -90,7 +90,7 @@ class ProductController extends AbstractController
 
                 $this->addFlash('success', t('Product was added.'));
 
-                return $this->redirectToRoute('supplies_product_index');
+                return $this->redirectToRoute('supplies_product_new');
             }catch (\Exception) {
                 $this->addFlash('error', t('Product could not be created.'));
             }

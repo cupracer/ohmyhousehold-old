@@ -83,7 +83,7 @@ class MeasureController extends AbstractController
 
                 $this->addFlash('success', t('Measure was added.'));
 
-                return $this->redirectToRoute('supplies_measure_index');
+                return $this->redirectToRoute('supplies_measure_new');
             }catch (\Exception) {
                 $this->addFlash('error', t('Measure could not be created.'));
             }

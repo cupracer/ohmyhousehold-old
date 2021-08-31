@@ -82,7 +82,7 @@ class CategoryController extends AbstractController
 
                 $this->addFlash('success', t('Category was added.'));
 
-                return $this->redirectToRoute('supplies_category_index');
+                return $this->redirectToRoute('supplies_category_new');
             }catch (\Exception) {
                 $this->addFlash('error', t('Category could not be created.'));
             }
