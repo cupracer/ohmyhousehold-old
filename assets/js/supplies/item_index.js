@@ -24,6 +24,10 @@ $(document).ready(function () {
                 defaultContent: "-",
             },
             {
+                data: "brand",
+                defaultContent: "-",
+            },
+            {
                 data: "bestBeforeDate",
                 defaultContent: "-",
                 class: "min",

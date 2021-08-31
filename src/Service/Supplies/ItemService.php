@@ -58,6 +58,7 @@ class ItemService extends DatatablesService
                 'id' => $row->getId(),
                 'purchaseDate' => $row->getPurchaseDate() ? $dateFormatter->format($row->getPurchaseDate()) : null,
                 'product' => $row->getProduct()->getSupply()->getName() . ($row->getProduct()->getName() ? ' - ' . $row->getProduct()->getName() : ''),
+                'brand' => $row->getProduct()->getBrand()->getName(),
                 'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
