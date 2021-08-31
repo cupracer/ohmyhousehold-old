@@ -11,6 +11,7 @@ use App\Repository\HouseholdRepository;
 use App\Service\Supplies\ItemService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -163,5 +164,71 @@ class ItemController extends AbstractController
         }
 
         return $this->redirectToRoute('supplies_item_index');
+    }
+
+
+    #[Route('/checkout/{id}', name: 'supplies_item_checkout', methods: ['POST'])]
+    public function checkout(Request $request, Item $item): Response
+    {
+        $this->denyAccessUnlessGranted('checkout', $item);
+
+        try {
+            $item->setWithdrawalDate(new \DateTime());
+
+            $this->getDoctrine()->getManager()->flush();
+
+            if($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'status' => 'success',
+                    'message' => 'Item was checked out.',
+                    'checkinUrl' => $this->generateUrl('supplies_item_checkin', ['id' => $item->getId(),]),
+                ]);
+            }else {
+                $this->addFlash('success', t('Item was checked out.'));
+                return $this->redirectToRoute('supplies_item_index');
+            }
+        }catch(\Exception) {
+            if($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'Item could not be checked out.',
+                ]);
+            }else {
+                $this->addFlash('error', t('Item could not be checked out.'));
+                return $this->redirectToRoute('supplies_item_index');
+            }
+        }
+    }
+
+    #[Route('/checkin/{id}', name: 'supplies_item_checkin', methods: ['POST'])]
+    public function checkin(Request $request, Item $item): Response
+    {
+        $this->denyAccessUnlessGranted('checkin', $item);
+
+        try {
+            $item->setWithdrawalDate(null);
+
+            $this->getDoctrine()->getManager()->flush();
+
+            if($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'status' => 'success',
+                    'message' => 'Checkout was cancelled.',
+                ]);
+            }else {
+                $this->addFlash('success', t('Checkout was cancelled.'));
+                return $this->redirectToRoute('supplies_item_index');
+            }
+        }catch(\Exception) {
+            if($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'status' => 'error',
+                    'message' => 'Checkout could not be cancelled.',
+                ]);
+            }else {
+                $this->addFlash('error', t('Checkout could not be cancelled.'));
+                return $this->redirectToRoute('supplies_item_index');
+            }
+        }
     }
 }

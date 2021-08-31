@@ -1,5 +1,11 @@
 {% extends 'theme/base-datatables.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    {{ encore_entry_link_tags('supplies_item_index') }}
+{% endblock stylesheets %}
+
 {% block page_header_buttons %}
     {% if is_granted('createSuppliesItem', household) %}
         <a href="{{ path('supplies_item_new') }}" class="btn btn-outline-primary btn-sm btn-icon-split ml-3">

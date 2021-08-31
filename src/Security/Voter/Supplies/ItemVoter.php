@@ -15,6 +15,8 @@ class ItemVoter extends Voter
     const VIEW = 'view';
     const EDIT = 'edit';
     const DELETE = 'delete';
+    const CHECKOUT = 'checkout';
+    const CHECKIN = 'checkin';
 
     private HouseholdUserRepository $householdUserRepository;
 
@@ -26,7 +28,7 @@ class ItemVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::DELETE, self::CHECKOUT, self::CHECKIN, ])) {
             return false;
         }
 
@@ -68,6 +70,10 @@ class ItemVoter extends Voter
                 return $this->canEdit($householdUser);
             case self::DELETE:
                 return $this->canDelete($householdUser);
+            case self::CHECKOUT:
+                return $this->canCheckout($householdUser);
+            case self::CHECKIN:
+                return $this->canCheckin($householdUser);
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -88,5 +94,17 @@ class ItemVoter extends Voter
     private function canDelete(HouseholdUser $householdUser): bool
     {
         return $householdUser->getIsAdmin();
+    }
+
+    private function canCheckout(HouseholdUser $householdUser): bool
+    {
+        // if users can edit, they can checkout
+        return $this->canEdit($householdUser);
+    }
+
+    private function canCheckin(HouseholdUser $householdUser): bool
+    {
+        // if users can checkout, they can checkin
+        return $this->canCheckout($householdUser);
     }
 }

@@ -62,11 +62,14 @@ class ItemService extends DatatablesService
                 'amount' => 1*$row->getProduct()->getQuantity() . ' ' . $row->getProduct()->getMeasure()->getName(),
                 'purchaseDate' => $row->getPurchaseDate() ? $dateFormatter->format($row->getPurchaseDate()) : null,
                 'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
+                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(
                 'supplies_item_edit', ['id' => $row->getId()]);
+
+            $rowData['checkoutLink'] = $this->urlGenerator->generate(
+                'supplies_item_checkout', ['id' => $row->getId()]);
 
             $tableData[] = $rowData;
         }
