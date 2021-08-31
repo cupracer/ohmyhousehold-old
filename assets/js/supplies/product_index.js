@@ -37,6 +37,7 @@ $(document).ready(function () {
             {
                 data: "amount",
                 defaultContent: "-",
+                class: "min text-right",
                 orderable: false,
             },
             {

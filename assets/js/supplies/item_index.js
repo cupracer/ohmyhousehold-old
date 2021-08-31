@@ -15,11 +15,6 @@ $(document).ready(function () {
         order: [[ 1, "asc" ]],
         columns: [
             {
-                data: "purchaseDate",
-                defaultContent: "-",
-                class: "min",
-            },
-            {
                 data: "product",
                 defaultContent: "-",
             },
@@ -28,9 +23,23 @@ $(document).ready(function () {
                 defaultContent: "-",
             },
             {
+                data: "category",
+                defaultContent: "-",
+            },
+            {
+                data: "amount",
+                defaultContent: "-",
+                class: "min text-right",
+            },
+            {
+                data: "purchaseDate",
+                defaultContent: "-",
+                class: "min text-center",
+            },
+            {
                 data: "bestBeforeDate",
                 defaultContent: "-",
-                class: "min",
+                class: "min text-center",
             },
             {
                 class: "min",

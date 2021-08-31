@@ -55,7 +55,7 @@ class ProductService extends DatatablesService
                 'ean' => $row->getEan(),
                 'category' => $row->getSupply()->getCategory()->getName(),
                 'packaging' => $row->getPackaging() ? $row->getPackaging()->getName() : null,
-                'amount' => $row->getQuantity() . ' ' . $row->getMeasure()->getName(),
+                'amount' => 1*$row->getQuantity() . ' ' . $row->getMeasure()->getName(),
                 'usageCount' => $this->getUsageCount($row),
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
@@ -100,7 +100,7 @@ class ProductService extends DatatablesService
                 'text' => $row->getSupply()->getName() .
                     ($row->getName() ? ' - ' . $row->getName() : '') .
                     ' - ' . $row->getBrand()->getName() .
-                    ' - ' . $row->getQuantity() . $row->getMeasure()->getName(),
+                    ' - ' . 1*$row->getQuantity() . $row->getMeasure()->getName(),
             ];
 
             $tableData[] = $rowData;
