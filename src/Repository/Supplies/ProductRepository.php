@@ -158,6 +158,28 @@ class ProductRepository extends ServiceEntityRepository
         });
     }
 
+    /**
+     * @return Product[] Returns an array of Product objects, ideally just a single one (by $id)
+     *
+     * TODO: type hint for $id
+     */
+    public function findGrantedByHouseholdAndId(Household $household, $id): array
+    {
+        $products = $this->createQueryBuilder('p')
+            ->andWhere('p.household = :household')
+            ->andWhere('p.id = :id')
+            ->setParameter('household', $household)
+            ->setParameter('id', $id)
+            ->orderBy('LOWER(p.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($products, function (Product $product) {
+            return $this->security->isGranted('view', $product);
+        });
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

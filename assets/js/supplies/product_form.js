@@ -3,11 +3,21 @@ $(document).ready(function () {
     supplySelect.select2({
         theme: 'bootstrap4',
         placeholder: '',
+        ajax: {
+            dataType: 'json',
+            url: supplySelect.data('json-url'),
+            delay: 250,
+        }
     });
     let brandSelect = $('#product_brand');
     brandSelect.select2({
         theme: 'bootstrap4',
         placeholder: '',
+        ajax: {
+            dataType: 'json',
+            url: brandSelect.data('json-url'),
+            delay: 250,
+        }
     });
     let measureSelect = $('#product_measure');
     measureSelect.select2({

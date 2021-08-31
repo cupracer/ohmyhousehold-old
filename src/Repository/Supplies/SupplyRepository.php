@@ -135,6 +135,28 @@ class SupplyRepository extends ServiceEntityRepository
         });
     }
 
+    /**
+     * @return Supply[] Returns an array of Supply objects, ideally just a single one (by $id)
+     *
+     * TODO: type hint for $id
+     */
+    public function findGrantedByHouseholdAndId(Household $household, $id): array
+    {
+        $supplies = $this->createQueryBuilder('s')
+            ->andWhere('s.household = :household')
+            ->andWhere('s.id = :id')
+            ->setParameter('household', $household)
+            ->setParameter('id', $id)
+            ->orderBy('LOWER(s.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($supplies, function (Supply $supply) {
+            return $this->security->isGranted('view', $supply);
+        });
+    }
+
     // /**
     //  * @return Supply[] Returns an array of Supply objects
     //  */

@@ -121,6 +121,28 @@ class BrandRepository extends ServiceEntityRepository
         });
     }
 
+    /**
+     * @return Brand[] Returns an array of Brand objects, ideally just a single one (by $id)
+     *
+     * TODO: type hint for $id
+     */
+    public function findGrantedByHouseholdAndId(Household $household, $id): array
+    {
+        $brands = $this->createQueryBuilder('b')
+            ->andWhere('b.household = :household')
+            ->andWhere('b.id = :id')
+            ->setParameter('household', $household)
+            ->setParameter('id', $id)
+            ->orderBy('LOWER(b.name)', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($brands, function (Brand $brand) {
+            return $this->security->isGranted('view', $brand);
+        });
+    }
+
 
     // /**
     //  * @return Brand[] Returns an array of Brand objects

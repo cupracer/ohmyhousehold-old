@@ -40,15 +40,15 @@ class SupplyController extends AbstractController
         );
     }
 
-//    #[Route('/select2', name: 'housekeepingbook_accountholder_select2', methods: ['GET'])]
-//    public function getAsSelect2(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
-//    {
-//        $currentHousehold = $householdRepository->find($session->get('current_household'));
-//
-//        return $this->json(
-//            $accountHolderService->getAccountHoldersAsSelect2Array($request, $currentHousehold)
-//        );
-//    }
+    #[Route('/select2', name: 'supplies_supply_select2', methods: ['GET'])]
+    public function getAsSelect2(Request $request, SupplyService $supplyService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    {
+        $currentHousehold = $householdRepository->find($session->get('current_household'));
+
+        return $this->json(
+            $supplyService->getSuppliesAsSelect2Array($request, $currentHousehold)
+        );
+    }
 
     #[Route('/new', name: 'supplies_supply_new', methods: ['GET', 'POST'])]
     public function new(

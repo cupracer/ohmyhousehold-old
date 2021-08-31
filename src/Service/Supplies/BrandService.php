@@ -67,43 +67,43 @@ class BrandService extends DatatablesService
             'recordsFiltered' => $result['recordsFiltered'],
         ];
     }
-//
-//    public function getAccountHoldersAsSelect2Array(Request $request, Household $household): array
-//    {
-//        $page = $request->query->getInt('page', 1);
-//        $length = $request->query->getInt('length', 10);
-//        $start = $page > 1 ? $page * $length : 0;
-//        $search = $request->query->get('term', '');
-//
-//        $orderingData = [
-//            [
-//                'name' => 'name',
-//                'dir' => 'asc',
-//            ]
-//        ];
-//
-//        $result = $this->accountHolderRepository->getFilteredDataByHousehold(
-//            $household, $start, $length, $orderingData, $search);
-//
-//        $tableData = [];
-//
-//        /** @var AccountHolder $row */
-//        foreach($result['data'] as $row) {
-//            $rowData = [
-//                'id' => $row->getId(),
-//                'text' => $row->getName(),
-//            ];
-//
-//            $tableData[] = $rowData;
-//        }
-//
-//        return [
-//            'results' => $tableData,
-//            'pagination' => [
-//                'more' => $start + $length < $result['recordsFiltered'],
-//            ]
-//        ];
-//    }
+
+    public function getBrandsAsSelect2Array(Request $request, Household $household): array
+    {
+        $page = $request->query->getInt('page', 1);
+        $length = $request->query->getInt('length', 10);
+        $start = $page > 1 ? $page * $length : 0;
+        $search = $request->query->get('term', '');
+
+        $orderingData = [
+            [
+                'name' => 'name',
+                'dir' => 'asc',
+            ]
+        ];
+
+        $result = $this->brandRepository->getFilteredDataByHousehold(
+            $household, $start, $length, $orderingData, $search);
+
+        $tableData = [];
+
+        /** @var Brand $row */
+        foreach($result['data'] as $row) {
+            $rowData = [
+                'id' => $row->getId(),
+                'text' => $row->getName(),
+            ];
+
+            $tableData[] = $rowData;
+        }
+
+        return [
+            'results' => $tableData,
+            'pagination' => [
+                'more' => $start + $length < $result['recordsFiltered'],
+            ]
+        ];
+    }
 
     /**
      * @param Brand $brand

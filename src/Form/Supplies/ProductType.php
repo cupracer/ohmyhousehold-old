@@ -21,8 +21,11 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use function Symfony\Component\Translation\t;
@@ -36,6 +39,7 @@ class ProductType extends AbstractType
     private BrandRepository $brandRepository;
     private MeasureRepository $measureRepository;
     private PackagingRepository $packagingRepository;
+    private UrlGeneratorInterface $router;
 
     private Household $household;
 
@@ -46,7 +50,8 @@ class ProductType extends AbstractType
         SupplyRepository $supplyRepository,
         BrandRepository $brandRepository,
         MeasureRepository $measureRepository,
-        PackagingRepository $packagingRepository)
+        PackagingRepository $packagingRepository,
+        UrlGeneratorInterface $router)
     {
         $this->session = $session;
         $this->householdRepository = $householdRepository;
@@ -55,6 +60,7 @@ class ProductType extends AbstractType
         $this->brandRepository = $brandRepository;
         $this->measureRepository = $measureRepository;
         $this->packagingRepository = $packagingRepository;
+        $this->router = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -64,14 +70,14 @@ class ProductType extends AbstractType
         }
 
         $builder
-            ->add('supply', EntityType::class, [
-                'placeholder' => '',
-                'class' => Supply::class,
-                'choices' => $this->supplyRepository->findAllGrantedByHousehold($this->household),
-                'attr' => [
-                    'class' => 'form-control select2field',
-                ],
-            ])
+//            ->add('supply', EntityType::class, [
+//                'placeholder' => '',
+//                'class' => Supply::class,
+//                'choices' => $this->supplyRepository->findAllGrantedByHousehold($this->household),
+//                'attr' => [
+//                    'class' => 'form-control select2field',
+//                ],
+//            ])
             ->add('name', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
@@ -84,14 +90,14 @@ class ProductType extends AbstractType
                     ], null, $options['product'] ),
                 ],
             ])
-            ->add('brand', EntityType::class, [
-                'placeholder' => '',
-                'class' => Brand::class,
-                'choices' => $this->brandRepository->findAllGrantedByHousehold($this->household),
-                'attr' => [
-                    'class' => 'form-control select2field',
-                ],
-            ])
+//            ->add('brand', EntityType::class, [
+//                'placeholder' => '',
+//                'class' => Brand::class,
+//                'choices' => $this->brandRepository->findAllGrantedByHousehold($this->household),
+//                'attr' => [
+//                    'class' => 'form-control select2field',
+//                ],
+//            ])
             ->add('ean', TextType::class, [
                 'required' => false,
                 'attr' => [
@@ -133,6 +139,67 @@ class ProductType extends AbstractType
                     'min' => 0,
                 ],
             ])
+
+            // The Supply field is used with Select2 to load options dynamically via Ajax.
+            // As Symfony would load all Supplies a second time, we generate it via EventListeners.
+            // PRE_SET_DATA uses an empty array,
+            // PRE_SUMIT picks the selected ID and tries to load the Supply from the database.
+            // Validation: If a result is returned, the object is fine, if not, the selection is wrong.
+
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $form = $event->getForm();
+
+                $form
+                    ->add('supply', EntityType::class, [
+                        'placeholder' => '',
+                        'class' => Supply::class,
+                        'choices' => [],
+                        'attr' => [
+                            'class' => 'form-control select2field',
+                            'data-json-url' => $this->router->generate('supplies_supply_select2'),
+                        ],
+                    ])
+                    ->add('brand', EntityType::class, [
+                        'placeholder' => '',
+                        'class' => Brand::class,
+                        'choices' => [],
+                        'attr' => [
+                            'class' => 'form-control select2field',
+                            'data-json-url' => $this->router->generate('supplies_brand_select2'),
+                        ],
+                    ])
+                ;
+            })
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+                $form = $event->getForm();
+
+                // TODO: Is it safe enough to use intval() on the id?
+
+                $supplyId = array_key_exists('supply', $data) ? $data['supply'] : null;
+                $brandId = array_key_exists('brand', $data) ? $data['brand'] : null;
+
+                $form
+                    ->add('supply', EntityType::class, [
+                        'placeholder' => '',
+                        'class' => Supply::class,
+                        'choices' => $this->supplyRepository->findGrantedByHouseholdAndId($this->household, intval($supplyId)),
+                        'attr' => [
+                            'class' => 'form-control select2field',
+                            'data-json-url' => $this->router->generate('supplies_supply_select2'),
+                        ],
+                    ])
+                    ->add('brand', EntityType::class, [
+                        'placeholder' => '',
+                        'class' => Brand::class,
+                        'choices' => $this->brandRepository->findGrantedByHouseholdAndId($this->household, intval($brandId)),
+                        'attr' => [
+                            'class' => 'form-control select2field',
+                            'data-json-url' => $this->router->generate('supplies_brand_select2'),
+                        ],
+                    ])
+                ;
+            })
         ;
     }
 
