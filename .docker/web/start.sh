@@ -9,6 +9,10 @@ if [[ ! -z "$SSL_SUBJECT" ]]; then
 	a2ensite default-ssl
 fi
 
+if [[ ! -z "$TZ" ]]; then
+  printf "[PHP]\ndate.timezone = \"${TZ}\"\n" > /usr/local/etc/php/conf.d/tzone.ini
+fi
+
 case "${APP_ENV}" in
 	dev)
 		cp -a /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
