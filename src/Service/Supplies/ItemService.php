@@ -59,7 +59,7 @@ class ItemService extends DatatablesService
                 'product' => $row->getProduct()->getSupply()->getName() . ($row->getProduct()->getName() ? ' - ' . $row->getProduct()->getName() : ''),
                 'brand' => $row->getProduct()->getBrand()->getName(),
                 'category' => $row->getProduct()->getSupply()->getCategory()->getName(),
-                'amount' => 1*$row->getProduct()->getQuantity() . ' ' . $row->getProduct()->getMeasure()->getName(),
+                'amount' => 1*$row->getProduct()->getQuantity() . $row->getProduct()->getMeasure()->getName(),
                 'purchaseDate' => $row->getPurchaseDate() ? $dateFormatter->format($row->getPurchaseDate()) : null,
                 'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
                 'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
