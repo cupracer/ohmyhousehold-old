@@ -56,7 +56,7 @@ $(document).ready(function () {
                     let buttons = '';
 
                     if(row['checkoutLink']) {
-                        buttons += '<button id="checkout_button" class="btn btn-xs btn-outline-secondary mr-3" value="' + row['checkoutLink'] + '" title="checkout"><i class="fas fa-shopping-basket text-secondary"></i></button>';
+                        buttons += '<button id="checkout_button" class="btn btn-xs btn-outline-secondary" value="' + row['checkoutLink'] + '" title="checkout"><i class="fas fa-shopping-basket text-secondary"></i></button>';
                     }
 
                     return buttons;
