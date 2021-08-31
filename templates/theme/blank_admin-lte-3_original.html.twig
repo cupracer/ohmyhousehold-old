@@ -222,7 +222,9 @@
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
+        {% block sidebar_nav_tag %}
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        {% endblock sidebar_nav_tag %}
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 {% block sidebar_links %}
