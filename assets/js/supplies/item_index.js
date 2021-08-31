@@ -48,13 +48,18 @@ $(document).ready(function () {
                 orderable: false,
                 defaultContent: "-",
                 render: function (data, type, row) {
-                    let editButton = '';
+                    let buttons = '';
+                    let rowId = row['id'];
 
-                    if(row['editLink']) {
-                        editButton = generateDatatablesEditButton(row['editLink']);
+                    if(rowId) {
+                        buttons += '<button id="checkout_button" class="btn btn-xs btn-outline-secondary mr-3" value="' + rowId + '" title="checkout"><i class="fas fa-shopping-basket text-secondary"></i></button>';
                     }
 
-                    return editButton;
+                    if(row['editLink']) {
+                        buttons+= generateDatatablesEditButton(row['editLink']);
+                    }
+
+                    return buttons;
                 }
             },
         ],
