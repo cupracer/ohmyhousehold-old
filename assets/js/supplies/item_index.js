@@ -59,6 +59,17 @@ $(document).ready(function () {
                         buttons += '<button id="checkout_button" class="btn btn-xs btn-outline-secondary mr-3" value="' + row['checkoutLink'] + '" title="checkout"><i class="fas fa-shopping-basket text-secondary"></i></button>';
                     }
 
+                    return buttons;
+                }
+            },
+            {
+                class: "min",
+                searchable: false,
+                orderable: false,
+                defaultContent: "-",
+                render: function (data, type, row) {
+                    let buttons = '';
+
                     if(row['editLink']) {
                         buttons+= generateDatatablesEditButton(row['editLink']);
                     }

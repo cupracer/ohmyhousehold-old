@@ -29,12 +29,13 @@
                         data-json-url="{{ path('supplies_item_datatables') }}">
                         <thead>
                         <tr>
-                            <th>{{ 'Product'|trans }}</th>
-                            <th>{{ 'Brand'|trans }}</th>
+                            <th data-priority="0">{{ 'Product'|trans }}</th>
+                            <th data-priority="2">{{ 'Brand'|trans }}</th>
                             <th>{{ 'Category'|trans }}</th>
-                            <th>{{ 'Amount'|trans }}</th>
+                            <th data-priority="3">{{ 'Amount'|trans }}</th>
                             <th>{{ 'Purchase date'|trans }}</th>
-                            <th>{{ 'Best-before date'|trans }}</th>
+                            <th data-priority="4">{{ 'Best-before date'|trans }}</th>
+                            <th data-priority="1"></th>
                             <th></th>
                         </tr>
                         </thead>

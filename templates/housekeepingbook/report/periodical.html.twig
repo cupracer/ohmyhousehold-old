@@ -97,15 +97,15 @@
                     <table id="transactions" class="table table-hover dataTable" role="grid">
                         <thead>
                         <tr>
-                            <th></th>
-                            <th>{{ 'Date'|trans }}</th>
+                            <th data-priority="0"></th>
+                            <th data-priority="1">{{ 'Date'|trans }}</th>
                             <th>{{ 'Timestamp'|trans }}</th>
-                            <th>{{ 'User'|trans }}</th>
+                            <th data-priority="3">{{ 'User'|trans }}</th>
                             <th>{{ 'Category'|trans }}</th>
                             <th>{{ 'Source'|trans }}</th>
-                            <th>{{ 'Destination'|trans }}</th>
-                            <th>{{ 'Description'|trans }}</th>
-                            <th>{{ 'Amount'|trans }}</th>
+                            <th data-priority="4">{{ 'Destination'|trans }}</th>
+                            <th data-priority="5">{{ 'Description'|trans }}</th>
+                            <th data-priority="2">{{ 'Amount'|trans }}</th>
                             <th>amount_filter</th>
                             <th>private</th>
                         </tr>
