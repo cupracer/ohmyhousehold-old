@@ -38,7 +38,7 @@ test -z $DATABASE_URL || echo "DATABASE_URL=${DATABASE_URL}" >> /var/www/html/.e
 test -z $MAILER_DSN || echo "MAILER_DSN=${MAILER_DSN}" >> /var/www/html/.env.local
 test -z $SUPER_ADMIN_EMAIL || echo "SUPER_ADMIN_EMAIL=${SUPER_ADMIN_EMAIL}" >> /var/www/html/.env.local
 test -z $MAILER_SENDER_ADDRESS || echo "MAILER_SENDER_ADDRESS=${MAILER_SENDER_ADDRESS}" >> /var/www/html/.env.local
-test -z $MAILER_SENDER_NAME || echo "MAILER_SENDER_NAME='${MAILER_SENDER_NAME}'" >> /var/www/html/.env.local
+test -z $MAILER_SENDER_NAME || echo "MAILER_SENDER_NAME=\'${MAILER_SENDER_NAME}\'" >> /var/www/html/.env.local
 # test -z $APP_MAILER_DEV_RECIPIENT || echo "APP_MAILER_DEV_RECIPIENT='${APP_MAILER_DEV_RECIPIENT}'" >> /var/www/html/.env.local
 # test -z $APP_DATATABLES_USE_FIXED_COLUMNS || echo "APP_DATATABLES_USE_FIXED_COLUMNS='${APP_DATATABLES_USE_FIXED_COLUMNS}'" >> /var/www/html/.env.local
 
