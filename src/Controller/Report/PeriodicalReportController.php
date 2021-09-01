@@ -48,7 +48,8 @@ class PeriodicalReportController extends AbstractController
 
         return $this->render('housekeepingbook/report/periodical.html.twig', [
 //            'pageTitle' => t('Current Period (' . $dateFormatter->format($data['startDate']) . ' - ' . $dateFormatter->format($data['endDate']) . ')'),
-            'pageTitle' => t('period') . ': ' . $dateFormatter->format($data['startDate']),
+            'pageTitle' => t('period'),
+            'period' => $dateFormatter->format($data['startDate']),
             'currentStartDate' => (new \DateTime())->modify('first day of this month')->modify('midnight'),
             'previousStartDate' => (clone $data['startDate'])->modify('- 1 month'),
             'nextStartDate' => (clone $data['startDate'])->modify('+ 1 month'),

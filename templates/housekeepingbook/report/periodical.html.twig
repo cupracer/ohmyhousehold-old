@@ -26,6 +26,8 @@
     </div>
 {% endblock page_header_buttons %}
 
+{% block page_header %}{{ pageTitle|trans|title }}: {{ period }}{% endblock page_header %}
+
 {% block page_content %}
     <div class="row">
         <div class="col-lg-3">
