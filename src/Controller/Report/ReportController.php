@@ -27,7 +27,7 @@ class ReportController extends AbstractController
         $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
 
         return $this->render('housekeepingbook/report/index.html.twig', [
-            'pageTitle' => t('Reports'),
+            'pageTitle' => t('reports.noun'),
             'household' => $currentHousehold,
         ]);
     }

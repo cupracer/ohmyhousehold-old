@@ -317,6 +317,58 @@
         <source>supply_items</source>
         <target>Artikel</target>
       </trans-unit>
+      <trans-unit id="30">
+        <source>further</source>
+        <target>zusätzlich</target>
+      </trans-unit>
+      <trans-unit id="31">
+        <source>balance.noun</source>
+        <target>Kontostand</target>
+      </trans-unit>
+      <trans-unit id="32">
+        <source>total</source>
+        <target>gesamt</target>
+      </trans-unit>
+      <trans-unit id="33">
+        <source>savings</source>
+        <target>Ersparnisse</target>
+      </trans-unit>
+      <trans-unit id="34">
+        <source>date</source>
+        <target>Datum</target>
+      </trans-unit>
+      <trans-unit id="35">
+        <source>user</source>
+        <target>Benutzer</target>
+      </trans-unit>
+      <trans-unit id="36">
+        <source>category</source>
+        <target>Kategorie</target>
+      </trans-unit>
+      <trans-unit id="37">
+        <source>source</source>
+        <target>Quelle</target>
+      </trans-unit>
+      <trans-unit id="38">
+        <source>destination</source>
+        <target>Ziel</target>
+      </trans-unit>
+      <trans-unit id="39">
+        <source>description</source>
+        <target>Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="40">
+        <source>amount.financial</source>
+        <target>Betrag</target>
+      </trans-unit>
+      <trans-unit id="41">
+        <source>current.button</source>
+        <target>jetzt</target>
+      </trans-unit>
+      <trans-unit id="42">
+        <source>period</source>
+        <target>Zeitabschnitt</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

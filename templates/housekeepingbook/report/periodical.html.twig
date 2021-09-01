@@ -12,7 +12,7 @@
                 </a>
                 <a href="{{ path('housekeepingbook_report_periodical_index', {year: currentStartDate.format('Y'), month: currentStartDate.format('m'),}) }}">
                     <button type="button" class="btn btn-default">
-                        <div class="ml-3 mr-3">{{ t('current') }}</div>
+                        <div class="ml-3 mr-3">{{ 'current.button'|trans }}</div>
                     </button>
                 </a>
                 <a href="{{ path('housekeepingbook_report_periodical_index', {year: nextStartDate.format('Y'), month: nextStartDate.format('m'),}) }}">
@@ -32,9 +32,9 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <p>Deposit</p>
+                    <p>{{ 'deposits'|trans|title }}</p>
                     <h3>{{ deposit|format_currency('EUR') }}</h3>
-                    <h4 class="text-right text-lightgreen"><small>further</small> +{{ upcomingDeposit|format_currency('EUR') }}</h4>
+                    <h4 class="text-right text-lightgreen"><small>{{ 'further'|trans }}</small> +{{ upcomingDeposit|format_currency('EUR') }}</h4>
                 </div>
                 <div class="icon">
                     <i class="far fa-smile"></i>
@@ -47,9 +47,9 @@
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <p>Withdrawal</p>
+                    <p>{{ 'withdrawals'|trans|title }}</p>
                     <h3>{{ withdrawal|format_currency('EUR') }}</h3>
-                    <h4 class="text-right text-lightred"><small>further</small> -{{ upcomingWithdrawal|format_currency('EUR') }}</h4>
+                    <h4 class="text-right text-lightred"><small>{{ 'further'|trans }}</small> -{{ upcomingWithdrawal|format_currency('EUR') }}</h4>
                 </div>
                 <div class="icon">
                     <i class="far fa-frown"></i>
@@ -62,9 +62,9 @@
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
-                    <p>Balance</p>
+                    <p>{{ 'balance.noun'|trans|title }}</p>
                     <h3>{{ balance|format_currency('EUR') }}</h3>
-                    <h4 class="text-right text-lightcyan"><small>total</small> {{ expectedBalance|format_currency('EUR') }}</h4>
+                    <h4 class="text-right text-lightcyan"><small>{{ 'total'|trans }}</small> {{ expectedBalance|format_currency('EUR') }}</h4>
                 </div>
                 <div class="icon">
                     <i class="fas fa-balance-scale-left"></i>
@@ -77,9 +77,9 @@
             <!-- small box -->
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <p>Savings</p>
+                    <p>{{ 'savings'|trans|title }}</p>
                     <h3>{{ savings|format_currency('EUR') }}</h3>
-                    <h4 class="text-right text-gray"><small>total</small> {{ expectedSavings|format_currency('EUR') }}</h4>
+                    <h4 class="text-right text-gray"><small>{{ 'total'|trans }}</small> {{ expectedSavings|format_currency('EUR') }}</h4>
                 </div>
                 <div class="icon">
                     <i class="fas fa-coins"></i>
@@ -98,14 +98,14 @@
                         <thead>
                         <tr>
                             <th data-priority="0"></th>
-                            <th data-priority="1">{{ 'Date'|trans }}</th>
-                            <th>{{ 'Timestamp'|trans }}</th>
-                            <th data-priority="3">{{ 'User'|trans }}</th>
-                            <th>{{ 'Category'|trans }}</th>
-                            <th>{{ 'Source'|trans }}</th>
-                            <th data-priority="4">{{ 'Destination'|trans }}</th>
-                            <th data-priority="5">{{ 'Description'|trans }}</th>
-                            <th data-priority="2">{{ 'Amount'|trans }}</th>
+                            <th data-priority="1">{{ 'date'|trans }}</th>
+                            <th>timestamp</th>
+                            <th data-priority="3">{{ 'user'|trans }}</th>
+                            <th>{{ 'category'|trans }}</th>
+                            <th>{{ 'source'|trans }}</th>
+                            <th data-priority="4">{{ 'destination'|trans }}</th>
+                            <th data-priority="5">{{ 'description'|trans }}</th>
+                            <th data-priority="2">{{ 'amount.financial'|trans }}</th>
                             <th>amount_filter</th>
                             <th>private</th>
                         </tr>
