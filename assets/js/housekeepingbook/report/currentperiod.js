@@ -5,6 +5,9 @@ $(document).ready(function () {
         serverSide: false,
         lengthChange: true,
         searching: true,
+        language: {
+            url: datatable.data('i18nUrl')
+        },
         ordering: true,
         info: true,
         autoWidth: false,

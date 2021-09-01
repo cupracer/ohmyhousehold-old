@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Service\ReferrerService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,5 +72,23 @@ class DefaultController extends AbstractController
             'success' => true,
             'message' => $translator->trans('Authenticated.')
         ]);
+    }
+
+    #[Route('/{_locale<%app.supported_locales%>}/datatables/locale', name: 'app_datatables_locale')]
+    public function datatablesLocale(string $_locale, Packages $packages): Response
+    {
+        $fileName = 'English.lang';
+
+        switch($_locale) {
+            case "de":
+                $fileName = 'de_de.json';
+                break;
+        }
+
+        if($fileName) {
+            return $this->redirect($packages->getUrl('build/datatables/i18n/' . $fileName));
+        }else {
+            return new Response('');
+        }
     }
 }

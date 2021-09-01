@@ -20,7 +20,8 @@
                 </div>
                 <div class="card-body">
                     <table id="products" class="table table-hover table-striped dataTable" role="grid"
-                        data-json-url="{{ path('supplies_product_datatables') }}">
+                        data-json-url="{{ path('supplies_product_datatables') }}"
+                           data-i18n-url="{{ path('app_datatables_locale') }}">
                         <thead>
                         <tr>
                             <th>{{ 'Name'|trans }}</th>

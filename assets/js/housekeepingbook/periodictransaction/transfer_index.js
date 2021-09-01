@@ -8,6 +8,9 @@ $(document).ready(function () {
         lengthChange: true,
         searching: true,
         ajax: datatable.data('jsonUrl'),
+        language: {
+            url: datatable.data('i18nUrl')
+        },
         ordering: true,
         info: true,
         autoWidth: false,

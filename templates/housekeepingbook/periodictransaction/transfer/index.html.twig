@@ -20,7 +20,8 @@
                 </div>
                 <div class="card-body">
                     <table id="periodicTransferTransactions" class="table table-hover dataTable" role="grid"
-                           data-json-url="{{ path('housekeepingbook_periodic_transfer_transaction_datatables') }}">
+                           data-json-url="{{ path('housekeepingbook_periodic_transfer_transaction_datatables') }}"
+                           data-i18n-url="{{ path('app_datatables_locale') }}">
                         <thead>
                         <tr>
                             <th>{{ 'Start'|trans }}</th>
