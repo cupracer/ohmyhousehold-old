@@ -306,8 +306,8 @@
         <target>Maßeinheiten</target>
       </trans-unit>
       <trans-unit id="27">
-        <source>supply_types</source>
-        <target>Vorratsarten</target>
+        <source>supplies.noun</source>
+        <target>Vorräte</target>
       </trans-unit>
       <trans-unit id="28">
         <source>products</source>
