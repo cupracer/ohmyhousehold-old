@@ -23,6 +23,17 @@ class PeriodicalReportController extends AbstractController
     }
 
 
+    #[Route('/current', name: 'housekeepingbook_report_periodical_current', methods: ['GET'])]
+    public function current(): Response
+    {
+        $now = new \DateTime();
+
+        return $this->redirectToRoute('housekeepingbook_report_periodical_index',[
+            'year' => $now->format('Y'),
+            'month' => $now->format('m')
+        ]);
+    }
+
     #[Route('/{year}/{month}', name: 'housekeepingbook_report_periodical_index', requirements: ['year' => '\d{4}', 'month' => '\d{1,2}'], methods: ['GET'])]
     public function index(int $year, int $month, ReportService $reportService): Response
     {

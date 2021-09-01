@@ -7,7 +7,7 @@
     </a>
     <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_report_index') %}block{% else %}none{% endif %};">
         <li class="nav-item">
-            <a href="{{ path('housekeepingbook_report_periodical_index', {year: 2021, month: 08}) }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_report_periodical_index', {year: 2021, month: 08}) %}active{% endif %}">
+            <a href="{{ path('housekeepingbook_report_periodical_current') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_report_periodical_current') %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Current period</p>
             </a>
