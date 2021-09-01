@@ -1,15 +1,15 @@
-<li class="nav-header font-weight-bold">HOUSEKEEPING BOOK</li>
+<li class="nav-header font-weight-bold">{{ 'housekeeping_book'|trans|upper }}</li>
 
 <li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_report_index') %}menu-open{% endif %}">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-line"></i>
-        <p>Reports <i class="right fas fa-angle-left"></i></p>
+        <p>{{ 'reports.noun'|trans|title }} <i class="right fas fa-angle-left"></i></p>
     </a>
     <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_report_index') %}block{% else %}none{% endif %};">
         <li class="nav-item">
             <a href="{{ path('housekeepingbook_report_periodical_current') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_report_periodical_current') %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Current period</p>
+                <p>{{ 'current_period'|trans|title }}</p>
             </a>
         </li>
     </ul>
@@ -45,25 +45,25 @@
 <li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_transaction_index') %}menu-open{% endif %}">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-random"></i>
-        <p>Transactions <i class="right fas fa-angle-left"></i></p>
+        <p>{{ 'transactions'|trans|title }} <i class="right fas fa-angle-left"></i></p>
     </a>
     <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_transaction_index') %}block{% else %}none{% endif %};">
         <li class="nav-item">
             <a href="{{ path('housekeepingbook_deposit_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_deposit_transaction_index') %}active{% endif %}">
                 <i class="far fa-smile nav-icon"></i>
-                <p>Deposit</p>
+                <p>{{ 'deposits'|trans|title }}</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ path('housekeepingbook_withdrawal_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_withdrawal_transaction_index') %}active{% endif %}">
                 <i class="far fa-frown nav-icon"></i>
-                <p>Withdrawal</p>
+                <p>{{ 'withdrawals'|trans|title }}</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ path('housekeepingbook_transfer_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_transfer_transaction_index') %}active{% endif %}">
                 <i class="far fa-meh nav-icon"></i>
-                <p>Transfer</p>
+                <p>{{ 'transfers.noun'|trans|title }}</p>
             </a>
         </li>
     </ul>
@@ -72,25 +72,25 @@
 <li class="nav-item {% if app.request.pathInfo starts with path('housekeepingbook_periodic_transaction_index') %}menu-open{% endif %}">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-redo"></i>
-        <p>Periodic Transactions <i class="right fas fa-angle-left"></i></p>
+        <p>{{ 'periodic_transactions'|trans|title }} <i class="right fas fa-angle-left"></i></p>
     </a>
     <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('housekeepingbook_periodic_transaction_index') %}block{% else %}none{% endif %};">
         <li class="nav-item">
             <a href="{{ path('housekeepingbook_periodic_deposit_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodic_deposit_transaction_index') %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Deposit</p>
+                <p>{{ 'deposits'|trans|title }}</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ path('housekeepingbook_periodic_withdrawal_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodic_withdrawal_transaction_index') %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Withdrawal</p>
+                <p>{{ 'withdrawals'|trans|title }}</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ path('housekeepingbook_periodic_transfer_transaction_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_periodic_transfer_transaction_index') %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Transfer</p>
+                <p>{{ 'transfers.noun'|trans|title }}</p>
             </a>
         </li>
     </ul>
@@ -99,55 +99,55 @@
 <li class="nav-item">
     <a href="{{ path('housekeepingbook_asset_account_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_asset_account_index') %}active{% endif %}">
         <i class="nav-icon fas fa-credit-card"></i>
-        <p>Asset accounts</p>
+        <p>{{ 'asset_accounts'|trans|title }}</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ path('housekeepingbook_accountholder_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_accountholder_index') %}active{% endif %}">
         <i class="nav-icon fas fa-handshake"></i>
-        <p>Account holders</p>
+        <p>{{ 'account_holders'|trans|title }}</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ path('housekeepingbook_bookingcategory_index') }}" class="nav-link {% if app.request.pathInfo starts with path('housekeepingbook_bookingcategory_index') %}active{% endif %}">
         <i class="nav-icon fas fa-database"></i>
-        <p>Booking categories</p>
+        <p>{{ 'categories'|trans|title }}</p>
     </a>
 </li>
 
-<li class="nav-header font-weight-bold mt-3">SUPPLIES</li>
+<li class="nav-header font-weight-bold mt-3">{{ 'supply_management'|trans|upper }}</li>
 
 <li class="nav-item {% if app.request.pathInfo starts with path('supplies_components_index') %}menu-open{% endif %}">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-line"></i>
-        <p>Components <i class="right fas fa-angle-left"></i></p>
+        <p>{{ 'components'|trans|title }} <i class="right fas fa-angle-left"></i></p>
     </a>
     <ul class="nav nav-treeview" style="display: {% if app.request.pathInfo starts with path('supplies_components_index') %}block{% else %}none{% endif %};">
         <li class="nav-item">
             <a href="{{ path('supplies_brand_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_brand_index') %}active{% endif %}">
                 <i class="nav-icon fas fa-copyright"></i>
-                <p>Brands</p>
+                <p>{{ 'brands.noun'|trans|title }}</p>
             </a>
         </li>
 
         <li class="nav-item">
             <a href="{{ path('supplies_category_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_category_index') %}active{% endif %}">
                 <i class="nav-icon fas fa-database"></i>
-                <p>Categories</p>
+                <p>{{ 'categories'|trans|title }}</p>
             </a>
         </li>
 
         <li class="nav-item">
             <a href="{{ path('supplies_packaging_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_packaging_index') %}active{% endif %}">
                 <i class="nav-icon fas fa-box-open"></i>
-                <p>Packagings</p>
+                <p>{{ 'packagings'|trans|title }}</p>
             </a>
         </li>
 
         <li class="nav-item">
             <a href="{{ path('supplies_measure_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_measure_index') %}active{% endif %}">
                 <i class="nav-icon fas fa-weight"></i>
-                <p>Measures</p>
+                <p>{{ 'measures.noun'|trans|title }}</p>
             </a>
         </li>
     </ul>
@@ -156,20 +156,20 @@
 <li class="nav-item">
     <a href="{{ path('supplies_supply_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_supply_index') %}active{% endif %}">
         <i class="nav-icon fas fa-cubes"></i>
-        <p>Supplies</p>
+        <p>{{ 'supply_types'|trans|title }}</p>
     </a>
 </li>
 
 <li class="nav-item">
     <a href="{{ path('supplies_product_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_product_index') %}active{% endif %}">
         <i class="nav-icon fas fa-barcode"></i>
-        <p>Products</p>
+        <p>{{ 'products'|trans|title }}</p>
     </a>
 </li>
 
 <li class="nav-item">
     <a href="{{ path('supplies_item_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_item_index') %}active{% endif %}">
         <i class="nav-icon fas fa-shopping-cart"></i>
-        <p>Items</p>
+        <p>{{ 'supply_items'|trans|title }}</p>
     </a>
 </li>

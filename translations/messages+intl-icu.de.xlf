@@ -241,6 +241,82 @@
         <source>button.add</source>
         <target>hinzufügen</target>
       </trans-unit>
+      <trans-unit id="11">
+        <source>housekeeping_book</source>
+        <target>Haushaltsbuch</target>
+      </trans-unit>
+      <trans-unit id="12">
+        <source>reports.noun</source>
+        <target>Auswertungen</target>
+      </trans-unit>
+      <trans-unit id="13">
+        <source>current_period</source>
+        <target>aktueller Zeitabschnitt</target>
+      </trans-unit>
+      <trans-unit id="14">
+        <source>transactions</source>
+        <target>Buchungen</target>
+      </trans-unit>
+      <trans-unit id="15">
+        <source>deposits</source>
+        <target>Einnahmen</target>
+      </trans-unit>
+      <trans-unit id="16">
+        <source>withdrawals</source>
+        <target>Ausgaben</target>
+      </trans-unit>
+      <trans-unit id="17">
+        <source>transfers.noun</source>
+        <target>Umbuchungen</target>
+      </trans-unit>
+      <trans-unit id="18">
+        <source>periodic_transactions</source>
+        <target>Daueraufträge</target>
+      </trans-unit>
+      <trans-unit id="19">
+        <source>asset_accounts</source>
+        <target>Bestandskonten</target>
+      </trans-unit>
+      <trans-unit id="20">
+        <source>account_holders</source>
+        <target>Kontoinhaber</target>
+      </trans-unit>
+      <trans-unit id="21">
+        <source>categories</source>
+        <target>Kategorien</target>
+      </trans-unit>
+      <trans-unit id="22">
+        <source>supply_management</source>
+        <target>Vorratsverwaltung</target>
+      </trans-unit>
+      <trans-unit id="23">
+        <source>components</source>
+        <target>Komponenten</target>
+      </trans-unit>
+      <trans-unit id="24">
+        <source>brands.noun</source>
+        <target>Marken</target>
+      </trans-unit>
+      <trans-unit id="25">
+        <source>packagings</source>
+        <target>Verpackungen</target>
+      </trans-unit>
+      <trans-unit id="26">
+        <source>measures.noun</source>
+        <target>Maßeinheiten</target>
+      </trans-unit>
+      <trans-unit id="27">
+        <source>supply_types</source>
+        <target>Vorratsarten</target>
+      </trans-unit>
+      <trans-unit id="28">
+        <source>products</source>
+        <target>Produkte</target>
+      </trans-unit>
+      <trans-unit id="29">
+        <source>supply_items</source>
+        <target>Artikel</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
