@@ -2460,6 +2460,11 @@ datatables.net-keytable@2.6.2:
     datatables.net "^1.10.15"
     jquery ">=1.7"
 
+datatables.net-plugins@^1.10.24:
+  version "1.10.24"
+  resolved "https://registry.yarnpkg.com/datatables.net-plugins/-/datatables.net-plugins-1.10.24.tgz#2b3cb4c30298da5762d1e1dd37640db6cd3b6c92"
+  integrity sha512-A0+q4BuPoiRkHXtn/D0bEUR+IiS+hpAp71CtB5BLZqG3R6UPp+OD306FwTZ/z6JUT7cIlf7BsM5fKxpOjhaGoA==
+
 datatables.net-responsive-bs4@^2.2.7:
   version "2.2.9"
   resolved "https://registry.yarnpkg.com/datatables.net-responsive-bs4/-/datatables.net-responsive-bs4-2.2.9.tgz#18166b9e99c439b8b19bdd7edef8b78572b17b3f"
