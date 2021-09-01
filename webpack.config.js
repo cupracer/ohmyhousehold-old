@@ -1,5 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
 const webpack = require("webpack");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -88,6 +89,16 @@ Encore
     .addPlugin(
         new webpack.ProvidePlugin({
             moment: "moment"
+        })
+    )
+    .addPlugin(
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'node_modules/datatables.net-plugins/i18n',
+                    to: 'datatables/i18n',
+                },
+            ]
         })
     )
 ;
