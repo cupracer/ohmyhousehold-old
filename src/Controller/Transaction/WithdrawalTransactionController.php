@@ -40,7 +40,7 @@ class WithdrawalTransactionController extends AbstractController
         $currentHousehold = $this->householdRepository->find($this->session->get('current_household'));
 
         return $this->render('housekeepingbook/transaction/withdrawal/index.html.twig', [
-            'pageTitle' => t('Withdrawal Transactions'),
+            'pageTitle' => t('withdrawals'),
             'household' => $currentHousehold,
         ]);
     }
@@ -126,7 +126,7 @@ class WithdrawalTransactionController extends AbstractController
         }
 
         return $this->render('housekeepingbook/transaction/withdrawal/form.html.twig', [
-            'pageTitle' => t('Add withdrawal transaction'),
+            'pageTitle' => t('add_withdrawal_transaction'),
             'form' => $form->createView(),
         ]);
     }
@@ -186,10 +186,10 @@ class WithdrawalTransactionController extends AbstractController
         }
 
         return $this->render('housekeepingbook/transaction/withdrawal/form.html.twig', [
-            'pageTitle' => t('Edit withdrawal transaction'),
+            'pageTitle' => t('edit_withdrawal_transaction'),
             'form' => $form->createView(),
             'withdrawalTransaction' => $withdrawalTransaction,
-            'button_label' => t('Update'),
+            'button_label' => t('update.button'),
         ]);
     }
 

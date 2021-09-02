@@ -40,7 +40,7 @@ class DepositTransactionController extends AbstractController
         $currentHousehold = $this->householdRepository->find($this->session->get('current_household'));
 
         return $this->render('housekeepingbook/transaction/deposit/index.html.twig', [
-            'pageTitle' => t('Deposit Transactions'),
+            'pageTitle' => t('deposits'),
             'household' => $currentHousehold,
         ]);
     }
@@ -126,7 +126,7 @@ class DepositTransactionController extends AbstractController
         }
 
         return $this->render('housekeepingbook/transaction/deposit/form.html.twig', [
-            'pageTitle' => t('Add deposit transaction'),
+            'pageTitle' => t('add_deposit_transaction'),
             'form' => $form->createView(),
         ]);
     }
@@ -186,10 +186,10 @@ class DepositTransactionController extends AbstractController
         }
 
         return $this->render('housekeepingbook/transaction/deposit/form.html.twig', [
-            'pageTitle' => t('Edit deposit transaction'),
+            'pageTitle' => t('edit_deposit_transaction'),
             'form' => $form->createView(),
             'depositTransaction' => $depositTransaction,
-            'button_label' => t('Update'),
+            'button_label' => t('update.button'),
         ]);
     }
 

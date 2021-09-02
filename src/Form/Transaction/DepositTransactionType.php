@@ -83,6 +83,7 @@ class DepositTransactionType extends AbstractType
             ->add('bookingDate', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
+                'label' => t('booking_date'),
                 'attr' => [
                     'class' => 'text-center',
                     'autofocus' => true,
@@ -92,6 +93,7 @@ class DepositTransactionType extends AbstractType
                 'placeholder' => '',
                 'class' => BookingCategory::class,
                 'choices' => $this->bookingCategoryRepository->findAllGrantedByHousehold($this->household),
+                'label' => t('category'),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],
@@ -108,12 +110,14 @@ class DepositTransactionType extends AbstractType
                 'placeholder' => '',
                 'class' => AssetAccount::class,
                 'choices' => $this->assetAccountRepository->findAllUsableByHousehold($this->household, $this->householdUser),
+                'label' => t('destination'),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],
             ])
             ->add('amount', NumberType::class, [
                 'scale' => 2,
+                'label' => t('amount.financial'),
                 'attr' => [
                     'class' => 'form-control text-right',
                     'placeholder' => '8,88',
@@ -121,6 +125,7 @@ class DepositTransactionType extends AbstractType
             ])
             ->add('description', TextType::class, [
                 'required' => false,
+                'label' => t('description'),
                 'attr' => [
                     'class' => 'form-control',
                 ],
@@ -132,14 +137,14 @@ class DepositTransactionType extends AbstractType
                     'data-on-text' => t('private'),
                     'data-off-text' => t('household'),
                     'data-on-color' => 'success',
-                    'data-label-text' => t('Visibility'),
+                    'data-label-text' => t('visibility'),
                 ]
             ])
             ->add('bookingPeriodOffset', TextType::class, [
                 'attr' => [
                     'class' => 'form-control text-center',
                 ],
-                'label' => t('Offset'),
+                'label' => t('offset'),
             ])
 
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -149,6 +154,7 @@ class DepositTransactionType extends AbstractType
                     'placeholder' => '',
                     'class' => AccountHolder::class,
                     'choices' => $this->accountHolderRepository->findAllGrantedByHousehold($this->household),
+                    'label' => t('source'),
                     'attr' => [
                         'class' => 'form-control select2field',
                     ],
@@ -192,6 +198,7 @@ class DepositTransactionType extends AbstractType
                     'placeholder' => '',
                     'class' => AccountHolder::class,
                     'choices' => $this->accountHolderRepository->findAllGrantedByHousehold($this->household),
+                    'label' => t('source'),
                     'attr' => [
                         'class' => 'form-control select2field',
                     ],

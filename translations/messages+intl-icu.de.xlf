@@ -369,6 +369,58 @@
         <source>period</source>
         <target>Zeitabschnitt</target>
       </trans-unit>
+      <trans-unit id="add_deposit_transaction">
+        <source>add_deposit_transaction</source>
+        <target>Einnahme hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="edit_deposit_transaction">
+        <source>edit_deposit_transaction</source>
+        <target>Einnahme bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="create.button">
+        <source>create.button</source>
+        <target>Erstellen</target>
+      </trans-unit>
+      <trans-unit id="update.button">
+        <source>update.button</source>
+        <target>Aktualisieren</target>
+      </trans-unit>
+      <trans-unit id="private">
+        <source>private</source>
+        <target>privat</target>
+      </trans-unit>
+      <trans-unit id="household">
+        <source>household</source>
+        <target>Haushalt</target>
+      </trans-unit>
+      <trans-unit id="visibility">
+        <source>visibility</source>
+        <target>Sichtbarkeit</target>
+      </trans-unit>
+      <trans-unit id="offset">
+        <source>offset</source>
+        <target>Versatz</target>
+      </trans-unit>
+      <trans-unit id="booking_date">
+        <source>booking_date</source>
+        <target>Buchungsdatum</target>
+      </trans-unit>
+      <trans-unit id="add_withdrawal_transaction">
+        <source>add_withdrawal_transaction</source>
+        <target>Ausgabe hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="edit_withdrawal_transaction">
+        <source>edit_withdrawal_transaction</source>
+        <target>Ausgabe bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="delete.button">
+        <source>delete.button</source>
+        <target>Löschen</target>
+      </trans-unit>
+      <trans-unit id="details">
+        <source>details</source>
+        <target>Details</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

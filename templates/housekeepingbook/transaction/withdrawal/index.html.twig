@@ -6,7 +6,7 @@
             <span class="icon text-primary mr-1">
               <i class="fas fa-plus-circle"></i>
             </span>
-            <span class="text">{{ 'Add withdrawal transaction...'|trans }}</span>
+            <span class="text">{{ 'add_withdrawal_transaction'|trans }}</span>
         </a>
     {% endif %}
 {% endblock %}
@@ -16,7 +16,7 @@
         <div class="col-lg-12">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'Withdrawal transactions'|trans }}</h3>
+                    <h3 class="card-title">{{ 'withdrawals'|trans }}</h3>
                 </div>
                 <div class="card-body">
                     <table id="withdrawalTransactions" class="table table-hover dataTable" role="grid"
@@ -24,13 +24,13 @@
                            data-i18n-url="{{ path('app_datatables_locale') }}">
                         <thead>
                         <tr>
-                            <th>{{ 'Date'|trans }}</th>
-                            <th>{{ 'User'|trans }}</th>
-                            <th>{{ 'Category'|trans }}</th>
-                            <th>{{ 'Source'|trans }}</th>
-                            <th>{{ 'Destination'|trans }}</th>
-                            <th>{{ 'Description'|trans }}</th>
-                            <th>{{ 'Amount'|trans }}</th>
+                            <th>{{ 'date'|trans }}</th>
+                            <th>{{ 'user'|trans }}</th>
+                            <th>{{ 'category'|trans }}</th>
+                            <th>{{ 'source'|trans }}</th>
+                            <th>{{ 'destination'|trans }}</th>
+                            <th>{{ 'description'|trans }}</th>
+                            <th>{{ 'amount.financial'|trans }}</th>
                             <th></th>
                         </tr>
                         </thead>

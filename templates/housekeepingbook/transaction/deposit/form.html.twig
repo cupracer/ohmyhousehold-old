@@ -6,7 +6,7 @@
         <div class="col-lg-6">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'Details'|trans }}</h3>
+                    <h3 class="card-title">{{ 'details'|trans }}</h3>
                 </div>
                 <div class="card-body">
                     {{ form_start(form) }}
@@ -79,7 +79,7 @@
                                         <span class="icon text-white-50 mr-1">
                                             <i class="far fa-save"></i>
                                         </span>
-                                <span class="text">{{ button_label|default('button.add')|trans|u.title }}</span>
+                                <span class="text">{{ button_label|default('create.button')|trans|u.title }}</span>
                             </button>
                         </div>
                         <!-- /.col -->
@@ -96,7 +96,7 @@
                                             <span class="icon mr-1">
                                                 <i class="far fa-trash-alt"></i>
                                             </span>
-                                    <span class="text">{{ 'delete'|trans|u.title }}</span>
+                                    <span class="text">{{ 'delete.button'|trans|u.title }}</span>
                                 </button>
                             </form>
                         </div>
