@@ -35,6 +35,7 @@ class HouseholdVoter extends Voter
     const CREATE_SUPPLIES_PACKAGING = 'createSuppliesPackaging';
     const CREATE_SUPPLIES_PRODUCT = 'createSuppliesProduct';
     const CREATE_SUPPLIES_SUPPLY = 'createSuppliesSupply';
+    const CHECKOUT_SUPPLIES_ITEM = 'checkoutSuppliesItem';
 
     private HouseholdUserRepository $householdUserRepository;
 
@@ -65,6 +66,7 @@ class HouseholdVoter extends Voter
             self::CREATE_SUPPLIES_PACKAGING,
             self::CREATE_SUPPLIES_PRODUCT,
             self::CREATE_SUPPLIES_SUPPLY,
+            self::CHECKOUT_SUPPLIES_ITEM,
         ])) {
             return false;
         }
@@ -134,6 +136,8 @@ class HouseholdVoter extends Voter
                 return $this->canCreateSuppliesProduct($householdUser);
             case self::CREATE_SUPPLIES_SUPPLY:
                 return $this->canCreateSuppliesSupply($householdUser);
+            case self::CHECKOUT_SUPPLIES_ITEM:
+                return $this->canCheckoutSuppliesItem($householdUser);
         }
 
         throw new \LogicException('This code should not be reached!');
@@ -242,6 +246,12 @@ class HouseholdVoter extends Voter
     }
 
     private function canCreateSuppliesItem(HouseholdUser $householdUser): bool
+    {
+        // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
+        return (bool)$householdUser;
+    }
+
+    private function canCheckoutSuppliesItem(HouseholdUser $householdUser): bool
     {
         // thanks to voteOnAttribute, we already know that $householdUser belongs to our Household
         return (bool)$householdUser;

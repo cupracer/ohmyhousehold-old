@@ -1,0 +1,59 @@
+{% extends 'theme/base.html.twig' %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-lg-8">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">({{ product.brand }}) {{ product.name }} - {{ product.amount }}</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                    {% if items %}
+                        <div class="col-lg-12">
+                            <div class="row">
+                            {% for item in items %}
+                            <div class="col-lg-6">
+                                <form action="{{ path('supplies_item_checkout_form', {'item': item.id}) }}" method="post">
+                                    <button type="submit" class="btn btn-block btn-outline-primary btn-lg mb-3">
+                                        {% if item.bestBeforeDate is defined and item.bestBeforeDate %}
+                                            <span class="text-lg">{{ item.bestBeforeDate }}</span>
+                                        {% else %}
+                                            <span class="text-lg">{{ 'no expiration date'|trans }}</span>
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-lg text-right">
+                            <a href="{{ path('supplies_item_checkout_form') }}" class="btn btn-warning btn-icon-split">
+                                        <span class="icon mr-1">
+                                            <i class="far fa-times-circle"></i>
+                                        </span>
+                                <span class="text">{{ 'back-to-search.button'|trans }}</span>
+                            </a>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <div class="col"></div>
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('supplies_item_form_checkout_list') }}
+{% endblock javascripts %}

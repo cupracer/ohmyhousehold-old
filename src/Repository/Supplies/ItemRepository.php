@@ -4,10 +4,12 @@ namespace App\Repository\Supplies;
 
 use App\Entity\Household;
 use App\Entity\Supplies\Item;
+use App\Entity\Supplies\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Item|null find($id, $lockMode = null, $lockVersion = null)
@@ -147,6 +149,29 @@ class ItemRepository extends ServiceEntityRepository
 
         return array_filter($items, function (Item $item) {
             return $this->security->isGranted('view', $item);
+        });
+    }
+
+    /**
+     * @return Item[] Returns an array of Item objects
+     */
+    public function findAllGrantedByHouseholdAndProductAndInStock(Household $household, Product $product): array
+    {
+        $qb = $this->createQueryBuilder('i');
+        $items = $qb
+            ->andWhere('i.household = :household')
+            ->andWhere('i.product = :product')
+            ->andWhere($qb->expr()->isNull('i.withdrawalDate'))
+            ->setParameter('household', $household)
+            ->setParameter('product', $product)
+            ->orderBy('i.bestBeforeDate', 'ASC')
+            ->addOrderBy('i.purchaseDate', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($items, function (Item $item) {
+            return $this->security->isGranted('edit', $item);
         });
     }
 

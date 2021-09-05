@@ -5,6 +5,7 @@ namespace App\Repository\Supplies;
 use App\Entity\Household;
 use App\Entity\Supplies\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,13 +30,13 @@ class ProductRepository extends ServiceEntityRepository
     /**
      * @return integer
      */
-    public function getCountAllByHouseholdAndUser(Household $household, UserInterface $user, string $search = '')
+    public function getCountAllByHouseholdAndUser(Household $household, UserInterface $user, bool $inUseOnly, string $search = '')
     {
         // For performance reasons, no security voter is used. Filtering is done by the query.
 
-        $qb = $this->createQueryBuilder('p');
+        $query = $this->createQueryBuilder('p');
 
-        $query = $qb->select($qb->expr()->count('p'))
+        $query = $query->select($query->expr()->count('p'))
             ->andWhere('p.household = :household')
             ->innerJoin('p.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
@@ -61,6 +62,17 @@ class ProductRepository extends ServiceEntityRepository
             $query->setParameter('search', '%' . $search . '%');
         }
 
+        if($inUseOnly) {
+            $query
+                ->leftJoin('p.items',
+                    'i',
+                    Join::WITH,
+                    $query->expr()->isNull('i.withdrawalDate')
+                )
+                ->andWhere($query->expr()->isNotNull('i'))
+                ;
+        }
+
         return $query
             ->getQuery()
             ->getSingleScalarResult()
@@ -70,17 +82,17 @@ class ProductRepository extends ServiceEntityRepository
     /**
      * @return array
      */
-    public function getFilteredDataByHousehold(Household $household, $start, $length, array $orderingData, string $search = '')
+    public function getFilteredDataByHousehold(Household $household, $start, $length, array $orderingData, bool $inUseOnly, string $search = '')
     {
         // This method generates an array which is to be used for a Datatables output.
         // For performance reasons, no security voter is used. Filtering is done by the query.
         $result = [
-            'recordsTotal' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser()),
+            'recordsTotal' => $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $inUseOnly),
         ];
 
         // no need to run the same query again if no search term is used.
         $result['recordsFiltered'] = $search ?
-            $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $search) :
+            $this->getCountAllByHouseholdAndUser($household, $this->security->getUser(), $inUseOnly, $search) :
             $result['recordsTotal'];
 
         $query = $this->createQueryBuilder('p')
@@ -108,6 +120,17 @@ class ProductRepository extends ServiceEntityRepository
             ));
 
             $query->setParameter('search', '%' . $search . '%');
+        }
+
+        if($inUseOnly) {
+            $query
+                ->leftJoin('p.items',
+                    'i',
+                    Join::WITH,
+                    $query->expr()->isNull('i.withdrawalDate')
+                )
+                ->andWhere($query->expr()->isNotNull('i'))
+            ;
         }
 
         foreach($orderingData as $order) {
@@ -139,6 +162,7 @@ class ProductRepository extends ServiceEntityRepository
 
         return $result;
     }
+
 
     /**
      * @return Product[] Returns an array of Product objects

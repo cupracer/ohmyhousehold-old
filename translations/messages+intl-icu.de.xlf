@@ -421,6 +421,22 @@
         <source>details</source>
         <target>Details</target>
       </trans-unit>
+      <trans-unit id="checkout.button">
+        <source>checkout.button</source>
+        <target>Checkout</target>
+      </trans-unit>
+      <trans-unit id="back-to-search.button">
+        <source>back-to-search.button</source>
+        <target>Zurück zur Suche</target>
+      </trans-unit>
+      <trans-unit id="show_items.button">
+        <source>show_items.button</source>
+        <target>Zeige Artikel</target>
+      </trans-unit>
+      <trans-unit id="smart_checkout.button">
+        <source>smart_checkout.button</source>
+        <target>Smart-Checkout</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -36,7 +36,7 @@ class ProductController extends AbstractController
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
         return $this->json(
-            $productService->getProductsAsDatatablesArray($request, $currentHousehold)
+            $productService->getProductsAsDatatablesArray($request, $currentHousehold, false)
         );
     }
 
@@ -46,7 +46,17 @@ class ProductController extends AbstractController
         $currentHousehold = $householdRepository->find($session->get('current_household'));
 
         return $this->json(
-            $productService->getProductsAsSelect2Array($request, $currentHousehold)
+            $productService->getProductsAsSelect2Array($request, $currentHousehold, false)
+        );
+    }
+
+    #[Route('/in-use/select2', name: 'supplies_product_inuse_select2', methods: ['GET'])]
+    public function getInUseAsSelect2(Request $request, ProductService $productService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    {
+        $currentHousehold = $householdRepository->find($session->get('current_household'));
+
+        return $this->json(
+            $productService->getProductsAsSelect2Array($request, $currentHousehold, true)
         );
     }
 

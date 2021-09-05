@@ -2,12 +2,16 @@
 
 namespace App\Controller\Supplies;
 
+use App\Entity\Supplies\DTO\ItemCheckoutDTO;
 use App\Entity\Supplies\DTO\ItemEditDTO;
 use App\Entity\Supplies\Item;
 use App\Entity\Supplies\DTO\ItemDTO;
+use App\Entity\User;
+use App\Form\Supplies\ItemCheckoutType;
 use App\Form\Supplies\ItemEditType;
 use App\Form\Supplies\ItemType;
 use App\Repository\HouseholdRepository;
+use App\Repository\Supplies\ItemRepository;
 use App\Service\Supplies\ItemService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -146,7 +150,7 @@ class ItemController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'supplies_item_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'supplies_item_delete', methods: ['POST'])]
     public function delete(Request $request, Item $item): Response
     {
         try {
@@ -230,5 +234,90 @@ class ItemController extends AbstractController
                 return $this->redirectToRoute('supplies_item_index');
             }
         }
+    }
+
+    #[Route('/checkout-form/{item}', name: 'supplies_item_checkout_form', methods: ['GET', 'POST'])]
+    public function checkoutForm(Request $request, SessionInterface $session, HouseholdRepository $householdRepository, ItemRepository $itemRepository, Item $item = null): Response
+    {
+        $household = null;
+
+        if($session->has('current_household')) {
+            $household = $householdRepository->find($session->get('current_household'));
+        }
+
+        $this->denyAccessUnlessGranted('checkoutSuppliesItem', $household);
+
+        //Shortcut - if $item is set, do a checkout and return:
+        if($item) {
+            $this->denyAccessUnlessGranted('checkout', $item);
+
+            $item->setWithdrawalDate(new \DateTime());
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', t('Item was checked out.'));
+            return $this->redirectToRoute('supplies_item_checkout_form');
+        }
+
+        $checkoutItem = new ItemCheckoutDTO();
+
+        $form = $this->createForm(ItemCheckoutType::class, $checkoutItem);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $items = $itemRepository->findAllGrantedByHouseholdAndProductAndInStock($household, $checkoutItem->getProduct());
+
+            // used to check if items have different best-before-dates
+            $firstDateFound = null;
+            $multipleBestBeforeDates = false;
+
+            foreach ($items as $item) {
+                if ($firstDateFound === null) {
+                    $firstDateFound = $item->getBestBeforeDate();
+                }elseif ($firstDateFound != $item->getBestBeforeDate()) {
+                    $multipleBestBeforeDates = true;
+                    break;
+                }
+            }
+
+            if(($form->has('smartCheckout') && $form->get('smartCheckout')->isClicked()) && (count($items) === 1 || !$multipleBestBeforeDates)) {
+                $this->denyAccessUnlessGranted('checkout', $item);
+
+                $items[0]->setWithdrawalDate(new \DateTime());
+                $this->getDoctrine()->getManager()->flush();
+
+                $this->addFlash('success', t('Item was checked out.'));
+                return $this->redirectToRoute('supplies_item_checkout_form');
+            }else {
+                $itemsArray = [];
+
+                /** @var User $user */
+                $user = $this->getUser();
+                $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+
+                foreach ($items as $item) {
+                    $itemsArray[] = [
+                        'id' => $item->getId(),
+                        'bestBeforeDate' => $item->getBestBeforeDate() ? $dateFormatter->format($item->getBestBeforeDate()) : null,
+                    ];
+                }
+
+                $productData = [
+                    'name' => $checkoutItem->getProduct()->getSupply()->getName() . ($checkoutItem->getProduct()->getName() ? ' - ' . $checkoutItem->getProduct()->getName() : ''),
+                    'brand' => $checkoutItem->getProduct()->getBrand(),
+                    'amount' => 1 * $checkoutItem->getProduct()->getQuantity() . $checkoutItem->getProduct()->getMeasure()->getName(),
+                ];
+
+                return $this->render('supplies/item/form_checkout_list.html.twig', [
+                    'pageTitle' => t('Checkout item'),
+                    'product' => $productData,
+                    'items' => $itemsArray,
+                ]);
+            }
+        }
+
+        return $this->render('supplies/item/form_checkout.html.twig', [
+            'pageTitle' => t('Checkout item'),
+            'form' => $form->createView(),
+        ]);
     }
 }

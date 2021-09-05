@@ -22,7 +22,7 @@ class ProductService extends DatatablesService
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getProductsAsDatatablesArray(Request $request, Household $household): array
+    public function getProductsAsDatatablesArray(Request $request, Household $household, bool $inUseOnly): array
     {
         $draw = $request->query->getInt('draw', 1);
         $start = $request->query->getInt('start');
@@ -42,7 +42,7 @@ class ProductService extends DatatablesService
         );
 
         $result = $this->productRepository->getFilteredDataByHousehold(
-            $household, $start, $length, $orderingData, $search);
+            $household, $start, $length, $orderingData, $inUseOnly, $search);
 
         $tableData = [];
 
@@ -74,7 +74,7 @@ class ProductService extends DatatablesService
         ];
     }
 
-    public function getProductsAsSelect2Array(Request $request, Household $household): array
+    public function getProductsAsSelect2Array(Request $request, Household $household, bool $inUseOnly): array
     {
         $page = $request->query->getInt('page', 1);
         $length = $request->query->getInt('length', 10);
@@ -89,7 +89,7 @@ class ProductService extends DatatablesService
         ];
 
         $result = $this->productRepository->getFilteredDataByHousehold(
-            $household, $start, $length, $orderingData, $search);
+            $household, $start, $length, $orderingData, $inUseOnly, $search);
 
         $tableData = [];
 

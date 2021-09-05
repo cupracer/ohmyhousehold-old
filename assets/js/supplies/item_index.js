@@ -21,7 +21,7 @@ $(document).ready(function () {
         info: true,
         autoWidth: false,
         responsive: true,
-        order: [[ 1, "asc" ]],
+        order: [[ 0, "asc" ]],
         columns: [
             {
                 data: "product",
