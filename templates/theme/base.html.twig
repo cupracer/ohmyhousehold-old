@@ -69,6 +69,16 @@
             <a href="{{ path('app_admin_index') }}" class="nav-link">Admin</a>
         </li>
     {% endif %}
+    {% if is_granted('ROLE_HOUSEKEEPINGBOOK') %}
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ path('housekeepingbook_report_periodical_current') }}" class="nav-link">{{ 'housekeeping_book'|trans|title }}</a>
+        </li>
+    {% endif %}
+    {% if is_granted('ROLE_SUPPLIES') %}
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ path('supplies_item_checkout_form') }}" class="nav-link">{{ 'supplies_checkout'|trans|title }}</a>
+        </li>
+    {% endif %}
 {% endblock navbar_left_items %}
 
 

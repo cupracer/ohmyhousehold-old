@@ -437,6 +437,10 @@
         <source>smart_checkout.button</source>
         <target>Smart-Checkout</target>
       </trans-unit>
+      <trans-unit id="supplies_checkout">
+        <source>supplies_checkout</source>
+        <target>Vorratsentnahme</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
