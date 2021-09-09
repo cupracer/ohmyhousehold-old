@@ -34,7 +34,7 @@ $(document).ready(function () {
                 data: "owners",
                 defaultContent: "-",
                 orderable: false,
-                render: function (data, type, row) {
+                render: function (data) {
                     let owners = '';
 
                     for (let i=0; i<data.length; i++) {

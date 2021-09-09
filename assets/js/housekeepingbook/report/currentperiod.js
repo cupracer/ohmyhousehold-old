@@ -17,7 +17,7 @@ $(document).ready(function () {
         [
             {
                 "targets": '_all',
-                "createdCell": function (td, cellData, rowData, row, col) {
+                "createdCell": function (td, cellData, rowData) {
                     if(rowData[10]) {
                         $(td).css('font-style', 'italic');
                     }
@@ -35,7 +35,7 @@ $(document).ready(function () {
                 "targets": [ 0, ],
                 "orderable": false,
                 "class": "min text-right",
-                "render": function ( data, type, row, meta ) {
+                "render": function (data, type) {
                     let output = '';
 
                     if(type ==="display"){
@@ -75,7 +75,7 @@ $(document).ready(function () {
             {
                 "targets": [1,],
                 "class": "min text-center",
-                "render": function ( data, type, row, meta ) {
+                "render": function (data, type, row) {
                     if(type ==="display" || type === "filter"){
                         return data;
                     }else {
@@ -97,7 +97,7 @@ $(document).ready(function () {
             {
                 "targets": [ 8, ],
                 "class": "min text-right",
-                "render": function ( data, type, row, meta ) {
+                "render": function (data, type, row) {
                     const floatVal = parseFloat(row[8]);
 
                     if(type ==="display" || type === "filter"){
