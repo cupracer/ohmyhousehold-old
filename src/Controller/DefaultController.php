@@ -77,18 +77,11 @@ class DefaultController extends AbstractController
     #[Route('/{_locale<%app.supported_locales%>}/datatables/locale', name: 'app_datatables_locale')]
     public function datatablesLocale(string $_locale, Packages $packages): Response
     {
-        $fileName = 'English.lang';
+        $fileName = match ($_locale) {
+            "de" => 'de_de.json',
+            default => 'English.lang',
+        };
 
-        switch($_locale) {
-            case "de":
-                $fileName = 'de_de.json';
-                break;
-        }
-
-        if($fileName) {
-            return $this->redirect($packages->getUrl('build/datatables/i18n/' . $fileName));
-        }else {
-            return new Response('');
-        }
+        return $this->redirect($packages->getUrl('build/datatables/i18n/' . $fileName));
     }
 }
