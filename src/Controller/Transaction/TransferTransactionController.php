@@ -88,7 +88,6 @@ class TransferTransactionController extends AbstractController
 
                 // explicitly setting to "midnight" might not be necessary for a db date field
                 $transferTransaction->setBookingDate($createTransferTransaction->getBookingDate()->modify('midnight'));
-                $transferTransaction->setBookingCategory($createTransferTransaction->getBookingCategory());
                 $transferTransaction->setSource($createTransferTransaction->getSource());
                 $transferTransaction->setDestination($createTransferTransaction->getDestination());
                 $transferTransaction->setAmount($createTransferTransaction->getAmount());
@@ -125,7 +124,6 @@ class TransferTransactionController extends AbstractController
 
         $editTransferTransaction = new TransferTransactionDTO();
         $editTransferTransaction->setBookingDate($transferTransaction->getBookingDate());
-        $editTransferTransaction->setBookingCategory($transferTransaction->getBookingCategory());
         $editTransferTransaction->setSource($transferTransaction->getSource());
         $editTransferTransaction->setDestination($transferTransaction->getDestination());
         $editTransferTransaction->setAmount($transferTransaction->getAmount());
@@ -141,7 +139,6 @@ class TransferTransactionController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
 
                 $transferTransaction->setBookingDate($editTransferTransaction->getBookingDate());
-                $transferTransaction->setBookingCategory($editTransferTransaction->getBookingCategory());
                 $transferTransaction->setSource($editTransferTransaction->getSource());
                 $transferTransaction->setDestination($editTransferTransaction->getDestination());
                 $transferTransaction->setAmount($editTransferTransaction->getAmount());

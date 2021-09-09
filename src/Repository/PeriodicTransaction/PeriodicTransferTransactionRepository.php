@@ -193,7 +193,6 @@ class PeriodicTransferTransactionRepository extends ServiceEntityRepository
             ->innerJoin('hhu.user', 'u')
             ->innerJoin('t.source', 's')
             ->innerJoin('t.destination', 'd')
-            ->innerJoin('t.bookingCategory', 'bc')
             ->innerJoin('u.userProfile', 'up')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
@@ -223,9 +222,6 @@ class PeriodicTransferTransactionRepository extends ServiceEntityRepository
                     break;
                 case "user":
                     $query->addOrderBy('LOWER(up.forenames)', $order['dir']);
-                    break;
-                case "bookingCategory":
-                    $query->addOrderBy('LOWER(bc.name)', $order['dir']);
                     break;
                 case "source":
                     $query->addOrderBy('LOWER(s.name)', $order['dir']);

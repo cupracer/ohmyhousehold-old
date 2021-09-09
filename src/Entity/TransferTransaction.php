@@ -28,12 +28,6 @@ class TransferTransaction extends Transaction
     protected $householdUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity=BookingCategory::class, inversedBy="transferTransactions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    protected $bookingCategory;
-
-    /**
      * @ORM\ManyToOne(targetEntity=PeriodicTransferTransaction::class, inversedBy="transferTransactions")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -83,18 +77,6 @@ class TransferTransaction extends Transaction
     public function setHouseholdUser(?HouseholdUser $householdUser): self
     {
         $this->householdUser = $householdUser;
-
-        return $this;
-    }
-
-    public function getBookingCategory(): ?BookingCategory
-    {
-        return $this->bookingCategory;
-    }
-
-    public function setBookingCategory(?BookingCategory $bookingCategory): self
-    {
-        $this->bookingCategory = $bookingCategory;
 
         return $this;
     }

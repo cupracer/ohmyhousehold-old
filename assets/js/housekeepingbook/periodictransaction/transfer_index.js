@@ -68,15 +68,6 @@ $(document).ready(function () {
                 },
             },
             {
-                data: "bookingCategory",
-                defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                    if(rowData.private) {
-                        $(cell).css('font-style', 'italic');
-                    }
-                },
-            },
-            {
                 data: "source",
                 defaultContent: "-",
                 createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {

@@ -45,7 +45,7 @@ class TransferTransactionService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['bookingDate', 'user', 'bookingCategory', 'source', 'destination', 'description', 'amount',],
+            ['bookingDate', 'user', 'source', 'destination', 'description', 'amount',],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -67,7 +67,6 @@ class TransferTransactionService extends DatatablesService
             $rowData = [
                 'bookingDate' => $dateFormatter->format($row->getBookingDate()),
                 'user' => $row->getHouseholdUser()->getUser()->getUsername(),
-                'bookingCategory' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getBookingCategory()->getName(),
                 'source' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getSource()->getName(),
                 'destination' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getDestination()->getName(),
                 'description' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getDescription(),

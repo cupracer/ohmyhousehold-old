@@ -8,12 +8,6 @@ $(document).ready(function () {
 
     $("#periodic_transfer_transaction_private").bootstrapSwitch();
 
-    let bookingCategorySelect = $('#periodic_transfer_transaction_bookingCategory');
-    bookingCategorySelect.select2({
-        placeholder: '',
-        theme: 'bootstrap4',
-    });
-
     let sourceSelect = $('#periodic_transfer_transaction_source');
     sourceSelect.select2({
         placeholder: '',

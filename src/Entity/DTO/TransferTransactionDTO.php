@@ -3,7 +3,6 @@
 namespace App\Entity\DTO;
 
 use App\Entity\AssetAccount;
-use App\Entity\BookingCategory;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TransferTransactionDTO
@@ -14,12 +13,6 @@ class TransferTransactionDTO
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
     private $bookingDate;
-
-    /**
-     * @var BookingCategory
-     */
-    #[Assert\NotBlank]
-    private $bookingCategory;
 
     /**
      * @var AssetAccount
@@ -62,24 +55,6 @@ class TransferTransactionDTO
     public function setBookingDate(\DateTimeInterface $bookingDate): TransferTransactionDTO
     {
         $this->bookingDate = $bookingDate;
-        return $this;
-    }
-
-    /**
-     * @return BookingCategory
-     */
-    public function getBookingCategory(): ?BookingCategory
-    {
-        return $this->bookingCategory;
-    }
-
-    /**
-     * @param BookingCategory $bookingCategory
-     * @return TransferTransactionDTO
-     */
-    public function setBookingCategory(BookingCategory $bookingCategory): TransferTransactionDTO
-    {
-        $this->bookingCategory = $bookingCategory;
         return $this;
     }
 

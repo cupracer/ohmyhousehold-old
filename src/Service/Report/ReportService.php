@@ -204,7 +204,9 @@ class ReportService extends DatatablesService
         $result['private'] = $transaction->getPrivate();
 
         if($this->security->isGranted('view', $transaction)) {
-            $result['bookingCategory'] = $transaction->getBookingCategory()->getName();
+            if(method_exists($transaction, 'getBookingCategory')) {
+                $result['bookingCategory'] = $transaction->getBookingCategory()->getName();
+            }
             $result['description'] = $transaction->getDescription();
             $result['amount'] = $numberFormatter->formatCurrency($transaction->getAmount(), 'EUR');
             $result['amount_filter'] = $transaction->getAmount();
@@ -393,7 +395,6 @@ class ReportService extends DatatablesService
                     $transaction->setHousehold($row->getHousehold());
                     $transaction->setBookingDate(clone $bookingDate);
                     $transaction->setHouseholdUser($row->getHouseholdUser());
-                    $transaction->setBookingCategory($row->getBookingCategory());
                     $transaction->setSource($row->getSource());
                     $transaction->setDestination($row->getDestination());
                     $transaction->setDescription($row->getDescription());

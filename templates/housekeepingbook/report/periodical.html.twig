@@ -121,7 +121,7 @@
                                 <td>{{ transaction.bookingDate }}</td>
                                 <td>{{ transaction.bookingDate_sort }}</td>
                                 <td>{{ transaction.user }}</td>
-                                <td>{{ transaction.bookingCategory }}</td>
+                                <td>{{ transaction.bookingCategory|default('-') }}</td>
                                 <td>{{ transaction.source }}</td>
                                 <td>{{ transaction.destination }}</td>
                                 <td>{{ transaction.description }}</td>

@@ -85,7 +85,6 @@ class PeriodicTransferTransactionController extends AbstractController
                 $periodicTransferTransaction->setStartDate($createPeriodicTransferTransaction->getStartDate());
                 $periodicTransferTransaction->setEndDate($createPeriodicTransferTransaction->getEndDate());
                 $periodicTransferTransaction->setBookingDayOfMonth($createPeriodicTransferTransaction->getBookingDayOfMonth());
-                $periodicTransferTransaction->setBookingCategory($createPeriodicTransferTransaction->getBookingCategory());
                 $periodicTransferTransaction->setSource($createPeriodicTransferTransaction->getSource());
                 $periodicTransferTransaction->setDestination($createPeriodicTransferTransaction->getDestination());
                 $periodicTransferTransaction->setAmount($createPeriodicTransferTransaction->getAmount());
@@ -125,7 +124,6 @@ class PeriodicTransferTransactionController extends AbstractController
         $editPeriodicTransferTransaction->setStartDate($periodicTransferTransaction->getStartDate());
         $editPeriodicTransferTransaction->setEndDate($periodicTransferTransaction->getEndDate());
         $editPeriodicTransferTransaction->setBookingDayOfMonth($periodicTransferTransaction->getBookingDayOfMonth());
-        $editPeriodicTransferTransaction->setBookingCategory($periodicTransferTransaction->getBookingCategory());
         $editPeriodicTransferTransaction->setSource($periodicTransferTransaction->getSource());
         $editPeriodicTransferTransaction->setDestination($periodicTransferTransaction->getDestination());
         $editPeriodicTransferTransaction->setAmount($periodicTransferTransaction->getAmount());
@@ -144,7 +142,6 @@ class PeriodicTransferTransactionController extends AbstractController
                 $periodicTransferTransaction->setStartDate($editPeriodicTransferTransaction->getStartDate());
                 $periodicTransferTransaction->setEndDate($editPeriodicTransferTransaction->getEndDate());
                 $periodicTransferTransaction->setBookingDayOfMonth($editPeriodicTransferTransaction->getBookingDayOfMonth());
-                $periodicTransferTransaction->setBookingCategory($editPeriodicTransferTransaction->getBookingCategory());
                 $periodicTransferTransaction->setSource($editPeriodicTransferTransaction->getSource());
                 $periodicTransferTransaction->setDestination($editPeriodicTransferTransaction->getDestination());
                 $periodicTransferTransaction->setAmount($editPeriodicTransferTransaction->getAmount());

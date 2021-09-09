@@ -45,7 +45,7 @@ class PeriodicTransferTransactionService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['startDate', 'endDate', 'bookingInterval', 'bookingDayOfMonth', 'user', 'bookingCategory', 'source', 'destination', 'description', 'amount',],
+            ['startDate', 'endDate', 'bookingInterval', 'bookingDayOfMonth', 'user', 'source', 'destination', 'description', 'amount',],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -71,7 +71,6 @@ class PeriodicTransferTransactionService extends DatatablesService
                 'bookingDayOfMonth' => $row->getBookingDayOfMonth(),
                 'bookingInterval' => $row->getBookingInterval(),
                 'user' => $row->getHouseholdUser()->getUser()->getUsername(),
-                'bookingCategory' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getBookingCategory()->getName(),
                 'source' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getSource()->getName(),
                 'destination' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getDestination()->getName(),
                 'description' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getDescription(),

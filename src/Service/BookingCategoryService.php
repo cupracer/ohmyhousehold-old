@@ -107,11 +107,9 @@ class BookingCategoryService extends DatatablesService
         $count = 0;
 
         $count+= count($bookingCategory->getDepositTransactions());
-        $count+= count($bookingCategory->getTransferTransactions());
         $count+= count($bookingCategory->getWithdrawalTransactions());
 
         $count+= count($bookingCategory->getPeriodicDepositTransactions());
-        $count+= count($bookingCategory->getPeriodicTransferTransactions());
         $count+= count($bookingCategory->getPeriodicWithdrawalTransactions());
 
         return $count;

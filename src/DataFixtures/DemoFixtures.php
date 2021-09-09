@@ -141,7 +141,6 @@ class DemoFixtures extends Fixture
             ->setAmount(290)
             ->setBookingDate(new \DateTime())
             ->setBookingPeriodOffset(0)
-            ->setBookingCategory($bookingCategory3)
             ->setDescription('transfer1')
             ->setPrivate(false);
 

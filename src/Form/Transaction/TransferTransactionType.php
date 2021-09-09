@@ -72,14 +72,6 @@ class TransferTransactionType extends AbstractType
                     'autofocus' => true,
                 ],
             ])
-            ->add('bookingCategory', EntityType::class, [
-                'placeholder' => '',
-                'class' => BookingCategory::class,
-                'choices' => $this->bookingCategoryRepository->findAllGrantedByHousehold($this->household),
-                'attr' => [
-                    'class' => 'form-control select2field',
-                ],
-            ])
             ->add('source', EntityType::class, [
                 'placeholder' => '',
                 'class' => AssetAccount::class,

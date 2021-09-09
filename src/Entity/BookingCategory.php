@@ -53,11 +53,6 @@ class BookingCategory implements \JsonSerializable
     private $depositTransactions;
 
     /**
-     * @ORM\OneToMany(targetEntity=TransferTransaction::class, mappedBy="bookingCategory", orphanRemoval=true)
-     */
-    private $transferTransactions;
-
-    /**
      * @ORM\OneToMany(targetEntity=PeriodicDepositTransaction::class, mappedBy="bookingCategory", orphanRemoval=true)
      */
     private $periodicDepositTransactions;
@@ -67,20 +62,13 @@ class BookingCategory implements \JsonSerializable
      */
     private $periodicWithdrawalTransactions;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PeriodicTransferTransaction::class, mappedBy="bookingCategory", orphanRemoval=true)
-     */
-    private $periodicTransferTransactions;
-
 
     public function __construct()
     {
         $this->withdrawalTransactions = new ArrayCollection();
         $this->depositTransactions = new ArrayCollection();
-        $this->transferTransactions = new ArrayCollection();
         $this->periodicDepositTransactions = new ArrayCollection();
         $this->periodicWithdrawalTransactions = new ArrayCollection();
-        $this->periodicTransferTransactions = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -208,36 +196,6 @@ class BookingCategory implements \JsonSerializable
     /**
      * @return Collection
      */
-    public function getTransferTransactions(): Collection
-    {
-        return $this->transferTransactions;
-    }
-
-    public function addTransferTransaction(TransferTransaction $transferTransaction): self
-    {
-        if (!$this->transferTransactions->contains($transferTransaction)) {
-            $this->transferTransactions[] = $transferTransaction;
-            $transferTransaction->setBookingCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransferTransaction(TransferTransaction $transferTransaction): self
-    {
-        if ($this->transferTransactions->removeElement($transferTransaction)) {
-            // set the owning side to null (unless already changed)
-            if ($transferTransaction->getBookingCategory() === $this) {
-                $transferTransaction->setBookingCategory(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection
-     */
     public function getPeriodicDepositTransactions(): Collection
     {
         return $this->periodicDepositTransactions;
@@ -289,36 +247,6 @@ class BookingCategory implements \JsonSerializable
             // set the owning side to null (unless already changed)
             if ($periodicWithdrawalTransaction->getBookingCategory() === $this) {
                 $periodicWithdrawalTransaction->setBookingCategory(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getPeriodicTransferTransactions(): Collection
-    {
-        return $this->periodicTransferTransactions;
-    }
-
-    public function addPeriodicTransferTransaction(PeriodicTransferTransaction $periodicTransferTransaction): self
-    {
-        if (!$this->periodicTransferTransactions->contains($periodicTransferTransaction)) {
-            $this->periodicTransferTransactions[] = $periodicTransferTransaction;
-            $periodicTransferTransaction->setBookingCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removePeriodicTransferTransaction(PeriodicTransferTransaction $periodicTransferTransaction): self
-    {
-        if ($this->periodicTransferTransactions->removeElement($periodicTransferTransaction)) {
-            // set the owning side to null (unless already changed)
-            if ($periodicTransferTransaction->getBookingCategory() === $this) {
-                $periodicTransferTransaction->setBookingCategory(null);
             }
         }
 
