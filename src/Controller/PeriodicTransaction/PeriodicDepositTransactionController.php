@@ -101,7 +101,7 @@ class PeriodicDepositTransactionController extends AbstractController
 
                 // explicitly setting to "midnight" might not be necessary for a db date field
                 $periodicDepositTransaction->setStartDate($createPeriodicDepositTransaction->getStartDate()->modify('midnight'));
-                $periodicDepositTransaction->setEndDate($createPeriodicDepositTransaction->getEndDate() ? $createPeriodicDepositTransaction->getEndDate()->modify('midnight') : null);
+                $periodicDepositTransaction->setEndDate($createPeriodicDepositTransaction->getEndDate()?->modify('midnight'));
                 $periodicDepositTransaction->setBookingDayOfMonth($createPeriodicDepositTransaction->getBookingDayOfMonth());
                 $periodicDepositTransaction->setBookingCategory($createPeriodicDepositTransaction->getBookingCategory());
                 $periodicDepositTransaction->setSource($revenueAccount);
@@ -141,7 +141,7 @@ class PeriodicDepositTransactionController extends AbstractController
 
         $editPeriodicDepositTransaction = new PeriodicDepositTransactionDTO();
         $editPeriodicDepositTransaction->setStartDate($periodicDepositTransaction->getStartDate()->modify('midnight'));
-        $editPeriodicDepositTransaction->setEndDate($periodicDepositTransaction->getEndDate() ? $periodicDepositTransaction->getEndDate()->modify('midnight') : null);
+        $editPeriodicDepositTransaction->setEndDate($periodicDepositTransaction->getEndDate()?->modify('midnight'));
         $editPeriodicDepositTransaction->setBookingDayOfMonth($periodicDepositTransaction->getBookingDayOfMonth());
         $editPeriodicDepositTransaction->setBookingCategory($periodicDepositTransaction->getBookingCategory());
         $editPeriodicDepositTransaction->setSource($periodicDepositTransaction->getSource()->getAccountHolder());
