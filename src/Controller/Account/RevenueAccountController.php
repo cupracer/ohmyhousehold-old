@@ -2,16 +2,12 @@
 
 namespace App\Controller\Account;
 
-use App\Entity\AccountHolder;
-use App\Entity\AssetAccount;
-use App\Repository\HouseholdRepository;
 use App\Service\Account\RevenueAccountService;
 use App\Service\UserSettingsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 

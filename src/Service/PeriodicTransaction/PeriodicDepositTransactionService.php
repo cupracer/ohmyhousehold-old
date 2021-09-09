@@ -2,7 +2,6 @@
 
 namespace App\Service\PeriodicTransaction;
 
-use App\Entity\AssetAccount;
 use App\Entity\Household;
 use App\Entity\PeriodicDepositTransaction;
 use App\Entity\User;

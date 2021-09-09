@@ -2,8 +2,6 @@
 
 namespace App\Controller\Account;
 
-use App\Entity\AccountHolder;
-use App\Entity\AssetAccount;
 use App\Service\Account\ExpenseAccountService;
 use App\Service\UserSettingsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
