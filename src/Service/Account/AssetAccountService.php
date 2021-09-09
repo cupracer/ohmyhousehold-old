@@ -22,25 +22,16 @@ use Symfony\Component\Security\Core\Security;
 class AssetAccountService extends DatatablesService
 {
     private AssetAccountRepository $assetAccountRepository;
-    private DepositTransactionRepository $depositTransactionRepository;
-    private TransferTransactionRepository $transferTransactionRepository;
-    private WithdrawalTransactionRepository $withdrawalTransactionRepository;
     private UrlGeneratorInterface $urlGenerator;
     private Security $security;
     private MoneyCalculationService $moneyCalc;
 
     public function __construct(AssetAccountRepository $assetAccountRepository,
-                                DepositTransactionRepository $depositTransactionRepository,
-                                TransferTransactionRepository $transferTransactionRepository,
-                                WithdrawalTransactionRepository $withdrawalTransactionRepository,
                                 UrlGeneratorInterface $urlGenerator,
                                 Security $security,
                                 MoneyCalculationService $moneyCalculationService)
     {
         $this->assetAccountRepository = $assetAccountRepository;
-        $this->depositTransactionRepository = $depositTransactionRepository;
-        $this->transferTransactionRepository = $transferTransactionRepository;
-        $this->withdrawalTransactionRepository = $withdrawalTransactionRepository;
         $this->urlGenerator = $urlGenerator;
         $this->security = $security;
         $this->moneyCalc = $moneyCalculationService;

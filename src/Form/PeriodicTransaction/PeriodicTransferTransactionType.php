@@ -29,7 +29,6 @@ class PeriodicTransferTransactionType extends AbstractType
 
     private HouseholdRepository $householdRepository;
     private HouseholdUserRepository $householdUserRepository;
-    private BookingCategoryRepository $bookingCategoryRepository;
     private AssetAccountRepository $assetAccountRepository;
     private Security $security;
 
@@ -41,7 +40,6 @@ class PeriodicTransferTransactionType extends AbstractType
         SessionInterface $session,
         HouseholdRepository $householdRepository,
         HouseholdUserRepository $householdUserRepository,
-        BookingCategoryRepository $bookingCategoryRepository,
         AssetAccountRepository $assetAccountRepository,
         Security $security
     )
@@ -49,7 +47,6 @@ class PeriodicTransferTransactionType extends AbstractType
         $this->session = $session;
         $this->householdRepository = $householdRepository;
         $this->householdUserRepository = $householdUserRepository;
-        $this->bookingCategoryRepository = $bookingCategoryRepository;
         $this->assetAccountRepository = $assetAccountRepository;
 
         $this->security = $security;
