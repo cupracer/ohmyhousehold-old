@@ -11,6 +11,8 @@ use App\Repository\Account\ExpenseAccountRepository;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\PeriodicTransaction\PeriodicWithdrawalTransactionService;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,7 +94,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
                     $expenseAccount = new ExpenseAccount();
                     $expenseAccount->setHousehold($household);
                     $expenseAccount->setInitialBalance(0);
-                    $expenseAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $expenseAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $expenseAccount->setAccountHolder($createPeriodicWithdrawalTransaction->getDestination());
 
                     $entityManager->persist($expenseAccount);
@@ -121,7 +123,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
                 $this->addFlash('success', t('Periodic withdrawal transaction was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_periodic_withdrawal_transaction_new');
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $this->addFlash('error', t('Periodic withdrawal transaction could not be created: ' . $exception->getMessage()));
             }
         }
@@ -165,7 +167,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
                     $expenseAccount = new RevenueAccount();
                     $expenseAccount->setHousehold($periodicWithdrawalTransaction->getHousehold());
                     $expenseAccount->setInitialBalance(0);
-                    $expenseAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $expenseAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $expenseAccount->setAccountHolder($editPeriodicWithdrawalTransaction->getDestination());
 
                     $entityManager->persist($expenseAccount);
@@ -187,7 +189,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
                 $this->addFlash('success', t('Periodic withdrawal transaction was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_periodic_withdrawal_transaction_index');
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash('error', t('Periodic withdrawal transaction could not be updated.'));
             }
         }
@@ -212,9 +214,9 @@ class PeriodicWithdrawalTransactionController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Periodic withdrawal transaction was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Periodic withdrawal transaction could not be deleted.'));
         }
 

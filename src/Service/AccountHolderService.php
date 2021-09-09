@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\AccountHolder;
 use App\Entity\Household;
 use App\Repository\AccountHolderRepository;
+use IntlDateFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -47,7 +48,7 @@ class AccountHolderService extends DatatablesService
         foreach($result['data'] as $row) {
             $rowData = $row->jsonSerialize();
             $rowData['usageCount'] = $this->getUsageCount($row);
-            $rowData['createdAt'] = \IntlDateFormatter::formatObject($rowData['createdAt']);
+            $rowData['createdAt'] = IntlDateFormatter::formatObject($rowData['createdAt']);
             $rowData['editLink'] = $this->urlGenerator->generate(
                 'housekeepingbook_accountholder_edit', ['id' => $row->getId()]);
 

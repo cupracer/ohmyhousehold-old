@@ -3,12 +3,13 @@
 namespace App\Entity\DTO;
 
 use App\Entity\AssetAccount;
+use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TransferTransactionDTO
 {
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
@@ -41,18 +42,18 @@ class TransferTransactionDTO
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getBookingDate(): \DateTimeInterface
+    public function getBookingDate(): DateTimeInterface
     {
         return $this->bookingDate;
     }
 
     /**
-     * @param \DateTimeInterface $bookingDate
+     * @param DateTimeInterface $bookingDate
      * @return TransferTransactionDTO
      */
-    public function setBookingDate(\DateTimeInterface $bookingDate): TransferTransactionDTO
+    public function setBookingDate(DateTimeInterface $bookingDate): TransferTransactionDTO
     {
         $this->bookingDate = $bookingDate;
         return $this;

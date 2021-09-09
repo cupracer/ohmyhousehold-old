@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks()
  */
-abstract class Transaction implements \JsonSerializable
+abstract class Transaction implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -63,12 +66,12 @@ abstract class Transaction implements \JsonSerializable
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -80,7 +83,7 @@ abstract class Transaction implements \JsonSerializable
      */
     public function setCreatedAtValue()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     public function getHousehold(): ?Household
@@ -119,12 +122,12 @@ abstract class Transaction implements \JsonSerializable
         return $this;
     }
 
-    public function getBookingDate(): ?\DateTimeInterface
+    public function getBookingDate(): ?DateTimeInterface
     {
         return $this->bookingDate;
     }
 
-    public function setBookingDate(\DateTimeInterface $bookingDate): self
+    public function setBookingDate(DateTimeInterface $bookingDate): self
     {
         $this->bookingDate = $bookingDate;
 

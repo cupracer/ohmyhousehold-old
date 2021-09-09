@@ -5,19 +5,20 @@ namespace App\Entity\DTO;
 use App\Entity\AccountHolder;
 use App\Entity\AssetAccount;
 use App\Entity\BookingCategory;
+use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PeriodicDepositTransactionDTO
 {
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
     private $startDate;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\Type("\DateTimeInterface")]
     private $endDate;
@@ -71,36 +72,36 @@ class PeriodicDepositTransactionDTO
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getStartDate(): \DateTimeInterface
+    public function getStartDate(): DateTimeInterface
     {
         return $this->startDate;
     }
 
     /**
-     * @param \DateTimeInterface $startDate
+     * @param DateTimeInterface $startDate
      * @return PeriodicDepositTransactionDTO
      */
-    public function setStartDate(\DateTimeInterface $startDate): PeriodicDepositTransactionDTO
+    public function setStartDate(DateTimeInterface $startDate): PeriodicDepositTransactionDTO
     {
         $this->startDate = $startDate;
         return $this;
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }
 
     /**
-     * @param \DateTimeInterface|null $endDate
+     * @param DateTimeInterface|null $endDate
      * @return PeriodicDepositTransactionDTO
      */
-    public function setEndDate(?\DateTimeInterface $endDate): PeriodicDepositTransactionDTO
+    public function setEndDate(?DateTimeInterface $endDate): PeriodicDepositTransactionDTO
     {
         $this->endDate = $endDate;
         return $this;

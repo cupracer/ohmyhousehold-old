@@ -10,6 +10,8 @@ use App\Repository\Account\RevenueAccountRepository;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\Transaction\DepositTransactionService;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +80,7 @@ class DepositTransactionController extends AbstractController
         $createDepositTransaction = new DepositTransactionDTO();
 
         // set initial values
-        $createDepositTransaction->setBookingDate((new \DateTime())->modify('midnight'));
+        $createDepositTransaction->setBookingDate((new DateTime())->modify('midnight'));
 
         $form = $this->createForm(DepositTransactionType::class, $createDepositTransaction);
         $form->handleRequest($request);
@@ -94,7 +96,7 @@ class DepositTransactionController extends AbstractController
                     $revenueAccount = new RevenueAccount();
                     $revenueAccount->setHousehold($household);
                     $revenueAccount->setInitialBalance(0);
-                    $revenueAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $revenueAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $revenueAccount->setAccountHolder($createDepositTransaction->getSource());
 
                     $entityManager->persist($revenueAccount);
@@ -120,7 +122,7 @@ class DepositTransactionController extends AbstractController
                 $this->addFlash('success', t('Deposit transaction was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_deposit_transaction_new');
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $this->addFlash('error', t('Deposit transaction could not be created: ' . $exception->getMessage()));
             }
         }
@@ -161,7 +163,7 @@ class DepositTransactionController extends AbstractController
                     $revenueAccount = new RevenueAccount();
                     $revenueAccount->setHousehold($depositTransaction->getHousehold());
                     $revenueAccount->setInitialBalance(0);
-                    $revenueAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $revenueAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $revenueAccount->setAccountHolder($editDepositTransaction->getSource());
 
                     $entityManager->persist($revenueAccount);
@@ -180,7 +182,7 @@ class DepositTransactionController extends AbstractController
                 $this->addFlash('success', t('Deposit transaction was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_deposit_transaction_index');
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash('error', t('Deposit transaction could not be updated.'));
             }
         }
@@ -205,9 +207,9 @@ class DepositTransactionController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Deposit transaction was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Deposit transaction could not be deleted.'));
         }
 

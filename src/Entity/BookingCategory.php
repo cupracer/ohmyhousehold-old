@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\BookingCategoryRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -17,7 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="This name is already in use in this household."
  *     )
  */
-class BookingCategory implements \JsonSerializable
+class BookingCategory implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -101,12 +104,12 @@ class BookingCategory implements \JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -118,7 +121,7 @@ class BookingCategory implements \JsonSerializable
      */
     public function setCreatedAtValue()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     public function getHousehold(): ?Household

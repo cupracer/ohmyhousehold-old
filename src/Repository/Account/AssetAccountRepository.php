@@ -5,6 +5,7 @@ namespace App\Repository\Account;
 use App\Entity\AssetAccount;
 use App\Entity\Household;
 use App\Entity\HouseholdUser;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -158,7 +159,7 @@ class AssetAccountRepository extends ServiceEntityRepository
     /**
      * @return AssetAccount[] Returns an array of AssetAccount objects
      */
-    public function findAllByHouseholdAndInitialBalanceDateInRange(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllByHouseholdAndInitialBalanceDateInRange(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $qb = $this->createQueryBuilder('a');
 

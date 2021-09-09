@@ -6,6 +6,7 @@ use App\Entity\AccountHolder;
 use App\Entity\ExpenseAccount;
 use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -49,7 +50,7 @@ class ExpenseAccountRepository extends ServiceEntityRepository
      * @param Household $household
      * @param AccountHolder $accountHolder
      * @return ExpenseAccount|null Returns an ExpenseAccount object
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findOneByHouseholdAndAccountHolder(Household $household, AccountHolder $accountHolder): ?ExpenseAccount
     {

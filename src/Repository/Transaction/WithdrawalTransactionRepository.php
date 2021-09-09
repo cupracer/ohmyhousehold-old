@@ -4,6 +4,7 @@ namespace App\Repository\Transaction;
 
 use App\Entity\WithdrawalTransaction;
 use App\Entity\Household;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -48,7 +49,7 @@ class WithdrawalTransactionRepository extends ServiceEntityRepository
     /**
      * @return WithdrawalTransaction[] Returns an array of WithdrawalTransaction objects
      */
-    public function findAllByHouseholdAndDateRange(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $qb = $this->createQueryBuilder('a');
 

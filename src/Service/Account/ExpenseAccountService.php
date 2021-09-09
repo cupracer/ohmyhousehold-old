@@ -9,6 +9,8 @@ use App\Repository\Account\ExpenseAccountRepository;
 use App\Repository\Transaction\WithdrawalTransactionRepository;
 use App\Service\DatatablesService;
 use App\Service\MoneyCalculationService;
+use IntlDateFormatter;
+use NumberFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -60,14 +62,14 @@ class ExpenseAccountService extends DatatablesService
 
         /** @var User $user */
         $user = $this->security->getUser();
-        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), \NumberFormatter::CURRENCY);
+        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), NumberFormatter::CURRENCY);
 
         /** @var ExpenseAccount $row */
         foreach($result['data'] as $row) {
             $rowData = [
                 'name' => $row->getAccountHolder()->getName(),
                 'balance' => $numberFormatter->formatCurrency($this->getBalance($row), 'EUR'),
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
+                'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt()),
                 'editLink' => $this->urlGenerator->generate('housekeepingbook_asset_account_edit', ['id' => $row->getId()]),
             ];
 

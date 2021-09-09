@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\MeasureDTO;
 use App\Form\Supplies\MeasureType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\MeasureService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,7 +85,7 @@ class MeasureController extends AbstractController
                 $this->addFlash('success', t('Measure was added.'));
 
                 return $this->redirectToRoute('supplies_measure_new');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Measure could not be created.'));
             }
         }
@@ -117,7 +118,7 @@ class MeasureController extends AbstractController
                 $this->addFlash('success', t('Measure was updated.'));
 
                 return $this->redirectToRoute('supplies_measure_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Measure could not be updated.'));
             }
         }
@@ -141,9 +142,9 @@ class MeasureController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Measure was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Measure could not be deleted.'));
         }
 

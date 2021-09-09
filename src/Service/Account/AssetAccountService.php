@@ -15,6 +15,9 @@ use App\Repository\Transaction\TransferTransactionRepository;
 use App\Repository\Transaction\WithdrawalTransactionRepository;
 use App\Service\DatatablesService;
 use App\Service\MoneyCalculationService;
+use DateTime;
+use IntlDateFormatter;
+use NumberFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -63,8 +66,8 @@ class AssetAccountService extends DatatablesService
 
         /** @var User $user */
         $user = $this->security->getUser();
-        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), \NumberFormatter::CURRENCY);
-        $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), NumberFormatter::CURRENCY);
+        $dateFormatter = new IntlDateFormatter($user->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
 
         /** @var AssetAccount $row */
         foreach($result['data'] as $row) {
@@ -75,7 +78,7 @@ class AssetAccountService extends DatatablesService
                 'initialBalance' => $numberFormatter->formatCurrency($row->getInitialBalance(), 'EUR'),
                 'initialBalanceDate' => $dateFormatter->format($row->getInitialBalanceDate()),
                 'balance' => $numberFormatter->formatCurrency($this->getBalance($row), 'EUR'),
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
+                'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt()),
                 'editLink' => $this->urlGenerator->generate('housekeepingbook_asset_account_edit', ['id' => $row->getId()]),
             ];
 
@@ -134,7 +137,7 @@ class AssetAccountService extends DatatablesService
 
     public function getBalance(AssetAccount $assetAccount)
     {
-        $today = (new \DateTime())->modify('midnight');
+        $today = (new DateTime())->modify('midnight');
 
         $balance = $assetAccount->getInitialBalance();
 

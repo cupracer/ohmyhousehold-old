@@ -4,6 +4,7 @@ namespace App\Repository\Transaction;
 
 use App\Entity\DepositTransaction;
 use App\Entity\Household;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -48,7 +49,7 @@ class DepositTransactionRepository extends ServiceEntityRepository
     /**
      * @return DepositTransaction[] Returns an array of DepositTransaction objects
      */
-    public function findAllByHouseholdAndDateRange(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $qb = $this->createQueryBuilder('a');
 

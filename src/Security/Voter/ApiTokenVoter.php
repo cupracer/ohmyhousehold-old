@@ -4,6 +4,7 @@ namespace App\Security\Voter;
 
 use App\Entity\ApiToken;
 use App\Entity\User;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -48,7 +49,7 @@ class ApiTokenVoter extends Voter
                 return $this->canDelete($apiToken, $user);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(ApiToken $apiToken, User $user): bool

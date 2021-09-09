@@ -10,6 +10,8 @@ use App\Entity\Supplies\Packaging as SupplyPackaging;
 use App\Entity\Supplies\Product as SupplyProduct;
 use App\Entity\Supplies\Supply;
 use App\Repository\HouseholdRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -171,12 +173,12 @@ class Household
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -188,7 +190,7 @@ class Household
      */
     public function setCreatedAtValue()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     /**

@@ -10,6 +10,8 @@ use App\Repository\Account\ExpenseAccountRepository;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\Transaction\WithdrawalTransactionService;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +80,7 @@ class WithdrawalTransactionController extends AbstractController
         $createWithdrawalTransaction = new WithdrawalTransactionDTO();
 
         // set initial values
-        $createWithdrawalTransaction->setBookingDate((new \DateTime())->modify('midnight'));
+        $createWithdrawalTransaction->setBookingDate((new DateTime())->modify('midnight'));
 
         $form = $this->createForm(WithdrawalTransactionType::class, $createWithdrawalTransaction);
         $form->handleRequest($request);
@@ -94,7 +96,7 @@ class WithdrawalTransactionController extends AbstractController
                     $expenseAccount = new ExpenseAccount();
                     $expenseAccount->setHousehold($household);
                     $expenseAccount->setInitialBalance(0);
-                    $expenseAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $expenseAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $expenseAccount->setAccountHolder($createWithdrawalTransaction->getDestination());
 
                     $entityManager->persist($expenseAccount);
@@ -120,7 +122,7 @@ class WithdrawalTransactionController extends AbstractController
                 $this->addFlash('success', t('Withdrawal transaction was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_withdrawal_transaction_new');
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $this->addFlash('error', t('Withdrawal transaction could not be created: ' . $exception->getMessage()));
             }
         }
@@ -161,7 +163,7 @@ class WithdrawalTransactionController extends AbstractController
                     $expenseAccount = new ExpenseAccount();
                     $expenseAccount->setHousehold($withdrawalTransaction->getHousehold());
                     $expenseAccount->setInitialBalance(0);
-                    $expenseAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $expenseAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $expenseAccount->setAccountHolder($editWithdrawalTransaction->getDestination());
 
                     $entityManager->persist($expenseAccount);
@@ -180,7 +182,7 @@ class WithdrawalTransactionController extends AbstractController
                 $this->addFlash('success', t('Withdrawal transaction was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_withdrawal_transaction_index');
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash('error', t('Withdrawal transaction could not be updated.'));
             }
         }
@@ -205,9 +207,9 @@ class WithdrawalTransactionController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Withdrawal transaction was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Withdrawal transaction could not be deleted.'));
         }
 

@@ -9,6 +9,7 @@ use App\Repository\HouseholdRepository;
 use App\Repository\PeriodicTransaction\PeriodicDepositTransactionRepository;
 use App\Repository\PeriodicTransaction\PeriodicTransferTransactionRepository;
 use App\Repository\PeriodicTransaction\PeriodicWithdrawalTransactionRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,11 +58,11 @@ class CreatePeriodicDepositTransactionsCommand extends Command
         $dateInPeriod = null;
 
         if ($input->getOption('period')) {
-            $dateInPeriod = \DateTime::createFromFormat('Y-m-d', $input->getOption('period'));
+            $dateInPeriod = DateTime::createFromFormat('Y-m-d', $input->getOption('period'));
         }
 
         if(!$dateInPeriod) {
-            $dateInPeriod = new \DateTime();
+            $dateInPeriod = new DateTime();
         }
 
         $dateInPeriod->modify('midnight');
@@ -85,7 +86,7 @@ class CreatePeriodicDepositTransactionsCommand extends Command
                     $intervalStart = clone $periodicTransaction->getStartDate();
                     $loopEndDate = clone $selectedPeriodEnd;
 
-                    /** @var \DateTime $currentLoopDate */
+                    /** @var DateTime $currentLoopDate */
                     $currentLoopDate = clone $intervalStart;
                     $bookingDate = null;
 
@@ -150,7 +151,7 @@ class CreatePeriodicDepositTransactionsCommand extends Command
                     $intervalStart = clone $periodicTransaction->getStartDate();
                     $loopEndDate = clone $selectedPeriodEnd;
 
-                    /** @var \DateTime $currentLoopDate */
+                    /** @var DateTime $currentLoopDate */
                     $currentLoopDate = clone $intervalStart;
                     $bookingDate = null;
 
@@ -215,7 +216,7 @@ class CreatePeriodicDepositTransactionsCommand extends Command
                     $intervalStart = clone $periodicTransaction->getStartDate();
                     $loopEndDate = clone $selectedPeriodEnd;
 
-                    /** @var \DateTime $currentLoopDate */
+                    /** @var DateTime $currentLoopDate */
                     $currentLoopDate = clone $intervalStart;
                     $bookingDate = null;
 

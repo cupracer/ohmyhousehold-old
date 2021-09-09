@@ -6,6 +6,7 @@ use App\Entity\Household;
 use App\Entity\Supplies\Product;
 use App\Repository\Supplies\ProductRepository;
 use App\Service\DatatablesService;
+use IntlDateFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -55,7 +56,7 @@ class ProductService extends DatatablesService
                 'packaging' => $row->getPackaging() ? $row->getPackaging()->getName() : null,
                 'amount' => 1*$row->getQuantity() . $row->getMeasure()->getName(),
                 'usageCount' => $this->getUsageCount($row),
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
+                'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(

@@ -4,6 +4,7 @@ namespace App\Security\Authenticators;
 
 use App\Entity\ApiToken;
 use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -109,7 +110,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
         if($requestToken) {
             $apiToken = $this->findApiTokenByToken($requestToken);
-            $apiToken->setLastUsedAt(new \DateTime());
+            $apiToken->setLastUsedAt(new DateTime());
             $this->entityManager->persist($apiToken);
             $this->entityManager->flush();
         }

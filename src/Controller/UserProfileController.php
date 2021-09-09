@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DTO\UpdateUserProfile;
 use App\Entity\User;
 use App\Form\UserProfileFormType;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,7 @@ class UserProfileController extends AbstractController
                 $entityManager->persist($userProfile);
                 $entityManager->flush();
                 $this->addFlash("success", t(message: 'Profile has been updated.', domain: 'messages'));
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash("error", t(message: 'Could not update profile settings.', domain: 'messages'));
             }
 

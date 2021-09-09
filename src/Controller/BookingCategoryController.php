@@ -7,6 +7,7 @@ use App\Entity\DTO\BookingCategoryDTO;
 use App\Form\BookingCategoryType;
 use App\Repository\HouseholdRepository;
 use App\Service\BookingCategoryService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,7 +84,7 @@ class BookingCategoryController extends AbstractController
                 $this->addFlash('success', t('Booking category was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_bookingcategory_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Booking category could not be created.'));
             }
         }
@@ -114,7 +115,7 @@ class BookingCategoryController extends AbstractController
                 $this->addFlash('success', t('Booking category was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_bookingcategory_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Booking category could not be updated.'));
             }
         }
@@ -138,9 +139,9 @@ class BookingCategoryController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Booking category was deleted.'));
             } else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Booking category could not be deleted.'));
         }
 

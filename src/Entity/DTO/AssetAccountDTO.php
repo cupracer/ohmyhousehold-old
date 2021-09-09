@@ -2,6 +2,7 @@
 
 namespace App\Entity\DTO;
 
+use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -23,7 +24,7 @@ class AssetAccountDTO
     private string $initialBalance;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
@@ -95,18 +96,18 @@ class AssetAccountDTO
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getInitialBalanceDate(): \DateTimeInterface
+    public function getInitialBalanceDate(): DateTimeInterface
     {
         return $this->initialBalanceDate;
     }
 
     /**
-     * @param \DateTimeInterface $initialBalanceDate
+     * @param DateTimeInterface $initialBalanceDate
      * @return AssetAccountDTO
      */
-    public function setInitialBalanceDate(\DateTimeInterface $initialBalanceDate): AssetAccountDTO
+    public function setInitialBalanceDate(DateTimeInterface $initialBalanceDate): AssetAccountDTO
     {
         $this->initialBalanceDate = $initialBalanceDate;
         return $this;

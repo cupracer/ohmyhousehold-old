@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DTO\UpdateHousehold;
 use App\Entity\Household;
 use App\Form\HouseholdFormType;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,9 +62,9 @@ class HouseholdController extends AbstractController
                 $request->getSession()->set('current_household', $household->getId());
                 $this->addFlash('success', t('Switched household.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Account holder could not be deleted.'));
         }
 

@@ -13,6 +13,9 @@ use App\Form\Supplies\ItemType;
 use App\Repository\HouseholdRepository;
 use App\Repository\Supplies\ItemRepository;
 use App\Service\Supplies\ItemService;
+use DateTime;
+use Exception;
+use IntlDateFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -77,7 +80,7 @@ class ItemController extends AbstractController
         if($session->has('supplies_item_new_purchase_date')) {
             $createItem->setPurchaseDate($session->get('supplies_item_new_purchase_date'));
         }else {
-            $createItem->setPurchaseDate(new \DateTime());
+            $createItem->setPurchaseDate(new DateTime());
         }
 
         $form = $this->createForm(ItemType::class, $createItem);
@@ -102,7 +105,7 @@ class ItemController extends AbstractController
                 }
 
                 return $this->redirectToRoute('supplies_item_new');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Item could not be created.'));
             }
         }
@@ -137,7 +140,7 @@ class ItemController extends AbstractController
                 $this->addFlash('success', t('Item was updated.'));
 
                 return $this->redirectToRoute('supplies_item_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Item could not be updated.'));
             }
         }
@@ -161,9 +164,9 @@ class ItemController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Item was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Item could not be deleted.'));
         }
 
@@ -177,7 +180,7 @@ class ItemController extends AbstractController
         $this->denyAccessUnlessGranted('checkout', $item);
 
         try {
-            $item->setWithdrawalDate(new \DateTime());
+            $item->setWithdrawalDate(new DateTime());
 
             $this->getDoctrine()->getManager()->flush();
 
@@ -191,7 +194,7 @@ class ItemController extends AbstractController
                 $this->addFlash('success', t('Item was checked out.'));
                 return $this->redirectToRoute('supplies_item_index');
             }
-        }catch(\Exception) {
+        }catch(Exception) {
             if($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'status' => 'error',
@@ -223,7 +226,7 @@ class ItemController extends AbstractController
                 $this->addFlash('success', t('Checkout was cancelled.'));
                 return $this->redirectToRoute('supplies_item_index');
             }
-        }catch(\Exception) {
+        }catch(Exception) {
             if($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'status' => 'error',
@@ -251,7 +254,7 @@ class ItemController extends AbstractController
         if($item) {
             $this->denyAccessUnlessGranted('checkout', $item);
 
-            $item->setWithdrawalDate(new \DateTime());
+            $item->setWithdrawalDate(new DateTime());
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', t('Item was checked out.'));
@@ -282,7 +285,7 @@ class ItemController extends AbstractController
             if(($form->has('smartCheckout') && $form->get('smartCheckout')->isClicked()) && (count($items) === 1 || !$multipleBestBeforeDates)) {
                 $this->denyAccessUnlessGranted('checkout', $item);
 
-                $items[0]->setWithdrawalDate(new \DateTime());
+                $items[0]->setWithdrawalDate(new DateTime());
                 $this->getDoctrine()->getManager()->flush();
 
                 $this->addFlash('success', t('Item was checked out.'));
@@ -292,7 +295,7 @@ class ItemController extends AbstractController
 
                 /** @var User $user */
                 $user = $this->getUser();
-                $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+                $dateFormatter = new IntlDateFormatter($user->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
 
                 foreach ($items as $item) {
                     $itemsArray[] = [

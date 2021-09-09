@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Repository\PeriodicTransaction\PeriodicWithdrawalTransactionRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\DatatablesService;
+use IntlDateFormatter;
+use NumberFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -59,8 +61,8 @@ class PeriodicWithdrawalTransactionService extends DatatablesService
         $user = $this->security->getUser();
         $householdUser = $this->householdUserRepository->findOneByUserAndHousehold($user, $household);
 
-        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), \NumberFormatter::CURRENCY);
-        $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), NumberFormatter::CURRENCY);
+        $dateFormatter = new IntlDateFormatter($user->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
 
         /** @var PeriodicWithdrawalTransaction $row */
         foreach($result['data'] as $row) {

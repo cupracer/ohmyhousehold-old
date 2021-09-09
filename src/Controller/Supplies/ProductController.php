@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\ProductDTO;
 use App\Form\Supplies\ProductType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\ProductService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,7 +102,7 @@ class ProductController extends AbstractController
                 $this->addFlash('success', t('Product was added.'));
 
                 return $this->redirectToRoute('supplies_product_new');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Product could not be created.'));
             }
         }
@@ -148,7 +149,7 @@ class ProductController extends AbstractController
                 $this->addFlash('success', t('Product was updated.'));
 
                 return $this->redirectToRoute('supplies_product_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Product could not be updated.'));
             }
         }
@@ -172,9 +173,9 @@ class ProductController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Product was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Product could not be deleted.'));
         }
 
