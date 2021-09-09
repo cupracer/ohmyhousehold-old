@@ -42,7 +42,7 @@ class UserProfileController extends AbstractController
                 $entityManager->persist($userProfile);
                 $entityManager->flush();
                 $this->addFlash("success", t(message: 'Profile has been updated.', domain: 'messages'));
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $this->addFlash("error", t(message: 'Could not update profile settings.', domain: 'messages'));
             }
 
