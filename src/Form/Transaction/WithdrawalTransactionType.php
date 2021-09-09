@@ -14,7 +14,6 @@ use App\Repository\AccountHolderRepository;
 use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

@@ -2,14 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\DTO\SwitchHousehold;
 use App\Entity\DTO\UpdateHousehold;
 use App\Entity\Household;
 use App\Form\HouseholdFormType;
-use App\Form\HouseholdType;
-use App\Form\SwitchHouseholdType;
-use App\Repository\HouseholdRepository;
-use App\Repository\HouseholdUserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -3,10 +3,8 @@
 namespace App\Form\Supplies;
 
 use App\Entity\Supplies\DTO\ItemCheckoutDTO;
-use App\Entity\Supplies\Item;
 use App\Entity\Supplies\Product;
 use App\Repository\HouseholdRepository;
-use App\Repository\Supplies\ItemRepository;
 use App\Repository\Supplies\ProductRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -14,7 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

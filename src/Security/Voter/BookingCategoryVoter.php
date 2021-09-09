@@ -3,9 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\BookingCategory;
-use App\Entity\HouseholdUser;
 use App\Entity\User;
-use App\Repository\HouseholdUserRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 

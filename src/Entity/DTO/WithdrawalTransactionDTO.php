@@ -5,7 +5,6 @@ namespace App\Entity\DTO;
 use App\Entity\AccountHolder;
 use App\Entity\AssetAccount;
 use App\Entity\BookingCategory;
-use App\Repository\BookingCategoryRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class WithdrawalTransactionDTO

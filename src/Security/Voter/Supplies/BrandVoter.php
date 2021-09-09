@@ -2,7 +2,6 @@
 
 namespace App\Security\Voter\Supplies;
 
-use App\Entity\AccountHolder;
 use App\Entity\HouseholdUser;
 use App\Entity\Supplies\Brand;
 use App\Entity\User;

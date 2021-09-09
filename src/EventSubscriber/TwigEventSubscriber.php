@@ -4,8 +4,6 @@ namespace App\EventSubscriber;
 
 use App\Service\LocaleService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\String\UnicodeString;
 use Twig\Environment;
 
 class TwigEventSubscriber implements EventSubscriberInterface

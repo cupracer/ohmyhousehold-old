@@ -2,14 +2,10 @@
 
 namespace App\Controller\Supplies;
 
-use App\Entity\AccountHolder;
-use App\Entity\DTO\AccountHolderDTO;
 use App\Entity\Supplies\Brand;
 use App\Entity\Supplies\DTO\BrandDTO;
-use App\Form\AccountHolderType;
 use App\Form\Supplies\BrandType;
 use App\Repository\HouseholdRepository;
-use App\Service\AccountHolderService;
 use App\Service\Supplies\BrandService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

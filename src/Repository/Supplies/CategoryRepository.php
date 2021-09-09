@@ -3,7 +3,6 @@
 namespace App\Repository\Supplies;
 
 use App\Entity\Household;
-use App\Entity\HouseholdUser;
 use App\Entity\Supplies\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
