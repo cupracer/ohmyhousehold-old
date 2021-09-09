@@ -8,6 +8,7 @@ use App\Entity\BookingCategory;
 use App\Entity\DTO\AccountHolderDTO;
 use App\Entity\DTO\WithdrawalTransactionDTO;
 use App\Entity\Household;
+use App\Entity\HouseholdUser;
 use App\Repository\Account\AssetAccountRepository;
 use App\Repository\AccountHolderRepository;
 use App\Repository\BookingCategoryRepository;
@@ -41,6 +42,7 @@ class WithdrawalTransactionType extends AbstractType
     private AssetAccountRepository $assetAccountRepository;
     private AccountHolderRepository $accountHolderRepository;
     private Household $household;
+    private HouseholdUser $householdUser;
     private EntityManagerInterface $entityManager;
     private ValidatorInterface $validator;
     private Security $security;
