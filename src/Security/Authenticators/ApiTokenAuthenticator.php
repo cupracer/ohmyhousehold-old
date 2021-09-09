@@ -4,6 +4,7 @@ namespace App\Security\Authenticators;
 
 use App\Entity\ApiToken;
 use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,11 +46,9 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
         $hashedTokens = [];
 
         foreach(['sha1',] as $hashAlgorithm) {
-            switch ($hashAlgorithm) {
-                case 'sha1':
-                    $hashedTokens[$hashAlgorithm] = sha1($token);
-                    break;
-            }
+            $hashedTokens[$hashAlgorithm] = match ($hashAlgorithm) {
+                'sha1' => sha1($token),
+            };
         }
 
         return $hashedTokens;
@@ -109,7 +108,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
         if($requestToken) {
             $apiToken = $this->findApiTokenByToken($requestToken);
-            $apiToken->setLastUsedAt(new \DateTime());
+            $apiToken->setLastUsedAt(new DateTime());
             $this->entityManager->persist($apiToken);
             $this->entityManager->flush();
         }

@@ -6,6 +6,7 @@ use App\Entity\HouseholdUser;
 use App\Entity\User;
 use App\Entity\TransferTransaction;
 use App\Repository\HouseholdUserRepository;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -70,13 +71,12 @@ class TransferTransactionVoter extends Voter
                 return $this->canDelete($householdUser, $transferTransaction);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(HouseholdUser $householdUser, TransferTransaction $transferTransaction): bool
     {
-        return ((bool)$householdUser && !$transferTransaction->getPrivate())
-            || $transferTransaction->getHouseholdUser() === $householdUser;
+        return !$transferTransaction->getPrivate() || $transferTransaction->getHouseholdUser() === $householdUser;
     }
 
     private function canEdit(HouseholdUser $householdUser, TransferTransaction $transferTransaction): bool

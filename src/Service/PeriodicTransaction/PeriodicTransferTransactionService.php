@@ -2,13 +2,14 @@
 
 namespace App\Service\PeriodicTransaction;
 
-use App\Entity\AssetAccount;
 use App\Entity\Household;
 use App\Entity\PeriodicTransferTransaction;
 use App\Entity\User;
 use App\Repository\PeriodicTransaction\PeriodicTransferTransactionRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\DatatablesService;
+use IntlDateFormatter;
+use NumberFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -59,8 +60,8 @@ class PeriodicTransferTransactionService extends DatatablesService
         $user = $this->security->getUser();
         $householdUser = $this->householdUserRepository->findOneByUserAndHousehold($user, $household);
 
-        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), \NumberFormatter::CURRENCY);
-        $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+        $numberFormatter = numfmt_create($user->getUserProfile()->getLocale(), NumberFormatter::CURRENCY);
+        $dateFormatter = new IntlDateFormatter($user->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
 
         /** @var PeriodicTransferTransaction $row */
         foreach($result['data'] as $row) {
@@ -91,40 +92,40 @@ class PeriodicTransferTransactionService extends DatatablesService
         ];
     }
 
-    public function getAssetAccountsAsSelect2Array(Request $request, Household $household): array
-    {
-        $page = $request->query->getInt('page', 1);
-        $length = $request->query->getInt('length', 10);
-        $start = $page > 1 ? $page * $length : 0;
-        $search = $request->query->get('term', '');
-
-        $orderingData = [
-            [
-                'name' => 'name',
-                'dir' => 'asc',
-            ]
-        ];
-
-        $result = $this->assetAccountRepository->getFilteredDataByHousehold(
-            $household, $start, $length, $orderingData, $search);
-
-        $tableData = [];
-
-        /** @var AssetAccount $row */
-        foreach($result['data'] as $row) {
-            $rowData = [
-                'id' => $row->getId(),
-                'text' => $row->getName(),
-            ];
-
-            $tableData[] = $rowData;
-        }
-
-        return [
-            'results' => $tableData,
-            'pagination' => [
-                'more' => $start + $length < $result['recordsFiltered'],
-            ]
-        ];
-    }
+//    public function getAssetAccountsAsSelect2Array(Request $request, Household $household): array
+//    {
+//        $page = $request->query->getInt('page', 1);
+//        $length = $request->query->getInt('length', 10);
+//        $start = $page > 1 ? $page * $length : 0;
+//        $search = $request->query->get('term', '');
+//
+//        $orderingData = [
+//            [
+//                'name' => 'name',
+//                'dir' => 'asc',
+//            ]
+//        ];
+//
+//        $result = $this->assetAccountRepository->getFilteredDataByHousehold(
+//            $household, $start, $length, $orderingData, $search);
+//
+//        $tableData = [];
+//
+//        /** @var AssetAccount $row */
+//        foreach($result['data'] as $row) {
+//            $rowData = [
+//                'id' => $row->getId(),
+//                'text' => $row->getName(),
+//            ];
+//
+//            $tableData[] = $rowData;
+//        }
+//
+//        return [
+//            'results' => $tableData,
+//            'pagination' => [
+//                'more' => $start + $length < $result['recordsFiltered'],
+//            ]
+//        ];
+//    }
 }

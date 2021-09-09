@@ -5,13 +5,13 @@ namespace App\Entity\DTO;
 use App\Entity\AccountHolder;
 use App\Entity\AssetAccount;
 use App\Entity\BookingCategory;
-use App\Repository\BookingCategoryRepository;
+use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class WithdrawalTransactionDTO
 {
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
@@ -50,25 +50,25 @@ class WithdrawalTransactionDTO
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getBookingDate(): \DateTimeInterface
+    public function getBookingDate(): DateTimeInterface
     {
         return $this->bookingDate;
     }
 
     /**
-     * @param \DateTimeInterface $bookingDate
+     * @param DateTimeInterface $bookingDate
      * @return WithdrawalTransactionDTO
      */
-    public function setBookingDate(\DateTimeInterface $bookingDate): WithdrawalTransactionDTO
+    public function setBookingDate(DateTimeInterface $bookingDate): WithdrawalTransactionDTO
     {
         $this->bookingDate = $bookingDate;
         return $this;
     }
 
     /**
-     * @return BookingCategory
+     * @return BookingCategory|null
      */
     public function getBookingCategory(): ?BookingCategory
     {

@@ -5,10 +5,11 @@ namespace App\Controller\Transaction;
 use App\Entity\DTO\TransferTransactionDTO;
 use App\Entity\TransferTransaction;
 use App\Form\Transaction\TransferTransactionType;
-use App\Repository\Account\AssetAccountRepository;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\Transaction\TransferTransactionService;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,7 +78,7 @@ class TransferTransactionController extends AbstractController
         $createTransferTransaction = new TransferTransactionDTO();
 
         // set initial values
-        $createTransferTransaction->setBookingDate((new \DateTime())->modify('midnight'));
+        $createTransferTransaction->setBookingDate((new DateTime())->modify('midnight'));
 
         $form = $this->createForm(TransferTransactionType::class, $createTransferTransaction);
         $form->handleRequest($request);
@@ -105,7 +106,7 @@ class TransferTransactionController extends AbstractController
                 $this->addFlash('success', t('Transfer transaction was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_transfer_transaction_new');
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $this->addFlash('error', t('Transfer transaction could not be created: ' . $exception->getMessage()));
             }
         }
@@ -150,7 +151,7 @@ class TransferTransactionController extends AbstractController
                 $this->addFlash('success', t('Transfer transaction was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_transfer_transaction_index');
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash('error', t('Transfer transaction could not be updated.'));
             }
         }
@@ -175,9 +176,9 @@ class TransferTransactionController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Transfer transaction was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Transfer transaction could not be deleted.'));
         }
 

@@ -3,19 +3,20 @@
 namespace App\Entity\DTO;
 
 use App\Entity\AssetAccount;
+use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PeriodicTransferTransactionDTO
 {
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
     private $startDate;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\Type("\DateTimeInterface")]
     private $endDate;
@@ -63,36 +64,36 @@ class PeriodicTransferTransactionDTO
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getStartDate(): \DateTimeInterface
+    public function getStartDate(): DateTimeInterface
     {
         return $this->startDate;
     }
 
     /**
-     * @param \DateTimeInterface $startDate
+     * @param DateTimeInterface $startDate
      * @return PeriodicTransferTransactionDTO
      */
-    public function setStartDate(\DateTimeInterface $startDate): PeriodicTransferTransactionDTO
+    public function setStartDate(DateTimeInterface $startDate): PeriodicTransferTransactionDTO
     {
         $this->startDate = $startDate;
         return $this;
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }
 
     /**
-     * @param \DateTimeInterface|null $endDate
+     * @param DateTimeInterface|null $endDate
      * @return PeriodicTransferTransactionDTO
      */
-    public function setEndDate(?\DateTimeInterface $endDate): PeriodicTransferTransactionDTO
+    public function setEndDate(?DateTimeInterface $endDate): PeriodicTransferTransactionDTO
     {
         $this->endDate = $endDate;
         return $this;

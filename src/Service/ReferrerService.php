@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use function is_string;
 
 class ReferrerService
 {
@@ -21,7 +22,7 @@ class ReferrerService
 
         $referrer = $request->headers->get('referer');
 
-        if (!$referrer || !\is_string($referrer)) {
+        if (!$referrer || !is_string($referrer)) {
             // Referer is invalid or empty.
             return null;
         }

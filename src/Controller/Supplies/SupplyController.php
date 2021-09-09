@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\SupplyDTO;
 use App\Form\Supplies\SupplyType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\SupplyService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,7 +86,7 @@ class SupplyController extends AbstractController
                 $this->addFlash('success', t('Supply was added.'));
 
                 return $this->redirectToRoute('supplies_supply_new');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Supply could not be created.'));
             }
         }
@@ -120,7 +121,7 @@ class SupplyController extends AbstractController
                 $this->addFlash('success', t('Supply was updated.'));
 
                 return $this->redirectToRoute('supplies_supply_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Supply could not be updated.'));
             }
         }
@@ -144,9 +145,9 @@ class SupplyController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Supply was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Supply could not be deleted.'));
         }
 

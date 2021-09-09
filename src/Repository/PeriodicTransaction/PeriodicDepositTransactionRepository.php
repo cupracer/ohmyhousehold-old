@@ -4,12 +4,12 @@ namespace App\Repository\PeriodicTransaction;
 
 use App\Entity\PeriodicDepositTransaction;
 use App\Entity\Household;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 
 /**
  * @method PeriodicDepositTransaction|null find($id, $lockMode = null, $lockVersion = null)
@@ -50,7 +50,7 @@ class PeriodicDepositTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicDepositTransaction[] Returns an array of PeriodicDepositTransaction objects
      */
-    public function findAllByHouseholdAndDateRange(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -77,7 +77,7 @@ class PeriodicDepositTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicDepositTransaction[] Returns an array of PeriodicDepositTransaction objects
      */
-    public function findAllGrantedByHouseholdAndDateRange(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllGrantedByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         return array_filter($this->findAllByHouseholdAndDateRange($household, $startDate, $endDate), function (PeriodicDepositTransaction $transaction) {
             return $this->security->isGranted('view', $transaction);
@@ -88,7 +88,7 @@ class PeriodicDepositTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicDepositTransaction[] Returns an array of PeriodicDepositTransaction objects
      */
-    public function findAllByHouseholdAndDateRangeWithoutTransaction(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllByHouseholdAndDateRangeWithoutTransaction(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -121,7 +121,7 @@ class PeriodicDepositTransactionRepository extends ServiceEntityRepository
 
         // TODO: the result can contain NULL items, so we filter them out here:
         return array_filter($rows, function (?PeriodicDepositTransaction $transaction) {
-            return $transaction ? $transaction : false;
+            return $transaction ?: false;
         });
     }
 
@@ -129,7 +129,7 @@ class PeriodicDepositTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicDepositTransaction[] Returns an array of PeriodicDepositTransaction objects
      */
-    public function findAllGrantedByHouseholdAndDateRangeWithoutTransaction(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllGrantedByHouseholdAndDateRangeWithoutTransaction(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $periodicTransactions = $this->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate);
         return array_filter($periodicTransactions, function (?PeriodicDepositTransaction $transaction) {

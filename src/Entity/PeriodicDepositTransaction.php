@@ -102,7 +102,7 @@ class PeriodicDepositTransaction extends PeriodicTransaction
     }
 
     /**
-     * @return Collection|DepositTransaction[]
+     * @return Collection
      */
     public function getDepositTransactions(): Collection
     {

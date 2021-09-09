@@ -12,7 +12,7 @@
                 </a>
                 <a href="{{ path('housekeepingbook_report_periodical_index', {year: currentStartDate.format('Y'), month: currentStartDate.format('m'),}) }}">
                     <button type="button" class="btn btn-default">
-                        <div class="ml-3 mr-3">{{ 'current.button'|trans }}</div>
+                        <span class="ml-3 mr-3">{{ 'current.button'|trans }}</span>
                     </button>
                 </a>
                 <a href="{{ path('housekeepingbook_report_periodical_index', {year: nextStartDate.format('Y'), month: nextStartDate.format('m'),}) }}">

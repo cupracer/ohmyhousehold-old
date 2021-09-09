@@ -2,10 +2,8 @@
 
 namespace App\Service\Supplies;
 
-use App\Entity\AccountHolder;
 use App\Entity\Household;
 use App\Entity\Supplies\Brand;
-use App\Repository\AccountHolderRepository;
 use App\Repository\Supplies\BrandRepository;
 use App\Service\DatatablesService;
 use Symfony\Component\HttpFoundation\Request;

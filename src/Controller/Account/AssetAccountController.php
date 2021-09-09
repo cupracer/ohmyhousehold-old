@@ -7,6 +7,8 @@ use App\Entity\DTO\AssetAccountDTO;
 use App\Form\Account\AssetAccountType;
 use App\Service\Account\AssetAccountService;
 use App\Service\UserSettingsService;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,7 +75,7 @@ class AssetAccountController extends AbstractController
                 $account->setIban($createAccount->getIban());
                 $account->setInitialBalance($createAccount->getInitialBalance());
 
-                /** @var \DateTime $initialBalanceDate */
+                /** @var DateTime $initialBalanceDate */
                 $initialBalanceDate = $createAccount->getInitialBalanceDate();
                 $initialBalanceDate->modify('midnight');
                 $account->setInitialBalanceDate($initialBalanceDate);
@@ -89,7 +91,7 @@ class AssetAccountController extends AbstractController
                 $this->addFlash('success', t('Asset account was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_asset_account_index');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Asset account could not be created.'));
             }
         }
@@ -127,7 +129,7 @@ class AssetAccountController extends AbstractController
                 $assetAccount->setIban($editAssetAccount->getIban());
                 $assetAccount->setInitialBalance($editAssetAccount->getInitialBalance());
 
-                /** @var \DateTime $initialBalanceDate */
+                /** @var DateTime $initialBalanceDate */
                 $initialBalanceDate = $editAssetAccount->getInitialBalanceDate();
                 $initialBalanceDate->modify('midnight');
                 $assetAccount->setInitialBalanceDate($initialBalanceDate);
@@ -140,7 +142,7 @@ class AssetAccountController extends AbstractController
                 $this->addFlash('success', t('Asset account was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_asset_account_index');
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash('error', t('Asset account could not be updated.'));
             }
         }
@@ -164,9 +166,9 @@ class AssetAccountController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Asset account was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Asset account could not be deleted.'));
         }
 

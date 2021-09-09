@@ -10,6 +10,8 @@ use App\Repository\Account\RevenueAccountRepository;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\PeriodicTransaction\PeriodicDepositTransactionService;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,7 +93,7 @@ class PeriodicDepositTransactionController extends AbstractController
                     $revenueAccount = new RevenueAccount();
                     $revenueAccount->setHousehold($household);
                     $revenueAccount->setInitialBalance(0);
-                    $revenueAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $revenueAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $revenueAccount->setAccountHolder($createPeriodicDepositTransaction->getSource());
 
                     $entityManager->persist($revenueAccount);
@@ -99,7 +101,7 @@ class PeriodicDepositTransactionController extends AbstractController
 
                 // explicitly setting to "midnight" might not be necessary for a db date field
                 $periodicDepositTransaction->setStartDate($createPeriodicDepositTransaction->getStartDate()->modify('midnight'));
-                $periodicDepositTransaction->setEndDate($createPeriodicDepositTransaction->getEndDate() ? $createPeriodicDepositTransaction->getEndDate()->modify('midnight') : null);
+                $periodicDepositTransaction->setEndDate($createPeriodicDepositTransaction->getEndDate()?->modify('midnight'));
                 $periodicDepositTransaction->setBookingDayOfMonth($createPeriodicDepositTransaction->getBookingDayOfMonth());
                 $periodicDepositTransaction->setBookingCategory($createPeriodicDepositTransaction->getBookingCategory());
                 $periodicDepositTransaction->setSource($revenueAccount);
@@ -120,7 +122,7 @@ class PeriodicDepositTransactionController extends AbstractController
                 $this->addFlash('success', t('Periodic deposit transaction was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_periodic_deposit_transaction_new');
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $this->addFlash('error', t('Periodic deposit transaction could not be created: ' . $exception->getMessage()));
             }
         }
@@ -139,7 +141,7 @@ class PeriodicDepositTransactionController extends AbstractController
 
         $editPeriodicDepositTransaction = new PeriodicDepositTransactionDTO();
         $editPeriodicDepositTransaction->setStartDate($periodicDepositTransaction->getStartDate()->modify('midnight'));
-        $editPeriodicDepositTransaction->setEndDate($periodicDepositTransaction->getEndDate() ? $periodicDepositTransaction->getEndDate()->modify('midnight') : null);
+        $editPeriodicDepositTransaction->setEndDate($periodicDepositTransaction->getEndDate()?->modify('midnight'));
         $editPeriodicDepositTransaction->setBookingDayOfMonth($periodicDepositTransaction->getBookingDayOfMonth());
         $editPeriodicDepositTransaction->setBookingCategory($periodicDepositTransaction->getBookingCategory());
         $editPeriodicDepositTransaction->setSource($periodicDepositTransaction->getSource()->getAccountHolder());
@@ -164,7 +166,7 @@ class PeriodicDepositTransactionController extends AbstractController
                     $revenueAccount = new RevenueAccount();
                     $revenueAccount->setHousehold($periodicDepositTransaction->getHousehold());
                     $revenueAccount->setInitialBalance(0);
-                    $revenueAccount->setInitialBalanceDate((new \DateTime())->modify('midnight'));
+                    $revenueAccount->setInitialBalanceDate((new DateTime())->modify('midnight'));
                     $revenueAccount->setAccountHolder($editPeriodicDepositTransaction->getSource());
 
                     $entityManager->persist($revenueAccount);
@@ -186,7 +188,7 @@ class PeriodicDepositTransactionController extends AbstractController
                 $this->addFlash('success', t('Periodic deposit transaction was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_periodic_deposit_transaction_index');
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash('error', t('Periodic deposit transaction could not be updated.'));
             }
         }
@@ -211,9 +213,9 @@ class PeriodicDepositTransactionController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Periodic deposit transaction was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Periodic deposit transaction could not be deleted.'));
         }
 

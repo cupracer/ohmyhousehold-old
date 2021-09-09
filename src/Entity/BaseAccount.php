@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -14,7 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="This name is already in use in this household."
  *     )
  */
-abstract class BaseAccount implements \JsonSerializable
+abstract class BaseAccount implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -71,12 +74,12 @@ abstract class BaseAccount implements \JsonSerializable
         return $this;
     }
 
-    public function getInitialBalanceDate(): ?\DateTimeInterface
+    public function getInitialBalanceDate(): ?DateTimeInterface
     {
         return $this->initialBalanceDate;
     }
 
-    public function setInitialBalanceDate(\DateTimeInterface $initialBalanceDate): self
+    public function setInitialBalanceDate(DateTimeInterface $initialBalanceDate): self
     {
         $this->initialBalanceDate = $initialBalanceDate;
 
@@ -95,12 +98,12 @@ abstract class BaseAccount implements \JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -112,6 +115,6 @@ abstract class BaseAccount implements \JsonSerializable
      */
     public function setCreatedAtValue()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 }

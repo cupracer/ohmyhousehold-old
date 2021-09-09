@@ -5,20 +5,20 @@ namespace App\Entity\DTO;
 use App\Entity\AccountHolder;
 use App\Entity\AssetAccount;
 use App\Entity\BookingCategory;
-use App\Entity\ExpenseAccount;
+use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PeriodicWithdrawalTransactionDTO
 {
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\NotBlank]
     #[Assert\Type("\DateTimeInterface")]
     private $startDate;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     #[Assert\Type("\DateTimeInterface")]
     private $endDate;
@@ -72,43 +72,43 @@ class PeriodicWithdrawalTransactionDTO
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getStartDate(): \DateTimeInterface
+    public function getStartDate(): DateTimeInterface
     {
         return $this->startDate;
     }
 
     /**
-     * @param \DateTimeInterface $startDate
+     * @param DateTimeInterface $startDate
      * @return PeriodicWithdrawalTransactionDTO
      */
-    public function setStartDate(\DateTimeInterface $startDate): PeriodicWithdrawalTransactionDTO
+    public function setStartDate(DateTimeInterface $startDate): PeriodicWithdrawalTransactionDTO
     {
         $this->startDate = $startDate;
         return $this;
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }
 
     /**
-     * @param \DateTimeInterface|null $endDate
+     * @param DateTimeInterface|null $endDate
      * @return PeriodicWithdrawalTransactionDTO
      */
-    public function setEndDate(?\DateTimeInterface $endDate): PeriodicWithdrawalTransactionDTO
+    public function setEndDate(?DateTimeInterface $endDate): PeriodicWithdrawalTransactionDTO
     {
         $this->endDate = $endDate;
         return $this;
     }
 
     /**
-     * @return BookingCategory
+     * @return BookingCategory|null
      */
     public function getBookingCategory(): ?BookingCategory
     {

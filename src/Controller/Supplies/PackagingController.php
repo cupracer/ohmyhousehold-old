@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\PackagingDTO;
 use App\Form\Supplies\PackagingType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\PackagingService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,7 +84,7 @@ class PackagingController extends AbstractController
                 $this->addFlash('success', t('Packaging was added.'));
 
                 return $this->redirectToRoute('supplies_packaging_new');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Packaging could not be created.'));
             }
         }
@@ -114,7 +115,7 @@ class PackagingController extends AbstractController
                 $this->addFlash('success', t('Packaging was updated.'));
 
                 return $this->redirectToRoute('supplies_packaging_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Packaging could not be updated.'));
             }
         }
@@ -138,9 +139,9 @@ class PackagingController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Packaging was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Packaging could not be deleted.'));
         }
 

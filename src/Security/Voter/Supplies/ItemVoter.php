@@ -6,6 +6,7 @@ use App\Entity\HouseholdUser;
 use App\Entity\Supplies\Item;
 use App\Entity\User;
 use App\Repository\HouseholdUserRepository;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -76,7 +77,7 @@ class ItemVoter extends Voter
                 return $this->canCheckin($householdUser);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(HouseholdUser $householdUser): bool

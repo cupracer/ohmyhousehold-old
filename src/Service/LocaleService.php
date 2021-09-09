@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LocaleService

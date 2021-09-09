@@ -4,6 +4,8 @@ namespace App\Entity\Supplies;
 
 use App\Entity\Household;
 use App\Repository\Supplies\ItemRepository;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -81,48 +83,48 @@ class Item
         return $this;
     }
 
-    public function getPurchaseDate(): ?\DateTimeInterface
+    public function getPurchaseDate(): ?DateTimeInterface
     {
         return $this->purchaseDate;
     }
 
-    public function setPurchaseDate(\DateTimeInterface $purchaseDate): self
+    public function setPurchaseDate(DateTimeInterface $purchaseDate): self
     {
         $this->purchaseDate = $purchaseDate;
 
         return $this;
     }
 
-    public function getBestBeforeDate(): ?\DateTimeInterface
+    public function getBestBeforeDate(): ?DateTimeInterface
     {
         return $this->bestBeforeDate;
     }
 
-    public function setBestBeforeDate(?\DateTimeInterface $bestBeforeDate): self
+    public function setBestBeforeDate(?DateTimeInterface $bestBeforeDate): self
     {
         $this->bestBeforeDate = $bestBeforeDate;
 
         return $this;
     }
 
-    public function getWithdrawalDate(): ?\DateTimeInterface
+    public function getWithdrawalDate(): ?DateTimeInterface
     {
         return $this->withdrawalDate;
     }
 
-    public function setWithdrawalDate(?\DateTimeInterface $withdrawalDate): self
+    public function setWithdrawalDate(?DateTimeInterface $withdrawalDate): self
     {
         $this->withdrawalDate = $withdrawalDate;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -134,6 +136,6 @@ class Item
      */
     public function setCreatedAtValue()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 }

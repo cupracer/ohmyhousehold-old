@@ -2,16 +2,12 @@
 
 namespace App\Controller\Account;
 
-use App\Entity\AccountHolder;
-use App\Entity\AssetAccount;
-use App\Repository\HouseholdRepository;
 use App\Service\Account\RevenueAccountService;
 use App\Service\UserSettingsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -50,51 +46,51 @@ class RevenueAccountController extends AbstractController
     }
 
 
-    #[Route('/new', name: 'housekeepingbook_revenue_account_new', methods: ['GET', 'POST'])]
-    public function newAssetAccount(
-        Request $request,
-        SessionInterface $session,
-        HouseholdRepository $householdRepository
-    ): Response
-    {
-        $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
+//    #[Route('/new', name: 'housekeepingbook_revenue_account_new', methods: ['GET', 'POST'])]
+//    public function newAssetAccount(
+//        Request $request,
+//        SessionInterface $session,
+//        HouseholdRepository $householdRepository
+//    ): Response
+//    {
+//        $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
+//
+//        $this->denyAccessUnlessGranted('createAssetAccount', $currentHousehold);
+//
+//        $account = new AssetAccount();
+//        $createAccount = new AccountHolderDTO();
+//
+//        $form = $this->createForm(AccountHolderType::class, $createAccountHolder);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            try {
+//                $accountHolder->setName($createAccountHolder->getName());
+//                $accountHolder->setHousehold($currentHousehold);
+//
+//                $entityManager = $this->getDoctrine()->getManager();
+//                $entityManager->persist($accountHolder);
+//                $entityManager->flush();
+//
+//                $this->addFlash('success', t('Account holder was added.'));
+//
+//                return $this->redirectToRoute('housekeepingbook_accountholder_index');
+//            }catch (\Exception) {
+//                $this->addFlash('error', t('Account holder could not be created.'));
+//            }
+//        }
+//
+//        return $this->render('housekeepingbook/accountholder/form.html.twig', [
+//            'pageTitle' => t('Add account holder'),
+//            'form' => $form->createView(),
+//        ]);
+//    }
 
-        $this->denyAccessUnlessGranted('createAssetAccount', $currentHousehold);
-
-        $account = new AssetAccount();
-        $createAccount = new AccountHolderDTO();
-
-        $form = $this->createForm(AccountHolderType::class, $createAccountHolder);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $accountHolder->setName($createAccountHolder->getName());
-                $accountHolder->setHousehold($currentHousehold);
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($accountHolder);
-                $entityManager->flush();
-
-                $this->addFlash('success', t('Account holder was added.'));
-
-                return $this->redirectToRoute('housekeepingbook_accountholder_index');
-            }catch (\Exception) {
-                $this->addFlash('error', t('Account holder could not be created.'));
-            }
-        }
-
-        return $this->render('housekeepingbook/accountholder/form.html.twig', [
-            'pageTitle' => t('Add account holder'),
-            'form' => $form->createView(),
-        ]);
-    }
 
 
-
-    #[Route('/{id}/edit', name: 'housekeepingbook_revenue_account_edit', methods: ['GET', 'POST'])]
-    public function editAssetAccount(Request $request, AccountHolder $accountHolder): Response
-    {
-        return $this->redirectToRoute('housekeepingbook_revenue_account_index');
-    }
+//    #[Route('/{id}/edit', name: 'housekeepingbook_revenue_account_edit', methods: ['GET', 'POST'])]
+//    public function editAssetAccount(Request $request, AccountHolder $accountHolder): Response
+//    {
+//        return $this->redirectToRoute('housekeepingbook_revenue_account_index');
+//    }
 }

@@ -2,15 +2,12 @@
 
 namespace App\Controller\Supplies;
 
-use App\Entity\AccountHolder;
-use App\Entity\DTO\AccountHolderDTO;
 use App\Entity\Supplies\Brand;
 use App\Entity\Supplies\DTO\BrandDTO;
-use App\Form\AccountHolderType;
 use App\Form\Supplies\BrandType;
 use App\Repository\HouseholdRepository;
-use App\Service\AccountHolderService;
 use App\Service\Supplies\BrandService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +84,7 @@ class BrandController extends AbstractController
                 $this->addFlash('success', t('Brand was added.'));
 
                 return $this->redirectToRoute('supplies_brand_new');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Brand could not be created.'));
             }
         }
@@ -118,7 +115,7 @@ class BrandController extends AbstractController
                 $this->addFlash('success', t('Brand was updated.'));
 
                 return $this->redirectToRoute('supplies_brand_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Brand could not be updated.'));
             }
         }
@@ -142,9 +139,9 @@ class BrandController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Brand was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Brand could not be deleted.'));
         }
 

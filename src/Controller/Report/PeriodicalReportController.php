@@ -5,6 +5,8 @@ namespace App\Controller\Report;
 use App\Entity\User;
 use App\Service\Report\ReportService;
 use App\Service\UserSettingsService;
+use DateTime;
+use IntlDateFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +28,7 @@ class PeriodicalReportController extends AbstractController
     #[Route('/current', name: 'housekeepingbook_report_periodical_current', methods: ['GET'])]
     public function current(): Response
     {
-        $now = new \DateTime();
+        $now = new DateTime();
 
         return $this->redirectToRoute('housekeepingbook_report_periodical_index',[
             'year' => $now->format('Y'),
@@ -44,13 +46,13 @@ class PeriodicalReportController extends AbstractController
         $user = $this->getUser();
 
         // Formats: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
-        $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE, pattern: 'LLLL YYYY');
+        $dateFormatter = new IntlDateFormatter($user->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, pattern: 'LLLL YYYY');
 
         return $this->render('housekeepingbook/report/periodical.html.twig', [
 //            'pageTitle' => t('Current Period (' . $dateFormatter->format($data['startDate']) . ' - ' . $dateFormatter->format($data['endDate']) . ')'),
             'pageTitle' => t('period'),
             'period' => $dateFormatter->format($data['startDate']),
-            'currentStartDate' => (new \DateTime())->modify('first day of this month')->modify('midnight'),
+            'currentStartDate' => (new DateTime())->modify('first day of this month')->modify('midnight'),
             'previousStartDate' => (clone $data['startDate'])->modify('- 1 month'),
             'nextStartDate' => (clone $data['startDate'])->modify('+ 1 month'),
             'household' => $currentHousehold,

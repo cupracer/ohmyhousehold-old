@@ -6,6 +6,7 @@ use App\Entity\ApiToken;
 use App\Entity\DTO\CreateApiToken;
 use App\Entity\User;
 use App\Form\CreateApiTokenType;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,9 +69,9 @@ class ApiTokenController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash("success", "Selected API token was deleted.");
             } else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch(\Exception) {
+        }catch(Exception) {
             $this->addFlash("error", "Selected API token could not be deleted.");
         }
 

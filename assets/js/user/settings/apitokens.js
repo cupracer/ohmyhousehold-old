@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('#apiTokens').DataTable({
+    let datatable = $('#apiTokens');
+    datatable.DataTable({
         "paging": false,
         "lengthChange": false,
         "searching": false,

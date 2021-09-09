@@ -3,9 +3,8 @@
 namespace App\Security\Voter;
 
 use App\Entity\BookingCategory;
-use App\Entity\HouseholdUser;
 use App\Entity\User;
-use App\Repository\HouseholdUserRepository;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -53,7 +52,7 @@ class BookingCategoryVoter extends Voter
                 return $this->canDelete($bookingCategory, $user);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(BookingCategory $bookingCategory, User $user): bool

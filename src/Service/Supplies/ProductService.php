@@ -2,12 +2,11 @@
 
 namespace App\Service\Supplies;
 
-use App\Entity\AccountHolder;
 use App\Entity\Household;
 use App\Entity\Supplies\Product;
-use App\Repository\AccountHolderRepository;
 use App\Repository\Supplies\ProductRepository;
 use App\Service\DatatablesService;
+use IntlDateFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -54,10 +53,10 @@ class ProductService extends DatatablesService
                 'brand' => $row->getBrand()->getName(),
                 'ean' => $row->getEan(),
                 'category' => $row->getSupply()->getCategory()->getName(),
-                'packaging' => $row->getPackaging() ? $row->getPackaging()->getName() : null,
+                'packaging' => $row->getPackaging()?->getName(),
                 'amount' => 1*$row->getQuantity() . $row->getMeasure()->getName(),
                 'usageCount' => $this->getUsageCount($row),
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt())
+                'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(

@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('#households').DataTable({
+    let datatable = $('#households');
+    datatable.DataTable({
         "paging": false,
         "lengthChange": false,
         "searching": false,

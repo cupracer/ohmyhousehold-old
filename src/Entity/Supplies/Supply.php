@@ -4,6 +4,7 @@ namespace App\Entity\Supplies;
 
 use App\Entity\Household;
 use App\Repository\Supplies\SupplyRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -92,12 +93,12 @@ class Supply
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -109,7 +110,7 @@ class Supply
      */
     public function setCreatedAtValue()
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getHousehold(): ?Household
@@ -149,7 +150,7 @@ class Supply
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection
      */
     public function getProducts(): Collection
     {

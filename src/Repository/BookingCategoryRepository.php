@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\AccountHolder;
 use App\Entity\BookingCategory;
 use App\Entity\Household;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

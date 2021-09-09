@@ -2,11 +2,11 @@
 
 namespace App\Security\Voter\Supplies;
 
-use App\Entity\AccountHolder;
 use App\Entity\HouseholdUser;
 use App\Entity\Supplies\Brand;
 use App\Entity\User;
 use App\Repository\HouseholdUserRepository;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -71,7 +71,7 @@ class BrandVoter extends Voter
                 return $this->canDelete($householdUser);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(HouseholdUser $householdUser): bool

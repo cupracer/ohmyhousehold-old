@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\CategoryDTO;
 use App\Form\Supplies\CategoryType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\CategoryService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,7 +84,7 @@ class CategoryController extends AbstractController
                 $this->addFlash('success', t('Category was added.'));
 
                 return $this->redirectToRoute('supplies_category_new');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Category could not be created.'));
             }
         }
@@ -114,7 +115,7 @@ class CategoryController extends AbstractController
                 $this->addFlash('success', t('Category was updated.'));
 
                 return $this->redirectToRoute('supplies_category_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Category could not be updated.'));
             }
         }
@@ -138,9 +139,9 @@ class CategoryController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Category was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Category could not be deleted.'));
         }
 

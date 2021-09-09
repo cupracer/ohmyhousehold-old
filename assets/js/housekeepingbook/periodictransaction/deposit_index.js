@@ -22,7 +22,7 @@ $(document).ready(function () {
                 data: "startDate",
                 class: "min",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -32,7 +32,7 @@ $(document).ready(function () {
                 data: "endDate",
                 class: "min",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -42,7 +42,7 @@ $(document).ready(function () {
                 data: "bookingInterval",
                 class: "min",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -52,7 +52,7 @@ $(document).ready(function () {
                 data: "bookingDayOfMonth",
                 class: "min",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -61,7 +61,7 @@ $(document).ready(function () {
             {
                 data: "user",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -70,7 +70,7 @@ $(document).ready(function () {
             {
                 data: "bookingCategory",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -79,7 +79,7 @@ $(document).ready(function () {
             {
                 data: "source",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -88,7 +88,7 @@ $(document).ready(function () {
             {
                 data: "destination",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -97,7 +97,7 @@ $(document).ready(function () {
             {
                 data: "description",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }
@@ -107,7 +107,7 @@ $(document).ready(function () {
                 data: "amount",
                 class: "min text-right",
                 defaultContent: "-",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                createdCell: function(cell, cellData, rowData) {
                     if(rowData.private) {
                         $(cell).css('font-style', 'italic');
                     }

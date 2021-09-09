@@ -3,15 +3,12 @@
 namespace App\Form\Transaction;
 
 use App\Entity\AssetAccount;
-use App\Entity\BookingCategory;
 use App\Entity\DTO\TransferTransactionDTO;
 use App\Entity\Household;
 use App\Entity\HouseholdUser;
 use App\Repository\Account\AssetAccountRepository;
-use App\Repository\BookingCategoryRepository;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -22,7 +19,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function Symfony\Component\Translation\t;
 
 class TransferTransactionType extends AbstractType
@@ -31,7 +27,6 @@ class TransferTransactionType extends AbstractType
 
     private HouseholdRepository $householdRepository;
     private HouseholdUserRepository $householdUserRepository;
-    private BookingCategoryRepository $bookingCategoryRepository;
     private AssetAccountRepository $assetAccountRepository;
     private Household $household;
     private HouseholdUser $householdUser;
@@ -41,7 +36,6 @@ class TransferTransactionType extends AbstractType
         SessionInterface $session,
         HouseholdRepository $householdRepository,
         HouseholdUserRepository $householdUserRepository,
-        BookingCategoryRepository $bookingCategoryRepository,
         AssetAccountRepository $assetAccountRepository,
         Security $security
     )
@@ -49,7 +43,6 @@ class TransferTransactionType extends AbstractType
         $this->session = $session;
         $this->householdRepository = $householdRepository;
         $this->householdUserRepository = $householdUserRepository;
-        $this->bookingCategoryRepository = $bookingCategoryRepository;
         $this->assetAccountRepository = $assetAccountRepository;
 
         $this->security = $security;

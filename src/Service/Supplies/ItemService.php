@@ -7,6 +7,7 @@ use App\Entity\Supplies\Item;
 use App\Entity\User;
 use App\Repository\Supplies\ItemRepository;
 use App\Service\DatatablesService;
+use IntlDateFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -50,7 +51,7 @@ class ItemService extends DatatablesService
 
         /** @var User $user */
         $user = $this->security->getUser();
-        $dateFormatter = new \IntlDateFormatter($user->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+        $dateFormatter = new IntlDateFormatter($user->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
 
         /** @var Item $row */
         foreach($result['data'] as $row) {
@@ -62,7 +63,7 @@ class ItemService extends DatatablesService
                 'amount' => 1*$row->getProduct()->getQuantity() . $row->getProduct()->getMeasure()->getName(),
                 'purchaseDate' => $row->getPurchaseDate() ? $dateFormatter->format($row->getPurchaseDate()) : null,
                 'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
-                'createdAt' => \IntlDateFormatter::formatObject($row->getCreatedAt()),
+                'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt()),
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(

@@ -21,6 +21,9 @@ use App\Repository\Transaction\TransferTransactionRepository;
 use App\Repository\Transaction\WithdrawalTransactionRepository;
 use App\Service\DatatablesService;
 use App\Service\MoneyCalculationService;
+use DateTime;
+use IntlDateFormatter;
+use NumberFormatter;
 use Symfony\Component\Security\Core\Security;
 
 class ReportService extends DatatablesService
@@ -62,7 +65,7 @@ class ReportService extends DatatablesService
 
     public function getDataAsArray(Household $household, int $year, int $month): array
     {
-        $requestedDate = \DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
+        $requestedDate = DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
         //TODO check if data is valid
 
         $currentPeriodStart = (clone $requestedDate)->modify('first day of this month')->modify('midnight');
@@ -99,14 +102,14 @@ class ReportService extends DatatablesService
         foreach($transactions as $transaction) {
             switch(true) {
                 case $transaction instanceof DepositTransaction:
-                    if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
+                    if($transaction->getBookingDate() <= (new DateTime())->modify('midnight')) {
                         $data['deposit'] = $this->moneyCalc->add($data['deposit'], $transaction->getAmount());
                     }else {
                         $data['upcomingDeposit'] = $this->moneyCalc->add($data['upcomingDeposit'], $transaction->getAmount());
                     }
                     break;
                 case $transaction instanceof WithdrawalTransaction:
-                    if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
+                    if($transaction->getBookingDate() <= (new DateTime())->modify('midnight')) {
                         $data['withdrawal'] = $this->moneyCalc->add($data['withdrawal'], $transaction->getAmount());
                     }else {
                         $data['upcomingWithdrawal'] = $this->moneyCalc->add($data['upcomingWithdrawal'], $transaction->getAmount());
@@ -114,13 +117,13 @@ class ReportService extends DatatablesService
                     break;
                 case $transaction instanceof TransferTransaction:
                     if($transaction->getSource()->getAccountType() === AssetAccount::TYPE_CURRENT && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
-                        if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
+                        if($transaction->getBookingDate() <= (new DateTime())->modify('midnight')) {
                             $data['savings'] = $this->moneyCalc->add($data['savings'], $transaction->getAmount());
                         }else {
                             $data['upcomingSavings'] = $this->moneyCalc->add($data['upcomingSavings'], $transaction->getAmount());
                         }
                     }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_CURRENT) {
-                        if($transaction->getBookingDate() <= (new \DateTime())->modify('midnight')) {
+                        if($transaction->getBookingDate() <= (new DateTime())->modify('midnight')) {
                             $data['savings'] = $this->moneyCalc->subtract($data['savings'], $transaction->getAmount());
                         }else {
                             $data['upcomingSavings'] = $this->moneyCalc->subtract($data['upcomingSavings'], $transaction->getAmount());
@@ -194,8 +197,8 @@ class ReportService extends DatatablesService
             return null;
         }
 
-        $numberFormatter = numfmt_create($householdUser->getUser()->getUserProfile()->getLocale(), \NumberFormatter::CURRENCY);
-        $dateFormatter = new \IntlDateFormatter($householdUser->getUser()->getUserProfile()->getLocale(), \IntlDateFormatter::MEDIUM, \IntlDateFormatter::NONE);
+        $numberFormatter = numfmt_create($householdUser->getUser()->getUserProfile()->getLocale(), NumberFormatter::CURRENCY);
+        $dateFormatter = new IntlDateFormatter($householdUser->getUser()->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
 
         $result['bookingDate'] = $dateFormatter->format($transaction->getBookingDate());
         $result['bookingDate_obj'] = $transaction->getBookingDate();
@@ -238,31 +241,30 @@ class ReportService extends DatatablesService
 
     /**
      * @param Household $household
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
+     * @param DateTime $startDate
+     * @param DateTime $endDate
      * @return array
      *
      * Get AssetAccounts that have their initial balance date within the specified range.
      */
-    public function getAssetAccounts(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function getAssetAccounts(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         return $this->assetAccountRepository->findAllByHouseholdAndInitialBalanceDateInRange($household, $startDate, $endDate);
     }
 
 
-    public function getTransactions(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function getTransactions(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $tableData = [];
 
         $tableData = array_merge($tableData, $this->depositTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
         $tableData = array_merge($tableData, $this->withdrawalTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
-        $tableData = array_merge($tableData, $this->transferTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
 
-        return $tableData;
+        return array_merge($tableData, $this->transferTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
     }
 
 
-    public function getPeriodicTransactions(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function getPeriodicTransactions(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $tableData = [];
 
@@ -270,9 +272,9 @@ class ReportService extends DatatablesService
 
         foreach ($periodicDepositTransactions as $row) {
 
-            /** @var \DateTime $bookingDate */
+            /** @var DateTime $bookingDate */
             $bookingDate = clone $row->getStartDate();
-            /** @var \DateTime $intervalDate */
+            /** @var DateTime $intervalDate */
             $intervalDate = clone $row->getStartDate();
             $intervalDate->modify('+ ' . $row->getBookingPeriodOffset() . ' months');
 
@@ -318,9 +320,9 @@ class ReportService extends DatatablesService
         $periodicWithdrawalTransactions = $this->periodicWithdrawalTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate);
 
         foreach ($periodicWithdrawalTransactions as $row) {
-            /** @var \DateTime $bookingDate */
+            /** @var DateTime $bookingDate */
             $bookingDate = clone $row->getStartDate();
-            /** @var \DateTime $intervalDate */
+            /** @var DateTime $intervalDate */
             $intervalDate = clone $row->getStartDate();
             $intervalDate->modify('+ ' . $row->getBookingPeriodOffset() . ' months');
 
@@ -366,9 +368,9 @@ class ReportService extends DatatablesService
         $periodicTransferTransactions = $this->periodicTransferTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate);
 
         foreach ($periodicTransferTransactions as $row) {
-            /** @var \DateTime $bookingDate */
+            /** @var DateTime $bookingDate */
             $bookingDate = clone $row->getStartDate();
-            /** @var \DateTime $intervalDate */
+            /** @var DateTime $intervalDate */
             $intervalDate = clone $row->getStartDate();
             $intervalDate->modify('+ ' . $row->getBookingPeriodOffset() . ' months');
 

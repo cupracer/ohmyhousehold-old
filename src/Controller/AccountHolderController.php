@@ -7,6 +7,7 @@ use App\Entity\DTO\AccountHolderDTO;
 use App\Form\AccountHolderType;
 use App\Repository\HouseholdRepository;
 use App\Service\AccountHolderService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,7 +84,7 @@ class AccountHolderController extends AbstractController
                 $this->addFlash('success', t('Account holder was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_accountholder_index');
-            }catch (\Exception) {
+            }catch (Exception) {
                 $this->addFlash('error', t('Account holder could not be created.'));
             }
         }
@@ -114,7 +115,7 @@ class AccountHolderController extends AbstractController
                 $this->addFlash('success', t('Account holder was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_accountholder_index');
-            }catch(\Exception) {
+            }catch(Exception) {
                 $this->addFlash('error', t('Account holder could not be updated.'));
             }
         }
@@ -138,9 +139,9 @@ class AccountHolderController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Account holder was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Account holder could not be deleted.'));
         }
 

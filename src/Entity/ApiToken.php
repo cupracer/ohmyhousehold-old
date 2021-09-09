@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ApiTokenRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -16,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="This description is already used for another token."
  * )
  */
-class ApiToken implements \JsonSerializable
+class ApiToken implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -89,12 +92,12 @@ class ApiToken implements \JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -106,15 +109,15 @@ class ApiToken implements \JsonSerializable
      */
     public function setCreatedAtValue()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
-    public function getExpiresAt(): ?\DateTimeInterface
+    public function getExpiresAt(): ?DateTimeInterface
     {
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(?\DateTimeInterface $expiresAt): self
+    public function setExpiresAt(?DateTimeInterface $expiresAt): self
     {
         $this->expiresAt = $expiresAt;
 
@@ -145,12 +148,12 @@ class ApiToken implements \JsonSerializable
         return $this;
     }
 
-    public function getLastUsedAt(): ?\DateTimeInterface
+    public function getLastUsedAt(): ?DateTimeInterface
     {
         return $this->lastUsedAt;
     }
 
-    public function setLastUsedAt(?\DateTimeInterface $lastUsedAt): self
+    public function setLastUsedAt(?DateTimeInterface $lastUsedAt): self
     {
         $this->lastUsedAt = $lastUsedAt;
 

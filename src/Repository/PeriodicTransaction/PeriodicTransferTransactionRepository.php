@@ -4,6 +4,7 @@ namespace App\Repository\PeriodicTransaction;
 
 use App\Entity\PeriodicTransferTransaction;
 use App\Entity\Household;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,7 +50,7 @@ class PeriodicTransferTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicTransferTransaction[] Returns an array of PeriodicTransferTransaction objects
      */
-    public function findAllByHouseholdAndDateRange(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -76,7 +77,7 @@ class PeriodicTransferTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicTransferTransaction[] Returns an array of PeriodicTransferTransaction objects
      */
-    public function findAllGrantedByHouseholdAndDateRange(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllGrantedByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         return array_filter($this->findAllByHouseholdAndDateRange($household, $startDate, $endDate), function (PeriodicTransferTransaction $transaction) {
             return $this->security->isGranted('view', $transaction);
@@ -87,7 +88,7 @@ class PeriodicTransferTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicTransferTransaction[] Returns an array of PeriodicTransferTransaction objects
      */
-    public function findAllByHouseholdAndDateRangeWithoutTransaction(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllByHouseholdAndDateRangeWithoutTransaction(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -120,7 +121,7 @@ class PeriodicTransferTransactionRepository extends ServiceEntityRepository
 
         // TODO: the result can contain NULL items, so we filter them out here:
         return array_filter($rows, function (?PeriodicTransferTransaction $transaction) {
-            return $transaction ? $transaction : false;
+            return $transaction ?: false;
         });
     }
 
@@ -128,7 +129,7 @@ class PeriodicTransferTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicTransferTransaction[] Returns an array of PeriodicTransferTransaction objects
      */
-    public function findAllGrantedByHouseholdAndDateRangeWithoutTransaction(Household $household, \DateTime $startDate, \DateTime $endDate): array
+    public function findAllGrantedByHouseholdAndDateRangeWithoutTransaction(Household $household, DateTime $startDate, DateTime $endDate): array
     {
         $periodicTransactions = $this->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate);
         return array_filter($periodicTransactions, function (?PeriodicTransferTransaction $transaction) {

@@ -84,7 +84,7 @@ class PeriodicTransferTransaction extends PeriodicTransaction
     }
 
     /**
-     * @return Collection|TransferTransaction[]
+     * @return Collection
      */
     public function getTransferTransactions(): Collection
     {

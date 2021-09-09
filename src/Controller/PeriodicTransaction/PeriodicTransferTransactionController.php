@@ -8,6 +8,7 @@ use App\Form\PeriodicTransaction\PeriodicTransferTransactionType;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\PeriodicTransaction\PeriodicTransferTransactionService;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,7 +104,7 @@ class PeriodicTransferTransactionController extends AbstractController
                 $this->addFlash('success', t('Periodic transfer transaction was added.'));
 
                 return $this->redirectToRoute('housekeepingbook_periodic_transfer_transaction_new');
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $this->addFlash('error', t('Periodic transfer transaction could not be created: ' . $exception->getMessage()));
             }
         }
@@ -154,7 +155,7 @@ class PeriodicTransferTransactionController extends AbstractController
                 $this->addFlash('success', t('Periodic transfer transaction was updated.'));
 
                 return $this->redirectToRoute('housekeepingbook_periodic_transfer_transaction_index');
-            } catch (\Exception) {
+            } catch (Exception) {
                 $this->addFlash('error', t('Periodic transfer transaction could not be updated.'));
             }
         }
@@ -179,9 +180,9 @@ class PeriodicTransferTransactionController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', t('Periodic transfer transaction was deleted.'));
             }else {
-                throw new \Exception('invalid CSRF token');
+                throw new Exception('invalid CSRF token');
             }
-        }catch (\Exception) {
+        }catch (Exception) {
             $this->addFlash('error', t('Periodic transfer transaction could not be deleted.'));
         }
 

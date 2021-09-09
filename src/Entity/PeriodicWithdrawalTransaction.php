@@ -102,7 +102,7 @@ class PeriodicWithdrawalTransaction extends PeriodicTransaction
     }
 
     /**
-     * @return Collection|WithdrawalTransaction[]
+     * @return Collection
      */
     public function getWithdrawalTransactions(): Collection
     {

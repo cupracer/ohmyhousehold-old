@@ -6,6 +6,7 @@ use App\Entity\HouseholdUser;
 use App\Entity\Supplies\Category;
 use App\Entity\User;
 use App\Repository\HouseholdUserRepository;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -70,7 +71,7 @@ class CategoryVoter extends Voter
                 return $this->canDelete($householdUser);
         }
 
-        throw new \LogicException('This code should not be reached!');
+        throw new LogicException('This code should not be reached!');
     }
 
     private function canView(HouseholdUser $householdUser): bool
