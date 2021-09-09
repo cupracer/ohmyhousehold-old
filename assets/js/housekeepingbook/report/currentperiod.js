@@ -36,7 +36,7 @@ $(document).ready(function () {
                 "orderable": false,
                 "class": "min text-right",
                 "render": function ( data, type, row, meta ) {
-                    var output = '';
+                    let output = '';
 
                     if(type ==="display"){
                         // if(row[10]) {
@@ -98,7 +98,7 @@ $(document).ready(function () {
                 "targets": [ 8, ],
                 "class": "min text-right",
                 "render": function ( data, type, row, meta ) {
-                    var floatVal = parseFloat(row[8]);
+                    const floatVal = parseFloat(row[8]);
 
                     if(type ==="display" || type === "filter"){
                         switch (row[0]) {
