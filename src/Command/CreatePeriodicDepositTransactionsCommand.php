@@ -252,7 +252,6 @@ class CreatePeriodicDepositTransactionsCommand extends Command
                     $transaction->setHousehold($household);
                     $transaction->setHouseholdUser($periodicTransaction->getHouseholdUser());
                     $transaction->setBookingDate($bookingDate);
-                    $transaction->setBookingCategory($periodicTransaction->getBookingCategory());
                     $transaction->setSource($periodicTransaction->getSource());
                     $transaction->setDestination($periodicTransaction->getDestination());
                     $transaction->setDescription($periodicTransaction->getDescription());
