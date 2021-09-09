@@ -126,7 +126,7 @@ class DemoFixtures extends Fixture
             ->setHouseholdUser($adminHouseholdUser)
             ->setSource($assetAccount1)
             ->setDestination($expenseAccount)
-            ->setAmount(22,88)
+            ->setAmount('22.88')
             ->setBookingDate(new \DateTime())
             ->setBookingPeriodOffset(0)
             ->setBookingCategory($bookingCategory2)
