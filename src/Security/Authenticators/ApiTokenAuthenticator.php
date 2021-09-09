@@ -46,11 +46,9 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
         $hashedTokens = [];
 
         foreach(['sha1',] as $hashAlgorithm) {
-            switch ($hashAlgorithm) {
-                case 'sha1':
-                    $hashedTokens[$hashAlgorithm] = sha1($token);
-                    break;
-            }
+            $hashedTokens[$hashAlgorithm] = match ($hashAlgorithm) {
+                'sha1' => sha1($token),
+            };
         }
 
         return $hashedTokens;
