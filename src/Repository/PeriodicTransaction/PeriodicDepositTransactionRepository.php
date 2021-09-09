@@ -120,7 +120,7 @@ class PeriodicDepositTransactionRepository extends ServiceEntityRepository
 
         // TODO: the result can contain NULL items, so we filter them out here:
         return array_filter($rows, function (?PeriodicDepositTransaction $transaction) {
-            return $transaction ? $transaction : false;
+            return $transaction ?: false;
         });
     }
 
