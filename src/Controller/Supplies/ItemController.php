@@ -270,10 +270,10 @@ class ItemController extends AbstractController
             $firstDateFound = null;
             $multipleBestBeforeDates = false;
 
-            foreach ($items as $item) {
+            foreach ($items as $i) {
                 if ($firstDateFound === null) {
-                    $firstDateFound = $item->getBestBeforeDate();
-                }elseif ($firstDateFound != $item->getBestBeforeDate()) {
+                    $firstDateFound = $i->getBestBeforeDate();
+                }elseif ($firstDateFound != $i->getBestBeforeDate()) {
                     $multipleBestBeforeDates = true;
                     break;
                 }
