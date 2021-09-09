@@ -75,8 +75,7 @@ class PeriodicWithdrawalTransactionVoter extends Voter
 
     private function canView(HouseholdUser $householdUser, PeriodicWithdrawalTransaction $periodicWithdrawalTransaction): bool
     {
-        return ((bool)$householdUser && !$periodicWithdrawalTransaction->getPrivate())
-            || $periodicWithdrawalTransaction->getHouseholdUser() === $householdUser;
+        return !$periodicWithdrawalTransaction->getPrivate() || $periodicWithdrawalTransaction->getHouseholdUser() === $householdUser;
     }
 
     private function canEdit(HouseholdUser $householdUser, PeriodicWithdrawalTransaction $periodicWithdrawalTransaction): bool

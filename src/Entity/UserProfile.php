@@ -92,7 +92,7 @@ class UserProfile
 
     public function getNaturalName(): string
     {
-        return (string) $this->forenames . ' ' . (string) $this->surname;
+        return $this->forenames . ' ' . $this->surname;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface

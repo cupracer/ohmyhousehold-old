@@ -75,8 +75,7 @@ class TransferTransactionVoter extends Voter
 
     private function canView(HouseholdUser $householdUser, TransferTransaction $transferTransaction): bool
     {
-        return ((bool)$householdUser && !$transferTransaction->getPrivate())
-            || $transferTransaction->getHouseholdUser() === $householdUser;
+        return !$transferTransaction->getPrivate() || $transferTransaction->getHouseholdUser() === $householdUser;
     }
 
     private function canEdit(HouseholdUser $householdUser, TransferTransaction $transferTransaction): bool

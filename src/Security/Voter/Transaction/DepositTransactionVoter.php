@@ -75,8 +75,7 @@ class DepositTransactionVoter extends Voter
 
     private function canView(HouseholdUser $householdUser, DepositTransaction $depositTransaction): bool
     {
-        return ((bool)$householdUser && !$depositTransaction->getPrivate())
-            || $depositTransaction->getHouseholdUser() === $householdUser;
+        return !$depositTransaction->getPrivate() || $depositTransaction->getHouseholdUser() === $householdUser;
     }
 
     private function canEdit(HouseholdUser $householdUser, DepositTransaction $depositTransaction): bool

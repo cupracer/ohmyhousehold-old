@@ -75,8 +75,7 @@ class WithdrawalTransactionVoter extends Voter
 
     private function canView(HouseholdUser $householdUser, WithdrawalTransaction $withdrawalTransaction): bool
     {
-        return ((bool)$householdUser && !$withdrawalTransaction->getPrivate())
-            || $withdrawalTransaction->getHouseholdUser() === $householdUser;
+        return !$withdrawalTransaction->getPrivate() || $withdrawalTransaction->getHouseholdUser() === $householdUser;
     }
 
     private function canEdit(HouseholdUser $householdUser, WithdrawalTransaction $withdrawalTransaction): bool
