@@ -9,15 +9,12 @@ class DatatablesService
         $columns = [];
         $orderColumns = [];
 
-        // requestColumns is provided by Datatables as request query param
-        if(is_array($requestColumns)) {
-            // We're on interested in the "data" value, which should be a key of the object's jsonSerialize array,
-            // so we initialize a fake class instance to get the keys from it.
-            // Each request column name is only accepted if it matches one of these keys.
-            foreach($requestColumns as $index => $requestColumn) {
-                if(in_array($requestColumn['data'], $sortableColumns)) {
-                    $columns[$index] = $requestColumn['data'];
-                }
+        // We're on interested in the "data" value, which should be a key of the object's jsonSerialize array,
+        // so we initialize a fake class instance to get the keys from it.
+        // Each request column name is only accepted if it matches one of these keys.
+        foreach($requestColumns as $index => $requestColumn) {
+            if(in_array($requestColumn['data'], $sortableColumns)) {
+                $columns[$index] = $requestColumn['data'];
             }
         }
 
