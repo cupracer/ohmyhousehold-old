@@ -132,7 +132,7 @@ class Household
     }
 
     /**
-     * @return Collection|HouseholdUser[]
+     * @return Collection
      */
     public function getHouseholdUsers(): Collection
     {
@@ -194,7 +194,7 @@ class Household
     }
 
     /**
-     * @return Collection|AccountHolder[]
+     * @return Collection
      */
     public function getAccountHolders(): Collection
     {
@@ -224,7 +224,7 @@ class Household
     }
 
     /**
-     * @return Collection|BookingCategory[]
+     * @return Collection
      */
     public function getBookingCategories(): Collection
     {
@@ -254,7 +254,7 @@ class Household
     }
 
     /**
-     * @return Collection|SupplyBrand[]
+     * @return Collection
      */
     public function getSupplyBrands(): Collection
     {
@@ -434,7 +434,7 @@ class Household
     }
 
     /**
-     * @return Collection|Item[]
+     * @return Collection
      */
     public function getSupplyItems(): Collection
     {

@@ -244,7 +244,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|ApiToken[]
+     * @return Collection
      */
     public function getApiTokens(): Collection
     {

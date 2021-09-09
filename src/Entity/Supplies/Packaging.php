@@ -110,7 +110,7 @@ class Packaging
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection
      */
     public function getProducts(): Collection
     {

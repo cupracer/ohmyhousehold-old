@@ -108,7 +108,7 @@ class PeriodicDepositTransactionDTO
     }
 
     /**
-     * @return BookingCategory
+     * @return BookingCategory|null
      */
     public function getBookingCategory(): ?BookingCategory
     {

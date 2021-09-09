@@ -255,7 +255,7 @@ class Product
     }
 
     /**
-     * @return Collection|Item[]
+     * @return Collection
      */
     public function getItems(): Collection
     {

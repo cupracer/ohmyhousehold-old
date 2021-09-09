@@ -43,6 +43,7 @@ class TransferTransaction extends Transaction
 
     /**
      * @param AssetAccount|null $source
+     * @return TransferTransaction
      */
     public function setSource(?AssetAccount $source): self
     {
@@ -61,6 +62,7 @@ class TransferTransaction extends Transaction
 
     /**
      * @param AssetAccount|null $destination
+     * @return TransferTransaction
      */
     public function setDestination(?AssetAccount $destination): self
     {

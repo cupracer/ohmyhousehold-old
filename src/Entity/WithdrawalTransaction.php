@@ -51,6 +51,7 @@ class WithdrawalTransaction extends Transaction
 
     /**
      * @param AssetAccount|null $source
+     * @return WithdrawalTransaction
      */
     public function setSource(?AssetAccount $source): self
     {
@@ -69,6 +70,7 @@ class WithdrawalTransaction extends Transaction
 
     /**
      * @param ExpenseAccount|null $destination
+     * @return WithdrawalTransaction
      */
     public function setDestination(?ExpenseAccount $destination): self
     {

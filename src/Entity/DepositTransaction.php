@@ -49,6 +49,7 @@ class DepositTransaction extends Transaction
 
     /**
      * @param RevenueAccount|null $source
+     * @return DepositTransaction
      */
     public function setSource(?RevenueAccount $source): self
     {
@@ -67,6 +68,7 @@ class DepositTransaction extends Transaction
 
     /**
      * @param AssetAccount|null $destination
+     * @return DepositTransaction
      */
     public function setDestination(?AssetAccount $destination): self
     {

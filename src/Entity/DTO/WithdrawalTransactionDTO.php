@@ -68,7 +68,7 @@ class WithdrawalTransactionDTO
     }
 
     /**
-     * @return BookingCategory
+     * @return BookingCategory|null
      */
     public function getBookingCategory(): ?BookingCategory
     {

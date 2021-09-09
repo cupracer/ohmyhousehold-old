@@ -110,7 +110,7 @@ class Category
     }
 
     /**
-     * @return Collection|Supply[]
+     * @return Collection
      */
     public function getSupplies(): Collection
     {
