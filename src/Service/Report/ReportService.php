@@ -256,9 +256,8 @@ class ReportService extends DatatablesService
 
         $tableData = array_merge($tableData, $this->depositTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
         $tableData = array_merge($tableData, $this->withdrawalTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
-        $tableData = array_merge($tableData, $this->transferTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
 
-        return $tableData;
+        return array_merge($tableData, $this->transferTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
     }
 
 
