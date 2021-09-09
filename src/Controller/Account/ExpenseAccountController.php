@@ -57,49 +57,49 @@ class ExpenseAccountController extends AbstractController
         );
     }
 
-    #[Route('/new', name: 'housekeepingbook_expense_account_new', methods: ['GET', 'POST'])]
-    public function newAssetAccount(
-        Request $request
-    ): Response
-    {
-        $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
+//    #[Route('/new', name: 'housekeepingbook_expense_account_new', methods: ['GET', 'POST'])]
+//    public function newAssetAccount(
+//        Request $request
+//    ): Response
+//    {
+//        $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
+//
+//        $this->denyAccessUnlessGranted('createAssetAccount', $currentHousehold);
+//
+//        $account = new AssetAccount();
+//        $createAccount = new AccountHolderDTO();
+//
+//        $form = $this->createForm(AccountHolderType::class, $createAccountHolder);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            try {
+//                $accountHolder->setName($createAccountHolder->getName());
+//                $accountHolder->setHousehold($currentHousehold);
+//
+//                $entityManager = $this->getDoctrine()->getManager();
+//                $entityManager->persist($accountHolder);
+//                $entityManager->flush();
+//
+//                $this->addFlash('success', t('Account holder was added.'));
+//
+//                return $this->redirectToRoute('housekeepingbook_accountholder_index');
+//            }catch (\Exception) {
+//                $this->addFlash('error', t('Account holder could not be created.'));
+//            }
+//        }
+//
+//        return $this->render('housekeepingbook/accountholder/form.html.twig', [
+//            'pageTitle' => t('Add account holder'),
+//            'form' => $form->createView(),
+//        ]);
+//    }
 
-        $this->denyAccessUnlessGranted('createAssetAccount', $currentHousehold);
-
-        $account = new AssetAccount();
-        $createAccount = new AccountHolderDTO();
-
-        $form = $this->createForm(AccountHolderType::class, $createAccountHolder);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $accountHolder->setName($createAccountHolder->getName());
-                $accountHolder->setHousehold($currentHousehold);
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($accountHolder);
-                $entityManager->flush();
-
-                $this->addFlash('success', t('Account holder was added.'));
-
-                return $this->redirectToRoute('housekeepingbook_accountholder_index');
-            }catch (\Exception) {
-                $this->addFlash('error', t('Account holder could not be created.'));
-            }
-        }
-
-        return $this->render('housekeepingbook/accountholder/form.html.twig', [
-            'pageTitle' => t('Add account holder'),
-            'form' => $form->createView(),
-        ]);
-    }
 
 
-
-    #[Route('/{id}/edit', name: 'housekeepingbook_expense_account_edit', methods: ['GET', 'POST'])]
-    public function editAssetAccount(Request $request, AccountHolder $accountHolder): Response
-    {
-        return $this->redirectToRoute('housekeepingbook_expense_account_index');
-    }
+//    #[Route('/{id}/edit', name: 'housekeepingbook_expense_account_edit', methods: ['GET', 'POST'])]
+//    public function editAssetAccount(Request $request, AccountHolder $accountHolder): Response
+//    {
+//        return $this->redirectToRoute('housekeepingbook_expense_account_index');
+//    }
 }
