@@ -98,6 +98,7 @@
 
 
 {% block navbar_notifications_dropdown %}
+    {{ include('supplies/_navbar_notifications_supply_items.html.twig') }}
 {% endblock navbar_notifications_dropdown %}
 
 
@@ -106,6 +107,7 @@
 
 
 {% block navbar_messages_dropdown %}
+    {% if not is_granted('ROLE_USER') %}
     <li class="nav-item dropdown">
         <a class="nav-link" href="#" id="dropdown-language" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -119,6 +121,7 @@
             {% endfor %}
         </div>
     </li>
+    {% endif %}
 {% endblock navbar_messages_dropdown %}
 
 

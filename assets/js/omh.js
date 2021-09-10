@@ -6,3 +6,5 @@
 //         });
 //     }
 // });
+
+import '/assets/styles/omh.scss';

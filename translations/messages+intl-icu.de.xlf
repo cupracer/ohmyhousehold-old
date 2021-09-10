@@ -441,6 +441,10 @@
         <source>supplies_checkout</source>
         <target>Vorratsentnahme</target>
       </trans-unit>
+      <trans-unit id="total_expiring_supply_items">
+        <source>{total} expiring supply item(s)</source>
+        <target>{total} ablaufende Artikel</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

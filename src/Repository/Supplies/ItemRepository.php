@@ -174,6 +174,35 @@ class ItemRepository extends ServiceEntityRepository
         });
     }
 
+
+    /**
+     * @return Item[] Returns an array of Item objects
+     */
+    public function findAllExpiringItemsGrantedByHousehold(Household $household, int $remainingDays): array
+    {
+        $dateToCheck = (new \DateTime())->modify('midnight');
+
+        $qb = $this->createQueryBuilder('i');
+        $items = $qb
+            ->andWhere('i.household = :household')
+            ->andWhere($qb->expr()->isNull('i.withdrawalDate'))
+            ->andWhere(
+                $qb->expr()->lte("DATE_SUB(i.bestBeforeDate, :remainingDays, 'DAY')", ':dateToCheck'),
+            )
+            ->setParameter('household', $household)
+            ->setParameter('remainingDays', $remainingDays)
+            ->setParameter('dateToCheck', $dateToCheck)
+            ->orderBy('i.bestBeforeDate', 'ASC')
+            ->addOrderBy('i.purchaseDate', 'ASC')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($items, function (Item $item) {
+            return $this->security->isGranted('view', $item);
+        });
+    }
+
     // /**
     //  * @return Item[] Returns an array of Item objects
     //  */
