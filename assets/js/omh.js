@@ -7,4 +7,4 @@
 //     }
 // });
 
-import '/assets/styles/omh.scss';
+import '../styles/omh.scss';
