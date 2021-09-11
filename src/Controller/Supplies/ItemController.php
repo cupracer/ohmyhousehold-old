@@ -283,9 +283,12 @@ class ItemController extends AbstractController
             }
 
             if(($form->has('smartCheckout') && $form->get('smartCheckout')->isClicked()) && (count($items) === 1 || !$multipleBestBeforeDates)) {
+                // all items should be identical, so we can use the first from the list
+                $item = $items[0];
+
                 $this->denyAccessUnlessGranted('checkout', $item);
 
-                $items[0]->setWithdrawalDate(new DateTime());
+                $item->setWithdrawalDate(new DateTime());
                 $this->getDoctrine()->getManager()->flush();
 
                 $this->addFlash('success', t('Item was checked out.'));
