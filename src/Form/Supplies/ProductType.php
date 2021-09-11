@@ -147,13 +147,18 @@ class ProductType extends AbstractType
             // Validation: If a result is returned, the object is fine, if not, the selection is wrong.
 
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                /** @var ProductDTO $data */
+                $data = $event->getData();
                 $form = $event->getForm();
+
+                $supplyId = $data->getSupply()?->getId();
+                $brandId = $data->getBrand()?->getId();
 
                 $form
                     ->add('supply', EntityType::class, [
                         'placeholder' => '',
                         'class' => Supply::class,
-                        'choices' => [],
+                        'choices' => $this->supplyRepository->findGrantedByHouseholdAndId($this->household, intval($supplyId)),
                         'attr' => [
                             'class' => 'form-control select2field',
                             'data-json-url' => $this->router->generate('supplies_supply_select2'),
@@ -162,7 +167,7 @@ class ProductType extends AbstractType
                     ->add('brand', EntityType::class, [
                         'placeholder' => '',
                         'class' => Brand::class,
-                        'choices' => [],
+                        'choices' => $this->brandRepository->findGrantedByHouseholdAndId($this->household, intval($brandId)),
                         'attr' => [
                             'class' => 'form-control select2field',
                             'data-json-url' => $this->router->generate('supplies_brand_select2'),
