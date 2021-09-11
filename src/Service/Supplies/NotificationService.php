@@ -45,7 +45,7 @@ class NotificationService
             $gn->setNote($item->getBestBeforeDate()->format('d.m.Y'));
             $gn->setItemId($item->getId());
 
-            if($item->getBestBeforeDate() <= (new DateTime())->modify("midnight")) {
+            if($item->getBestBeforeDate() < (new DateTime())->modify("midnight")) {
                 $gn->setCssClass('danger');
             }elseif($item->getBestBeforeDate() <= (new DateTime())->modify("midnight")->modify('+ ' . $daysLeftWarning . ' days')) {
                 $gn->setCssClass('warning');
