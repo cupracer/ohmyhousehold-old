@@ -99,7 +99,8 @@
 
 
 {% block navbar_notifications_dropdown %}
-    {{ include('supplies/_navbar_notifications_supply_items.html.twig') }}
+    {{ include('supplies/_navbar_notifications_expiring_supply_items.html.twig') }}
+    {{ include('supplies/_navbar_notifications_running_low_supplies.html.twig') }}
 {% endblock navbar_notifications_dropdown %}
 
 

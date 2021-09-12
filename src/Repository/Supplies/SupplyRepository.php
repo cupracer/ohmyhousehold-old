@@ -185,6 +185,44 @@ class SupplyRepository extends ServiceEntityRepository
         });
     }
 
+    /**
+     * @return Supply[] Returns an array of Supply objects
+     */
+    public function findAllRunningLowSuppliesGrantedByHousehold(Household $household): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.household = :household')
+            ->setParameter('household', $household)
+            ->orderBy('LOWER(s.name)', 'ASC');
+
+        // count supply items
+        $qb
+            ->leftJoin('s.products', 'p')
+            ->leftJoin('p.items',
+                'i',
+                Join::WITH,
+                $qb->expr()->isNull('i.withdrawalDate')
+            )
+            ->addSelect('COUNT(i) AS numUsage')
+            ->groupBy('s.id')
+          ;
+
+        $qb
+            ->andWhere('s.minimumNumber > 0')
+            ->having('COUNT(i) < s.minimumNumber');
+
+        $supplies = $qb
+            ->getQuery()
+            ->execute()
+        ;
+
+        return array_filter($supplies, function (array $supplyData) {
+            /** @var Supply $supply */
+            $supply = $supplyData[0];
+            return $this->security->isGranted('view', $supply);
+        });
+    }
+
     // /**
     //  * @return Supply[] Returns an array of Supply objects
     //  */

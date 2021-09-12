@@ -445,6 +445,10 @@
         <source>{total} expiring supply item(s)</source>
         <target>{total} ablaufende Artikel</target>
       </trans-unit>
+      <trans-unit id="total_running_low_supplies">
+        <source>{total} running low supplies</source>
+        <target>{total} zur Neige gehende Vorräte</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

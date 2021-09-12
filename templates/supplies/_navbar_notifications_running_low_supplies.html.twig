@@ -1,11 +1,11 @@
 {% if is_granted('ROLE_SUPPLIES') %}
-    {% if navbarSupplyItemNotifications is defined %}
-        {% set total = navbarSupplyItemNotifications|length %}
+    {% if navbarRunningLowSuppliesNotifications is defined %}
+        {% set total = navbarRunningLowSuppliesNotifications|length %}
 
         {% if total > 0 %}
             {% set badgeColor = 'warning' %}
 
-            {% for n in navbarSupplyItemNotifications %}
+            {% for n in navbarRunningLowSuppliesNotifications %}
                 {% if n.cssClass == 'danger' %}
                     {% set badgeColor = 'danger' %}
                 {% endif %}
@@ -14,16 +14,19 @@
             <!-- Notifications Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-shopping-cart"></i>
+                    <i class="far fa-cubes"></i>
                     <span class="badge badge-{{ badgeColor }} navbar-badge">{{ total }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dropdown-menu-lg-supply-items">
-                    <span class="dropdown-item dropdown-header">{{ '{total} expiring supply item(s)'|trans({'{total}': total}) }}</span>
+                    <span class="dropdown-item dropdown-header">{{ '{total} running low supplies'|trans({'{total}': total}) }}</span>
                     <div class="dropdown-divider"></div>
-                    {% for n in navbarSupplyItemNotifications %}
-                        <a href="{{ path('supplies_item_index') }}" class="dropdown-item">
+                    {% for n in navbarRunningLowSuppliesNotifications %}
+                        <a href="{{ path('supplies_supply_index') }}" class="dropdown-item">
                             {{ n.title|u.truncate(40, '...') }}
-                            <span class="float-right text-sm{% if n.cssClass %} text-{{ n.cssClass }}{% else %} text-muted{% endif %}">{{ n.note }}</span>
+                            <span class="float-right text-sm{% if n.cssClass %} text-{{ n.cssClass }}{% else %} text-muted{% endif %}">
+{#                                <button class="btn btn-xs btn-block bg-gradient-{{ n.cssClass }}">{{ n.note }}</button>#}
+                                {{ n.note }}
+                            </span>
                         </a>
                     {% endfor %}
                 </div>

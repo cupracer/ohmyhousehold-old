@@ -32,7 +32,8 @@ class TwigEventSubscriber implements EventSubscriberInterface
 //        $this->twig->addGlobal('navbarNotifications', $this->notificationService->getCategorizedNotifications());
 
         if($this->security->isGranted('ROLE_SUPPLIES')) {
-            $this->twig->addGlobal('navbarSupplyItemNotifications', $this->notificationService->getExpiringSupplyItems());
+            $this->twig->addGlobal('navbarExpiringSupplyItemNotifications', $this->notificationService->getExpiringSupplyItems());
+            $this->twig->addGlobal('navbarRunningLowSuppliesNotifications', $this->notificationService->getRunningLowSupplies());
         }
     }
 
