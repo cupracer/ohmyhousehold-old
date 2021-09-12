@@ -129,9 +129,6 @@ class SupplyRepository extends ServiceEntityRepository
                 case "category":
                     $query->addOrderBy('LOWER(c.name)', $order['dir']);
                     break;
-                case "minimumNumber":
-                    $query->addOrderBy('s.minimumNumber', $order['dir']);
-                    break;
                 case "usageCount":
                     $query
                         ->addOrderBy('orderValue', $order['dir'])
