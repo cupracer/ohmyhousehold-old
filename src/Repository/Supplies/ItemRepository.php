@@ -94,9 +94,13 @@ class ItemRepository extends ServiceEntityRepository
             ->andWhere('hhu.user = :user')
             ->andWhere($query->expr()->isNull('i.withdrawalDate'))
             ->setParameter('household', $household)
-            ->setParameter('user', $this->security->getUser())
-            ->setFirstResult($start)
-            ->setMaxResults($length);
+            ->setParameter('user', $this->security->getUser());
+
+        if($length > 0) {
+            $query
+                ->setFirstResult($start)
+                ->setMaxResults($length);
+        }
 
         if($search) {
             $query

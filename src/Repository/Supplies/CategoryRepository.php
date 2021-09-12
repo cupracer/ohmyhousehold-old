@@ -77,9 +77,13 @@ class CategoryRepository extends ServiceEntityRepository
             ->innerJoin('hh.householdUsers', 'hhu')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
-            ->setParameter('user', $this->security->getUser())
-            ->setFirstResult($start)
-            ->setMaxResults($length);
+            ->setParameter('user', $this->security->getUser());
+
+        if($length > 0) {
+            $query
+                ->setFirstResult($start)
+                ->setMaxResults($length);
+        }
 
         if($search) {
             // TODO: enable searching for more columns (as defined by Datatables)
