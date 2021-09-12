@@ -5,6 +5,7 @@ namespace App\Repository\Supplies;
 use App\Entity\Household;
 use App\Entity\Supplies\Supply;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -98,17 +99,43 @@ class SupplyRepository extends ServiceEntityRepository
                 ->setParameter('search', '%' . $search . '%');
         }
 
+        // count supply items
+        $query
+            ->leftJoin('s.products', 'p')
+            ->leftJoin('p.items',
+                'i',
+                Join::WITH,
+                $query->expr()->isNull('i.withdrawalDate')
+            )
+            ->addSelect('COUNT(i) AS numUsage')
+        ->groupBy('s.id');
+
+
+        // set order value
+        $query
+            ->addSelect('CASE 
+                WHEN s.minimumNumber IS NULL AND COUNT(i) = 0 THEN 2
+                WHEN s.minimumNumber IS NULL AND COUNT(i) > 0 THEN 1
+                WHEN s.minimumNumber >= 0 AND COUNT(i) = 0 THEN 0
+                WHEN s.minimumNumber >= 0 AND COUNT(i) > 0 AND COUNT(i) < s.minimumNumber THEN -1
+                WHEN s.minimumNumber > 0 AND COUNT(i) >= s.minimumNumber THEN -2
+                ELSE -2 END AS orderValue');
+
         foreach($orderingData as $order) {
             switch ($order['name']) {
                 case "name":
                     $query->addOrderBy('LOWER(s.name)', $order['dir']);
                     break;
                 case "category":
-                    $query
-                        ->addOrderBy('LOWER(c.name)', $order['dir']);
+                    $query->addOrderBy('LOWER(c.name)', $order['dir']);
                     break;
                 case "minimumNumber":
                     $query->addOrderBy('s.minimumNumber', $order['dir']);
+                    break;
+                case "usageCount":
+                    $query
+                        ->addOrderBy('orderValue', $order['dir'])
+                        ->addOrderBy('LOWER(s.name)', 'ASC');
                     break;
             }
         }

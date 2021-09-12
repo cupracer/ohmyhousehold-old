@@ -34,7 +34,7 @@ class SupplyService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'category', 'minimumNumber', ],
+            ['name', 'category', 'minimumNumber', 'usageCount', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -44,18 +44,22 @@ class SupplyService extends DatatablesService
 
         $tableData = [];
 
-        /** @var Supply $row */
         foreach($result['data'] as $row) {
+            /** @var Supply $supply */
+            $supply = $row[0];
+
             $rowData = [
-                'id' => $row->getId(),
-                'name' => $row->getName(),
-                'category' => $row->getCategory()->getName(),
-                'minimumNumber' => $row->getMinimumNumber(),
-                'usageCount' => $this->getUsageCount($row),
+                'id' => $supply->getId(),
+                'name' => $supply->getName(),
+                'category' => $supply->getCategory()->getName(),
+                'minimumNumber' => $supply->getMinimumNumber(),
+                'usageCount' => $row['numUsage'],
             ];
 
+            $rowData['orderValue'] = $row['orderValue'];
+
             $rowData['editLink'] = $this->urlGenerator->generate(
-                'supplies_supply_edit', ['id' => $row->getId()]);
+                'supplies_supply_edit', ['id' => $supply->getId()]);
 
             $tableData[] = $rowData;
         }
@@ -87,11 +91,13 @@ class SupplyService extends DatatablesService
 
         $tableData = [];
 
-        /** @var Supply $row */
         foreach($result['data'] as $row) {
+            /** @var Supply $supply */
+            $supply = $row[0];
+
             $rowData = [
-                'id' => $row->getId(),
-                'text' => $row->getName(),
+                'id' => $supply->getId(),
+                'text' => $supply->getName(),
             ];
 
             $tableData[] = $rowData;
@@ -103,19 +109,5 @@ class SupplyService extends DatatablesService
                 'more' => $start + $length < $result['recordsFiltered'],
             ]
         ];
-    }
-
-    /**
-     * @param Supply $supply
-     * @return int
-     */
-    protected function getUsageCount(Supply $supply): int {
-        $count = 0;
-
-        foreach($supply->getProducts() as $product) {
-            $count+= count($product->getItems());
-        }
-
-        return $count;
     }
 }
