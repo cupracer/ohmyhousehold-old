@@ -3,18 +3,26 @@
         {% set total = navbarSupplyItemNotifications|length %}
 
         {% if total > 0 %}
+            {% set badgeColor = 'warning' %}
+
+            {% for n in navbarSupplyItemNotifications %}
+                {% if n.cssClass == 'danger' %}
+                    {% set badgeColor = 'danger' %}
+                {% endif %}
+            {% endfor %}
+
             <!-- Notifications Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-bell"></i>
-                    <span class="badge badge-warning navbar-badge">{{ total }}</span>
+                    <i class="far fa-shopping-cart"></i>
+                    <span class="badge badge-{{ badgeColor }} navbar-badge">{{ total }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right dropdown-menu-lg-supply-items">
                     <span class="dropdown-item dropdown-header">{{ '{total} expiring supply item(s)'|trans({'{total}': total}) }}</span>
                     <div class="dropdown-divider"></div>
                     {% for n in navbarSupplyItemNotifications %}
                         <a href="{{ path('supplies_item_index') }}" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> {{ n.title|u.truncate(40, '...') }}
+                            {{ n.title|u.truncate(40, '...') }}
                             <span class="float-right text-sm{% if n.cssClass %} text-{{ n.cssClass }}{% else %} text-muted{% endif %}">{{ n.note }}</span>
                         </a>
                     {% endfor %}
