@@ -48,7 +48,43 @@ $(document).ready(function () {
                 data: "usageCount",
                 defaultContent: "-",
                 class: "min text-right",
-                orderable: false,
+                render: function (data, type, row) {
+                    let minCount = row['minimumNumber'];
+                    let buttonColor = 'primary';
+                    let buttonText = row['usageCount'];
+                    let titleText = "current: " + row['usageCount'];
+
+                    if(minCount) {
+                        buttonText = row['usageCount'] + ' / ' + minCount;
+                        titleText = "current: " + row['usageCount'] + ' / min: ' + minCount;
+                    }
+
+                    if(minCount && row['usageCount'] >= minCount) {
+                        buttonColor = 'success';
+                    }
+
+                    if(minCount && row['usageCount'] < minCount && row['usageCount'] > 0) {
+                        buttonColor = 'warning';
+                    }
+
+                    if(minCount && row['usageCount'] < minCount && row['usageCount'] === 0) {
+                        buttonColor = 'danger';
+                    }
+
+                    let button = '<button class="btn btn-xs btn-block bg-gradient-' + buttonColor + '" title="' + titleText + '">' + buttonText + '</button>';
+
+                    if(!minCount && row['usageCount'] === 0) {
+                        return '';
+                        // }else if(row['usageCount'] > 0) {
+                        //     return '<a href="/supplies/supply_items/by_supply/' + row['id'] + '/">' + button + '</a>';
+                    }else {
+                        return button;
+                    }
+                }
+            },
+            {
+                data: "orderValue",
+                visible: false,
             },
             {
                 class: "min",

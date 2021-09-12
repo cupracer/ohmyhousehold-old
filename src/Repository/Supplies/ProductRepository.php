@@ -5,6 +5,7 @@ namespace App\Repository\Supplies;
 use App\Entity\Household;
 use App\Entity\Supplies\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -126,23 +127,38 @@ class ProductRepository extends ServiceEntityRepository
             $query->setParameter('search', '%' . $search . '%');
         }
 
+        // count supply items
+        $query
+            ->leftJoin('p.items',
+                'i',
+                Join::WITH,
+                $query->expr()->isNull('i.withdrawalDate')
+            )
+            ->addSelect('COUNT(i) AS numUsage')
+            ->groupBy('p.id');
+
+        // set order value
+        $query
+            ->addSelect('CASE 
+                WHEN p.minimumNumber IS NULL AND COUNT(i) = 0 THEN 2
+                WHEN p.minimumNumber IS NULL AND COUNT(i) > 0 THEN 1
+                WHEN p.minimumNumber >= 0 AND COUNT(i) = 0 THEN 0
+                WHEN p.minimumNumber >= 0 AND COUNT(i) > 0 AND COUNT(i) < p.minimumNumber THEN -1
+                WHEN p.minimumNumber > 0 AND COUNT(i) >= p.minimumNumber THEN -2
+                ELSE -2 END AS orderValue');
+
         if($inUseOnly) {
-            $query
-                ->leftJoin('p.items',
-                    'i',
-                    Join::WITH,
-                    $query->expr()->isNull('i.withdrawalDate')
-                )
-                ->andWhere($query->expr()->isNotNull('i'))
-            ;
+            $query->andWhere($query->expr()->isNotNull('i'));
         }
+
+        // add nameSortColumn (use supply name if product name is empty)
+        $query->addSelect('CASE WHEN p.name IS NULL THEN LOWER(s.name) ELSE LOWER(p.name) END AS HIDDEN nameSortColumn');
 
         foreach($orderingData as $order) {
             switch ($order['name']) {
                 case "name":
                     $query
-                        ->addSelect('CASE WHEN p.name IS NULL THEN LOWER(s.name) ELSE LOWER(p.name) END AS HIDDEN nameColumn')
-                        ->addOrderBy('nameColumn', $order['dir']);
+                        ->addOrderBy('nameSortColumn', $order['dir']);
                     break;
                 case "brand":
                     $query->addOrderBy('LOWER(b.name)', $order['dir']);
@@ -155,6 +171,11 @@ class ProductRepository extends ServiceEntityRepository
                     break;
                 case "packaging":
                     $query->addOrderBy('LOWER(pkg.name)', $order['dir']);
+                    break;
+                case "usageCount":
+                    $query
+                        ->addOrderBy('orderValue', $order['dir'])
+                        ->addOrderBy('nameSortColumn', 'ASC');
                     break;
             }
         }

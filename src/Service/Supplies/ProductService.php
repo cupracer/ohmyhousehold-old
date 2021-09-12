@@ -35,7 +35,7 @@ class ProductService extends DatatablesService
         }
 
         $orderingData = $this->getOrderingData(
-            ['name', 'brand', 'ean', 'category', 'packaging', ],
+            ['name', 'brand', 'ean', 'category', 'packaging', 'usageCount', ],
             (array) $request->query->get('columns'),
             (array) $request->query->get('order')
         );
@@ -45,22 +45,25 @@ class ProductService extends DatatablesService
 
         $tableData = [];
 
-        /** @var Product $row */
         foreach($result['data'] as $row) {
+            /** @var Product $product */
+            $product = $row[0];
             $rowData = [
-                'id' => $row->getId(),
-                'name' => $row->getSupply()->getName() . ($row->getName() ? ' - ' . $row->getName() : ''),
-                'brand' => $row->getBrand()->getName(),
-                'ean' => $row->getEan(),
-                'category' => $row->getSupply()->getCategory()->getName(),
-                'packaging' => $row->getPackaging()?->getName(),
-                'amount' => 1*$row->getQuantity() . $row->getMeasure()->getName(),
-                'usageCount' => $this->getUsageCount($row),
-                'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt())
+                'id' => $product->getId(),
+                'name' => $product->getSupply()->getName() . ($product->getName() ? ' - ' . $product->getName() : ''),
+                'brand' => $product->getBrand()->getName(),
+                'ean' => $product->getEan(),
+                'category' => $product->getSupply()->getCategory()->getName(),
+                'packaging' => $product->getPackaging()?->getName(),
+                'amount' => 1*$product->getQuantity() . $product->getMeasure()->getName(),
+                'minimumNumber' => $product->getMinimumNumber(),
+                'usageCount' => $row['numUsage'],
+                'orderValue' => $row['orderValue'],
+                'createdAt' => IntlDateFormatter::formatObject($product->getCreatedAt())
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(
-                'supplies_product_edit', ['id' => $row->getId()]);
+                'supplies_product_edit', ['id' => $product->getId()]);
 
             $tableData[] = $rowData;
         }
@@ -92,14 +95,15 @@ class ProductService extends DatatablesService
 
         $tableData = [];
 
-        /** @var Product $row */
         foreach($result['data'] as $row) {
+            /** @var Product $product */
+            $product = $row[0];
             $rowData = [
-                'id' => $row->getId(),
-                'text' => $row->getSupply()->getName() .
-                    ($row->getName() ? ' - ' . $row->getName() : '') .
-                    ' - ' . $row->getBrand()->getName() .
-                    ' - ' . 1*$row->getQuantity() . $row->getMeasure()->getName(),
+                'id' => $product->getId(),
+                'text' => $product->getSupply()->getName() .
+                    ($product->getName() ? ' - ' . $product->getName() : '') .
+                    ' - ' . $product->getBrand()->getName() .
+                    ' - ' . 1*$product->getQuantity() . $product->getMeasure()->getName(),
             ];
 
             $tableData[] = $rowData;
@@ -111,13 +115,5 @@ class ProductService extends DatatablesService
                 'more' => $start + $length < $result['recordsFiltered'],
             ]
         ];
-    }
-
-    /**
-     * @param Product $product
-     * @return int
-     */
-    protected function getUsageCount(Product $product): int {
-        return count($product->getItems());
     }
 }
