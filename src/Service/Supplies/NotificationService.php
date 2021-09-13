@@ -38,6 +38,11 @@ class NotificationService
     {
         $notifications = [];
 
+        //TODO: Is there a better way to ensure a usable household variable?
+        if(!$this->household) {
+            return $notifications;
+        }
+
         //TODO: make variables configurable
         $daysLeftLimit = 14;
         $daysLeftWarning = 7;
@@ -66,6 +71,11 @@ class NotificationService
     public function getRunningLowSupplies(): array
     {
         $notifications = [];
+
+        //TODO: Is there a better way to ensure a usable household variable?
+        if(!$this->household) {
+            return $notifications;
+        }
 
         foreach($this->supplyRepository->findAllRunningLowSuppliesGrantedByHousehold($this->household) as $row) {
             /** @var Supply $supply */
