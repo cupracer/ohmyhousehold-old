@@ -49,11 +49,11 @@ class AssetAccountRepository extends ServiceEntityRepository
     /**
      * @return AssetAccount[] Returns an array of AssetAccount objects
      */
-    public function findAllOwnedAssetAccountsByHousehold(Household $household, HouseholdUser $householdUser): array
+    public function findAllOwnedAssetAccountsByHousehold(Household $household, HouseholdUser $householdUser, bool $excludeCurrent = false, bool $excludeSavings = false, bool $excludePrepaid = false, $excludePortfolio = false): array
     {
         $qb = $this->createQueryBuilder('a');
 
-        return $qb
+        $qb
             ->leftJoin('a.household', 'hh')
             ->leftJoin('hh.householdUsers', 'hhu')
             ->andWhere('a.household = :household')
@@ -67,7 +67,33 @@ class AssetAccountRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->isMemberOf(':householdUser', 'a.owners'))
             ->setParameter('household', $household)
             ->setParameter('householdUser', $householdUser)
-            ->orderBy('LOWER(a.name)', 'ASC')
+            ->orderBy('LOWER(a.name)', 'ASC');
+
+        if($excludeCurrent) {
+            $qb
+                ->andWhere($qb->expr()->neq('a.accountType', ':currentAccount'))
+                ->setParameter('currentAccount', AssetAccount::TYPE_CURRENT);
+        }
+
+        if($excludeSavings) {
+            $qb
+                ->andWhere($qb->expr()->neq('a.accountType', ':savingsAccount'))
+                ->setParameter('savingsAccount', AssetAccount::TYPE_SAVINGS);
+        }
+
+        if($excludePrepaid) {
+            $qb
+                ->andWhere($qb->expr()->neq('a.accountType', ':prepaidAccount'))
+                ->setParameter('prepaidAccount', AssetAccount::TYPE_PREPAID);
+        }
+
+        if($excludePortfolio) {
+            $qb
+                ->andWhere($qb->expr()->neq('a.accountType', ':portfolioAccount'))
+                ->setParameter('portfolioAccount', AssetAccount::TYPE_PORTFOLIO);
+        }
+
+        return $qb
             ->getQuery()
             ->execute()
         ;

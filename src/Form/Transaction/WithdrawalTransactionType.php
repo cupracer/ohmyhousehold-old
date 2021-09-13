@@ -101,7 +101,8 @@ class WithdrawalTransactionType extends AbstractType
             ->add('source', EntityType::class, [
                 'placeholder' => '',
                 'class' => AssetAccount::class,
-                'choices' => $this->assetAccountRepository->findAllOwnedAssetAccountsByHousehold($this->household, $this->householdUser),
+                'choices' => $this->assetAccountRepository->findAllOwnedAssetAccountsByHousehold($this->household, $this->householdUser, false, false, false, false),
+                'preferred_choices' => $this->assetAccountRepository->findAllOwnedAssetAccountsByHousehold($this->household, $this->householdUser, false, true, true, true),
                 'label' => t('source'),
                 'attr' => [
                     'class' => 'form-control select2field',

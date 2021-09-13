@@ -51,6 +51,7 @@ class AssetAccountType extends AbstractType
                     'Current' => AssetAccount::TYPE_CURRENT,
                     'Savings' => AssetAccount::TYPE_SAVINGS,
                     'Prepaid' => AssetAccount::TYPE_PREPAID,
+                    'Portfolio' => AssetAccount::TYPE_PORTFOLIO,
                 ],
                 'attr' => [
                     'class' => 'form-control select2field',

@@ -92,7 +92,7 @@ class ReportService extends DatatablesService
 
         /** @var AssetAccount $assetAccount */
         foreach($assetAccounts as $assetAccount) {
-            if(in_array($assetAccount->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID])) {
+            if(in_array($assetAccount->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID, AssetAccount::TYPE_PORTFOLIO])) {
                 $data['deposit'] = $this->moneyCalc->add($data['deposit'], $assetAccount->getInitialBalance());
             }
         }
@@ -116,13 +116,13 @@ class ReportService extends DatatablesService
                     }
                     break;
                 case $transaction instanceof TransferTransaction:
-                    if(in_array($transaction->getSource()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID]) && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
+                    if(in_array($transaction->getSource()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID, AssetAccount::TYPE_PORTFOLIO]) && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
                         if($transaction->getBookingDate() <= (new DateTime())->modify('midnight')) {
                             $data['savings'] = $this->moneyCalc->add($data['savings'], $transaction->getAmount());
                         }else {
                             $data['upcomingSavings'] = $this->moneyCalc->add($data['upcomingSavings'], $transaction->getAmount());
                         }
-                    }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && in_array($transaction->getDestination()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID])) {
+                    }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && in_array($transaction->getDestination()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID, AssetAccount::TYPE_PORTFOLIO])) {
                         if($transaction->getBookingDate() <= (new DateTime())->modify('midnight')) {
                             $data['savings'] = $this->moneyCalc->subtract($data['savings'], $transaction->getAmount());
                         }else {
@@ -142,9 +142,9 @@ class ReportService extends DatatablesService
                     $data['upcomingWithdrawal'] = $this->moneyCalc->add($data['upcomingWithdrawal'], $transaction->getAmount());
                     break;
                 case $transaction instanceof TransferTransaction:
-                    if(in_array($transaction->getSource()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID]) && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
+                    if(in_array($transaction->getSource()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID, AssetAccount::TYPE_PORTFOLIO]) && $transaction->getDestination()->getAccountType() === AssetAccount::TYPE_SAVINGS) {
                         $data['upcomingSavings'] = $this->moneyCalc->add($data['upcomingSavings'], $transaction->getAmount());
-                    }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && in_array($transaction->getDestination()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID])) {
+                    }elseif ($transaction->getSource()->getAccountType() === AssetAccount::TYPE_SAVINGS && in_array($transaction->getDestination()->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID, AssetAccount::TYPE_PORTFOLIO])) {
                         $data['upcomingSavings'] = $this->moneyCalc->subtract($data['upcomingSavings'], $transaction->getAmount());
                     }
                     break;
