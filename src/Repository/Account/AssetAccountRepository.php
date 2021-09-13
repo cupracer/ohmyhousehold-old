@@ -49,7 +49,7 @@ class AssetAccountRepository extends ServiceEntityRepository
     /**
      * @return AssetAccount[] Returns an array of AssetAccount objects
      */
-    public function findAllUsableByHousehold(Household $household, HouseholdUser $householdUser): array
+    public function findAllOwnedAssetAccountsByHousehold(Household $household, HouseholdUser $householdUser): array
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -57,10 +57,14 @@ class AssetAccountRepository extends ServiceEntityRepository
             ->leftJoin('a.household', 'hh')
             ->leftJoin('hh.householdUsers', 'hhu')
             ->andWhere('a.household = :household')
-            ->andWhere($qb->expr()->orX(
-                $qb->expr()->eq('hhu.isAdmin', 'true'),
-                $qb->expr()->isMemberOf(':householdUser', 'a.owners')
-            ))
+//            ->andWhere($qb->expr()->orX(
+//                $qb->expr()->andX(
+//                    $qb->expr()->eq('hhu.isAdmin', 'true'),
+//                    $qb->expr()->eq('hhu', ':householdUser'),
+//                ),
+//                $qb->expr()->isMemberOf(':householdUser', 'a.owners')
+//            ))
+            ->andWhere($qb->expr()->isMemberOf(':householdUser', 'a.owners'))
             ->setParameter('household', $household)
             ->setParameter('householdUser', $householdUser)
             ->orderBy('LOWER(a.name)', 'ASC')

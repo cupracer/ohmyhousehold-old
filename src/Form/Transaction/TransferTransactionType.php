@@ -68,7 +68,7 @@ class TransferTransactionType extends AbstractType
             ->add('source', EntityType::class, [
                 'placeholder' => '',
                 'class' => AssetAccount::class,
-                'choices' => $this->assetAccountRepository->findAllUsableByHousehold($this->household, $this->householdUser),
+                'choices' => $this->assetAccountRepository->findAllOwnedAssetAccountsByHousehold($this->household, $this->householdUser),
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],
