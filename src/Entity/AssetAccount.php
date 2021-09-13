@@ -14,6 +14,7 @@ class AssetAccount extends BaseAccount
 {
     public const TYPE_CURRENT = 'current';
     public const TYPE_SAVINGS = 'savings';
+    public const TYPE_PREPAID = 'prepaid';
 
     /**
      * @ORM\Column(type="string", length=255)
