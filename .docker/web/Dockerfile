@@ -48,7 +48,7 @@ RUN mkdir /var/www/.yarn \
     && chown www-data: /var/www/.cache/yarn \
 	&& touch /var/www/.yarnrc \
 	&& chown www-data: /var/www/.yarnrc \
-	&& su www-data --shell=/bin/bash -c "yarn install" \
+	&& su www-data --shell=/bin/bash -c "yarn install --production" \
 	&& su www-data --shell=/bin/bash -c "yarn encore prod"
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
