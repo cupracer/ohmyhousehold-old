@@ -100,12 +100,16 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 CMD [ "/start.sh" ]
 
-ENV APP_ENV=""
-ENV APP_SECRET=""
-ENV SITE_URI=""
-ENV SSL_SUBJECT=""
-ENV DATABASE_URL=""
-ENV MAILER_DSN=""
-ENV SUPER_ADMIN_EMAIL=""
-ENV MAILER_SENDER_ADDRESS=""
-ENV MAILER_SENDER_NAME=""
+EXPOSE 80
+EXPOSE 443
+
+ENV APP_ENV="" \
+    APP_SECRET="" \
+    SITE_URI="" \
+    SSL_SUBJECT="" \
+    DATABASE_URL="" \
+    MAILER_DSN="" \
+    SUPER_ADMIN_EMAIL="" \
+    MAILER_SENDER_ADDRESS="" \
+    MAILER_SENDER_NAME=""
+

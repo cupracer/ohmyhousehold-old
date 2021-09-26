@@ -1,13 +1,7 @@
 {
     "devDependencies": {
-        "@symfony/stimulus-bridge": "^2.0.0",
-        "@symfony/webpack-encore": "^1.0.0",
-        "core-js": "^3.0.0",
-        "node-sass": "^6.0.1",
         "regenerator-runtime": "^0.13.2",
-        "sass-loader": "^12",
-        "stimulus": "^2.0.0",
-        "webpack-notifier": "^1.6.0"
+        "stimulus": "^2.0.0"
     },
     "license": "Apache-2.0",
     "private": true,
@@ -18,11 +12,17 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@symfony/stimulus-bridge": "^2.0.0",
+        "@symfony/webpack-encore": "^1.0.0",
         "admin-lte": "^3.1.0",
         "copy-webpack-plugin": "^9.0.1",
+        "core-js": "^3.0.0",
         "datatables.net-plugins": "^1.10.24",
         "file-loader": "^6.2.0",
         "jquery": "^3.6.0",
-        "source-sans-pro": "^3"
+        "node-sass": "^6.0.1",
+        "sass-loader": "^12",
+        "source-sans-pro": "^3",
+        "webpack-notifier": "^1.6.0"
     }
 }
