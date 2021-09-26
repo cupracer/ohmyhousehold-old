@@ -1,6 +1,18 @@
 $(document).ready(function () {
     let datatable = $('#transactions');
     datatable.DataTable({
+        dom: 'fBrtip',
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    modifier: {
+                        search: 'none'
+                    },
+                    orthogonal: 'sort'
+                }
+            },
+        ],
         paging: false,
         serverSide: false,
         lengthChange: true,
@@ -63,10 +75,10 @@ $(document).ready(function () {
                                 output+= '<i class="text-gray far fa-meh"></i>';
                                 break;
                             default:
-                                output+= data;
+                                output = data;
                         }
                     }else {
-                        output+= data;
+                        output = data;
                     }
 
                     return output;
