@@ -449,6 +449,10 @@
         <source>{total} running low supplies</source>
         <target>{total} zur Neige gehende Vorräte</target>
       </trans-unit>
+      <trans-unit id="apply.button">
+        <source>apply.button</source>
+        <target>Anwenden</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
