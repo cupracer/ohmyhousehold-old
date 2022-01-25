@@ -193,11 +193,11 @@ class AssetAccountRepository extends ServiceEntityRepository
     /**
      * @return AssetAccount[] Returns an array of AssetAccount objects
      */
-    public function findAllByHouseholdAndInitialBalanceDateInRange(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function findAllByHouseholdAndInitialBalanceDateInRange(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember): array
     {
         $qb = $this->createQueryBuilder('a');
 
-        $accounts = $this->createQueryBuilder('a')
+        $qb
             ->andWhere('a.household = :household')
             ->andWhere(
                 $qb->expr()->andX(
@@ -209,6 +209,16 @@ class AssetAccountRepository extends ServiceEntityRepository
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
             ->orderBy('LOWER(a.name)', 'ASC')
+        ;
+
+        if($filterByMember) {
+            $qb
+                ->andWhere($qb->expr()->isMemberOf(':householdUser', 'a.owners'))
+                ->setParameter('householdUser', $filterByMember)
+            ;
+        }
+
+        $accounts = $qb
             ->getQuery()
             ->execute()
         ;

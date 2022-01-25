@@ -5,6 +5,7 @@ namespace App\Controller\Report;
 use App\Entity\DTO\PeriodicalReportDTO;
 use App\Entity\User;
 use App\Form\PeriodicalReportType;
+use App\Repository\HouseholdUserRepository;
 use App\Service\Report\ReportService;
 use App\Service\UserSettingsService;
 use DateTime;
@@ -13,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -40,23 +42,34 @@ class PeriodicalReportController extends AbstractController
     }
 
     #[Route('/{year}/{month}', name: 'housekeepingbook_report_periodical_index', requirements: ['year' => '\d{4}', 'month' => '\d{1,2}'], methods: ['GET', 'POST'])]
-    public function index(int $year, int $month, Request $request, ReportService $reportService): Response
+    public function index(int $year, int $month, Request $request, SessionInterface $session, ReportService $reportService, HouseholdUserRepository $householdUserRepository): Response
     {
         $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
-        $data = $reportService->getDataAsArray($currentHousehold, $year, $month);
 
         /** @var User $user */
         $user = $this->getUser();
 
         $periodicalReport = new PeriodicalReportDTO();
+
+        if($session->has('housekeepingbook_periodical_report_member_id')) {
+            $id = $householdUserRepository->find($session->get('housekeepingbook_periodical_report_member_id'));
+            if($id) {
+                $periodicalReport->setMember($householdUserRepository->find($id));
+            }
+        }
+
         $periodicalReportForm = $this->createForm(PeriodicalReportType::class, $periodicalReport);
         $periodicalReportForm->handleRequest($request);
 
-        $filterForMember = null;
-
         if ($periodicalReportForm->isSubmitted() && $periodicalReportForm->isValid()) {
-            $filterForMember = $periodicalReport->getMember();
+            if($periodicalReport->getMember()) {
+                $session->set('housekeepingbook_periodical_report_member_id', $periodicalReport->getMember()->getId());
+            }else {
+                $session->remove('housekeepingbook_periodical_report_member_id');
+            }
         }
+
+        $data = $reportService->getDataAsArray($currentHousehold, $year, $month, $periodicalReport->getMember());
 
         // Formats: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
         $dateFormatter = new IntlDateFormatter($user->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, pattern: 'LLLL YYYY');

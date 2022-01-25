@@ -4,6 +4,7 @@ namespace App\Repository\Transaction;
 
 use App\Entity\DepositTransaction;
 use App\Entity\Household;
+use App\Entity\HouseholdUser;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,11 +50,11 @@ class DepositTransactionRepository extends ServiceEntityRepository
     /**
      * @return DepositTransaction[] Returns an array of DepositTransaction objects
      */
-    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember): array
     {
         $qb = $this->createQueryBuilder('a');
 
-        return $qb
+        $qb
             ->andWhere('a.household = :household')
             ->andWhere(
                 $qb->expr()->andX(
@@ -65,6 +66,16 @@ class DepositTransactionRepository extends ServiceEntityRepository
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
             ->orderBy('a.bookingDate', 'ASC')
+        ;
+
+        if($filterByMember) {
+            $qb
+                ->andWhere('a.householdUser = :householdUser')
+                ->setParameter('householdUser', $filterByMember)
+            ;
+        }
+
+        return $qb
             ->getQuery()
             ->execute()
         ;
