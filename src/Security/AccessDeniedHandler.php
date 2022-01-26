@@ -5,6 +5,7 @@ namespace App\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -24,7 +25,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
         $this->translator = $translator;
     }
 
-    public function handle(Request $request, AccessDeniedException $accessDeniedException)
+    public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
     {
         if(str_starts_with($request->attributes->get('_route'), 'api_')) {
             return new JsonResponse([
