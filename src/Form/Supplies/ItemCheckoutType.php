@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function Symfony\Component\Translation\t;
@@ -20,18 +20,18 @@ use function Symfony\Component\Translation\t;
 
 class ItemCheckoutType extends AbstractType
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private ProductRepository $productRepository;
     private UrlGeneratorInterface $router;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         HouseholdRepository $householdRepository,
         ProductRepository $productRepository,
         UrlGeneratorInterface $router)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->productRepository = $productRepository;
         $this->router = $router;
@@ -41,8 +41,8 @@ class ItemCheckoutType extends AbstractType
     {
         $household = null;
 
-        if($this->session->has('current_household')) {
-            $household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $builder

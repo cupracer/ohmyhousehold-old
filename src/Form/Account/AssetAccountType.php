@@ -13,21 +13,21 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AssetAccountType extends AbstractType
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
 
     private HouseholdRepository $householdRepository;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         HouseholdRepository $householdRepository
     )
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
     }
 
@@ -35,8 +35,8 @@ class AssetAccountType extends AbstractType
     {
         $household = null;
 
-        if($this->session->has('current_household')) {
-            $household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $builder

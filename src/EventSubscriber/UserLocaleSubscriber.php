@@ -4,7 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 
 /**
@@ -13,11 +13,11 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
  */
 class UserLocaleSubscriber implements EventSubscriberInterface
 {
-    private $session;
+    private RequestStack $requestStack;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     public function onLoginSuccess(LoginSuccessEvent $event)
@@ -26,7 +26,7 @@ class UserLocaleSubscriber implements EventSubscriberInterface
         $user = $event->getUser();
 
         if (null !== $user->getUserProfile() && null !== $user->getUserProfile()->getLocale()) {
-            $this->session->set('_locale', $user->getUserProfile()->getLocale());
+            $this->requestStack->getSession()->set('_locale', $user->getUserProfile()->getLocale());
         }
     }
 
