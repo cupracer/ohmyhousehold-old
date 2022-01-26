@@ -20,8 +20,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -29,10 +29,17 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/item')]
 class ItemController extends AbstractController
 {
-    #[Route('/', name: 'supplies_item_index', methods: ['GET'])]
-    public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack)
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $this->requestStack = $requestStack;
+    }
+
+    #[Route('/', name: 'supplies_item_index', methods: ['GET'])]
+    public function index(HouseholdRepository $householdRepository): Response
+    {
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->render('supplies/item/index.html.twig', [
             'pageTitle' => t('Items'),
@@ -41,9 +48,9 @@ class ItemController extends AbstractController
     }
 
     #[Route('/datatables', name: 'supplies_item_datatables', methods: ['GET'])]
-    public function getAsDatatables(Request $request, ItemService $itemService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsDatatables(Request $request, ItemService $itemService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $itemService->getItemsAsDatatablesArray($request, $currentHousehold)
@@ -63,22 +70,21 @@ class ItemController extends AbstractController
     #[Route('/new', name: 'supplies_item_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        SessionInterface $session,
         HouseholdRepository $householdRepository
     ): Response
     {
         $household = null;
 
-        if($session->has('current_household')) {
-            $household = $householdRepository->find($session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $this->denyAccessUnlessGranted('createSuppliesItem', $household);
 
         $createItem = new ItemDTO();
 
-        if($session->has('supplies_item_new_purchase_date')) {
-            $createItem->setPurchaseDate($session->get('supplies_item_new_purchase_date'));
+        if($this->requestStack->getSession()->has('supplies_item_new_purchase_date')) {
+            $createItem->setPurchaseDate($this->requestStack->getSession()->get('supplies_item_new_purchase_date'));
         }else {
             $createItem->setPurchaseDate(new DateTime());
         }
@@ -87,7 +93,7 @@ class ItemController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $session->set('supplies_item_new_purchase_date', $createItem->getPurchaseDate());
+            $this->requestStack->getSession()->set('supplies_item_new_purchase_date', $createItem->getPurchaseDate());
 
             try {
                 for($i = 1; $i <= $createItem->getQuantity(); $i++) {
@@ -240,12 +246,12 @@ class ItemController extends AbstractController
     }
 
     #[Route('/checkout-form/{item}', name: 'supplies_item_checkout_form', methods: ['GET', 'POST'])]
-    public function checkoutForm(Request $request, SessionInterface $session, HouseholdRepository $householdRepository, ItemRepository $itemRepository, Item $item = null): Response
+    public function checkoutForm(Request $request, HouseholdRepository $householdRepository, ItemRepository $itemRepository, Item $item = null): Response
     {
         $household = null;
 
-        if($session->has('current_household')) {
-            $household = $householdRepository->find($session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $this->denyAccessUnlessGranted('checkoutSuppliesItem', $household);

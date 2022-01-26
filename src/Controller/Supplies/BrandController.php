@@ -11,8 +11,8 @@ use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -20,10 +20,17 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/components/brand')]
 class BrandController extends AbstractController
 {
-    #[Route('/', name: 'supplies_brand_index', methods: ['GET'])]
-    public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack)
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $this->requestStack = $requestStack;
+    }
+
+    #[Route('/', name: 'supplies_brand_index', methods: ['GET'])]
+    public function index(HouseholdRepository $householdRepository): Response
+    {
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->render('supplies/brand/index.html.twig', [
             'pageTitle' => t('Brands'),
@@ -32,9 +39,9 @@ class BrandController extends AbstractController
     }
 
     #[Route('/datatables', name: 'supplies_brand_datatables', methods: ['GET'])]
-    public function getAsDatatables(Request $request, BrandService $brandService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsDatatables(Request $request, BrandService $brandService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $brandService->getBrandsAsDatatablesArray($request, $currentHousehold)
@@ -42,9 +49,9 @@ class BrandController extends AbstractController
     }
 
     #[Route('/select2', name: 'supplies_brand_select2', methods: ['GET'])]
-    public function getAsSelect2(Request $request, BrandService $brandService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsSelect2(Request $request, BrandService $brandService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $brandService->getBrandsAsSelect2Array($request, $currentHousehold)
@@ -54,14 +61,13 @@ class BrandController extends AbstractController
     #[Route('/new', name: 'supplies_brand_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        SessionInterface $session,
         HouseholdRepository $householdRepository
     ): Response
     {
         $household = null;
 
-        if($session->has('current_household')) {
-            $household = $householdRepository->find($session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $this->denyAccessUnlessGranted('createSuppliesBrand', $household);

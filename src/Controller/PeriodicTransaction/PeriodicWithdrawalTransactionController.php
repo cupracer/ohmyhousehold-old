@@ -16,8 +16,8 @@ use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -25,14 +25,14 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/periodictransaction/withdrawal')]
 class PeriodicWithdrawalTransactionController extends AbstractController
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private PeriodicWithdrawalTransactionService $periodicWithdrawalTransactionService;
 
-    public function __construct(HouseholdRepository $householdRepository, SessionInterface $session,
+    public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack,
                                 PeriodicWithdrawalTransactionService $periodicWithdrawalTransactionService)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->periodicWithdrawalTransactionService = $periodicWithdrawalTransactionService;
     }
@@ -40,7 +40,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
     #[Route('/', name: 'housekeepingbook_periodic_withdrawal_transaction_index', methods: ['GET'])]
     public function index(): Response
     {
-        $currentHousehold = $this->householdRepository->find($this->session->get('current_household'));
+        $currentHousehold = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->render('housekeepingbook/periodictransaction/withdrawal/index.html.twig', [
             'pageTitle' => t('Periodic Withdrawal Transactions'),
@@ -51,7 +51,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
     #[Route('/datatables', name: 'housekeepingbook_periodic_withdrawal_transaction_datatables', methods: ['GET'])]
     public function getPeriodicWithdrawalTransactionsAsDatatables(Request $request): Response
     {
-        $currentHousehold = $this->householdRepository->find($this->session->get('current_household'));
+        $currentHousehold = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $this->periodicWithdrawalTransactionService->getPeriodicWithdrawalTransactionsAsDatatablesArray($request, $currentHousehold)
@@ -61,7 +61,6 @@ class PeriodicWithdrawalTransactionController extends AbstractController
     #[Route('/new', name: 'housekeepingbook_periodic_withdrawal_transaction_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        SessionInterface $session,
         HouseholdRepository $householdRepository,
         HouseholdUserRepository $householdUserRepository,
         ExpenseAccountRepository $expenseAccountRepository
@@ -70,8 +69,8 @@ class PeriodicWithdrawalTransactionController extends AbstractController
         $household = null;
         $householdUser = null;
 
-        if($session->has('current_household')) {
-            $household = $householdRepository->find($session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
             $householdUser = $householdUserRepository->findOneByUserAndHousehold($this->getUser(), $household);
         }
 
