@@ -37,7 +37,7 @@ class TransferTransactionService extends DatatablesService
         $draw = $request->query->getInt('draw', 1);
         $start = $request->query->getInt('start');
         $length = $request->query->getInt('length', 10);
-        $searchParam = (array) $request->query->get('search');
+        $searchParam = (array) $request->query->all('search');
 
         if(array_key_exists('value', $searchParam)) {
             $search = $searchParam['value'];
@@ -47,8 +47,8 @@ class TransferTransactionService extends DatatablesService
 
         $orderingData = $this->getOrderingData(
             ['bookingDate', 'user', 'source', 'destination', 'description', 'amount',],
-            (array) $request->query->get('columns'),
-            (array) $request->query->get('order')
+            (array) $request->query->all('columns'),
+            (array) $request->query->all('order')
         );
 
         $result = $this->transferTransactionRepository->getFilteredDataByHousehold(
