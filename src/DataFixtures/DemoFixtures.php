@@ -17,14 +17,14 @@ use App\Entity\WithdrawalTransaction;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class DemoFixtures extends Fixture
 {
     private string $superAdminEmail;
-    private UserPasswordEncoderInterface $passwordEncoder;
+    private UserPasswordHasherInterface $passwordEncoder;
 
-    public function __construct(string $superAdminEmail, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(string $superAdminEmail, UserPasswordHasherInterface $passwordEncoder)
     {
         $this->superAdminEmail = $superAdminEmail;
         $this->passwordEncoder = $passwordEncoder;
@@ -48,7 +48,7 @@ class DemoFixtures extends Fixture
             ->setIsVerified(true)
             ->setEmail(strtolower($this->superAdminEmail))
             ->setPassword(
-                $this->passwordEncoder->encodePassword(
+                $this->passwordEncoder->hashPassword(
                     $admin,
                     'secret'
                 ))
@@ -161,7 +161,7 @@ class DemoFixtures extends Fixture
             ->setIsVerified(true)
             ->setEmail(strtolower('member1@example.com'))
             ->setPassword(
-                $this->passwordEncoder->encodePassword(
+                $this->passwordEncoder->hashPassword(
                     $member1,
                     'secret'
                 ))
