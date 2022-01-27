@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     git \
     gnupg \
     libicu-dev \
+    python3 \
     unzip
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
@@ -67,11 +68,11 @@ FROM php:8-apache AS stage-php
 
 RUN mkdir /certs
 
-COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/apcu.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
-COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
-COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/calendar.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
-COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/intl.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
-COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20200930/pdo_mysql.so /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
+COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20210902/apcu.so /usr/local/lib/php/extensions/no-debug-non-zts-20210902/
+COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20210902/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20210902/
+COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20210902/calendar.so /usr/local/lib/php/extensions/no-debug-non-zts-20210902/
+COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20210902/intl.so /usr/local/lib/php/extensions/no-debug-non-zts-20210902/
+COPY --from=stage-php-build /usr/local/lib/php/extensions/no-debug-non-zts-20210902/pdo_mysql.so /usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 
 COPY .docker/web/target/etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/web/target/etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
