@@ -15,8 +15,8 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 #[Route('/{_locale<%app.supported_locales%>}/user/register')]
@@ -35,7 +35,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/', name: 'app_user_register')]
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
     {
         $registerUserRequest = new RegisterUser();
         $form = $this->createForm(RegistrationFormType::class, $registerUserRequest);
@@ -48,7 +48,7 @@ class RegistrationController extends AbstractController
 
             // encode the plain password
             $user->setPassword(
-                $passwordEncoder->encodePassword(
+                $passwordEncoder->hashPassword(
                     $user,
                     $registerUserRequest->getPlainPassword()
                 )
