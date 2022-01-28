@@ -56,6 +56,11 @@ abstract class Transaction implements JsonSerializable
      */
     private $bookingPeriodOffset;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $completed;
+
     public function jsonSerialize()
     {
         return [];
@@ -155,6 +160,24 @@ abstract class Transaction implements JsonSerializable
     {
         $this->bookingPeriodOffset = $bookingPeriodOffset;
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param bool $completed
+     * @return Transaction
+     */
+    public function setCompleted(bool $completed): Transaction
+    {
+        $this->completed = $completed;
         return $this;
     }
 }
