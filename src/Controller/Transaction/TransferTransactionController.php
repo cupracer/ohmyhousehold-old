@@ -94,6 +94,7 @@ class TransferTransactionController extends AbstractController
                 $transferTransaction->setDescription($createTransferTransaction->getDescription());
                 $transferTransaction->setPrivate($createTransferTransaction->getPrivate());
                 $transferTransaction->setBookingPeriodOffset($createTransferTransaction->getBookingPeriodOffset());
+                $transferTransaction->setCompleted($createTransferTransaction->isCompleted());
 
                 // TODO: Do we need to explicitly check that these values are set and not null?
                 $transferTransaction->setHousehold($household);
@@ -130,6 +131,7 @@ class TransferTransactionController extends AbstractController
         $editTransferTransaction->setDescription($transferTransaction->getDescription());
         $editTransferTransaction->setPrivate($transferTransaction->getPrivate());
         $editTransferTransaction->setBookingPeriodOffset($transferTransaction->getBookingPeriodOffset());
+        $editTransferTransaction->setCompleted($transferTransaction->isCompleted());
 
         $form = $this->createForm(TransferTransactionType::class, $editTransferTransaction);
         $form->handleRequest($request);
@@ -145,6 +147,7 @@ class TransferTransactionController extends AbstractController
                 $transferTransaction->setDescription($editTransferTransaction->getDescription());
                 $transferTransaction->setPrivate($editTransferTransaction->getPrivate());
                 $transferTransaction->setBookingPeriodOffset($editTransferTransaction->getBookingPeriodOffset());
+                $transferTransaction->setCompleted($editTransferTransaction->isCompleted());
 
                 $entityManager->flush();
                 $this->addFlash('success', t('Transfer transaction was updated.'));

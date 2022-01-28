@@ -110,6 +110,7 @@ class WithdrawalTransactionController extends AbstractController
                 $withdrawalTransaction->setDescription($createWithdrawalTransaction->getDescription());
                 $withdrawalTransaction->setPrivate($createWithdrawalTransaction->getPrivate());
                 $withdrawalTransaction->setBookingPeriodOffset($createWithdrawalTransaction->getBookingPeriodOffset());
+                $withdrawalTransaction->setCompleted($createWithdrawalTransaction->isCompleted());
 
                 // TODO: Do we need to explicitly check that these values are set and not null?
                 $withdrawalTransaction->setHousehold($household);
@@ -147,6 +148,7 @@ class WithdrawalTransactionController extends AbstractController
         $editWithdrawalTransaction->setDescription($withdrawalTransaction->getDescription());
         $editWithdrawalTransaction->setPrivate($withdrawalTransaction->getPrivate());
         $editWithdrawalTransaction->setBookingPeriodOffset($withdrawalTransaction->getBookingPeriodOffset());
+        $editWithdrawalTransaction->setCompleted($withdrawalTransaction->isCompleted());
 
         $form = $this->createForm(WithdrawalTransactionType::class, $editWithdrawalTransaction);
         $form->handleRequest($request);
@@ -176,6 +178,7 @@ class WithdrawalTransactionController extends AbstractController
                 $withdrawalTransaction->setDescription($editWithdrawalTransaction->getDescription());
                 $withdrawalTransaction->setPrivate($editWithdrawalTransaction->getPrivate());
                 $withdrawalTransaction->setBookingPeriodOffset($editWithdrawalTransaction->getBookingPeriodOffset());
+                $withdrawalTransaction->setCompleted($editWithdrawalTransaction->isCompleted());
 
                 $entityManager->flush();
                 $this->addFlash('success', t('Withdrawal transaction was updated.'));

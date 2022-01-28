@@ -110,6 +110,7 @@ class DepositTransactionController extends AbstractController
                 $depositTransaction->setDescription($createDepositTransaction->getDescription());
                 $depositTransaction->setPrivate($createDepositTransaction->getPrivate());
                 $depositTransaction->setBookingPeriodOffset($createDepositTransaction->getBookingPeriodOffset());
+                $depositTransaction->setCompleted($createDepositTransaction->isCompleted());
 
                 // TODO: Do we need to explicitly check that these values are set and not null?
                 $depositTransaction->setHousehold($household);
@@ -147,6 +148,7 @@ class DepositTransactionController extends AbstractController
         $editDepositTransaction->setDescription($depositTransaction->getDescription());
         $editDepositTransaction->setPrivate($depositTransaction->getPrivate());
         $editDepositTransaction->setBookingPeriodOffset($depositTransaction->getBookingPeriodOffset());
+        $editDepositTransaction->setCompleted($depositTransaction->isCompleted());
 
         $form = $this->createForm(DepositTransactionType::class, $editDepositTransaction);
         $form->handleRequest($request);
@@ -176,6 +178,7 @@ class DepositTransactionController extends AbstractController
                 $depositTransaction->setDescription($editDepositTransaction->getDescription());
                 $depositTransaction->setPrivate($editDepositTransaction->getPrivate());
                 $depositTransaction->setBookingPeriodOffset($editDepositTransaction->getBookingPeriodOffset());
+                $depositTransaction->setCompleted($editDepositTransaction->isCompleted());
 
                 $entityManager->flush();
                 $this->addFlash('success', t('Deposit transaction was updated.'));
