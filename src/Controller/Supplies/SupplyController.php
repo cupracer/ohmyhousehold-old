@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\SupplyDTO;
 use App\Form\Supplies\SupplyType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\SupplyService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,13 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/supply')]
 class SupplyController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
     }
 
 
@@ -86,7 +89,7 @@ class SupplyController extends AbstractController
                 $supply->setMinimumNumber($createSupply->getMinimumNumber() > 0 ? $createSupply->getMinimumNumber() : null);
                 $supply->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($supply);
                 $entityManager->flush();
 
@@ -123,7 +126,7 @@ class SupplyController extends AbstractController
                 $supply->setCategory($editSupply->getCategory());
                 $supply->setMinimumNumber($editSupply->getMinimumNumber() > 0 ? $editSupply->getMinimumNumber() : null);
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Supply was updated.'));
 
@@ -147,7 +150,7 @@ class SupplyController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_supply_' . $supply->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $supply);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($supply);
                 $entityManager->flush();
                 $this->addFlash('success', t('Supply was deleted.'));

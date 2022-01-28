@@ -11,6 +11,7 @@ use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\Transaction\WithdrawalTransactionService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,16 +25,18 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/transaction/withdrawal')]
 class WithdrawalTransactionController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private WithdrawalTransactionService $withdrawalTransactionService;
 
-    public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack,
-                                WithdrawalTransactionService $withdrawalTransactionService)
+    public function __construct(HouseholdRepository          $householdRepository, RequestStack $requestStack,
+                                WithdrawalTransactionService $withdrawalTransactionService, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->withdrawalTransactionService = $withdrawalTransactionService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_withdrawal_transaction_index', methods: ['GET'])]
@@ -86,7 +89,7 @@ class WithdrawalTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required expense account
                 $expenseAccount = $expenseAccountRepository->findOneByHouseholdAndAccountHolder($household, $createWithdrawalTransaction->getDestination());
@@ -155,7 +158,7 @@ class WithdrawalTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required expense account
                 $expenseAccount = $expenseAccountRepository->findOneByHouseholdAndAccountHolder($withdrawalTransaction->getHousehold(), $editWithdrawalTransaction->getDestination());
@@ -204,7 +207,7 @@ class WithdrawalTransactionController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_withdrawal_transaction_' . $withdrawalTransaction->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $withdrawalTransaction);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($withdrawalTransaction);
                 $entityManager->flush();
                 $this->addFlash('success', t('Withdrawal transaction was deleted.'));

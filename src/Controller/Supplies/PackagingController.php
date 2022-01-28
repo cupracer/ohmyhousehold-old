@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\PackagingDTO;
 use App\Form\Supplies\PackagingType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\PackagingService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,13 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/components/packaging')]
 class PackagingController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'supplies_packaging_index', methods: ['GET'])]
@@ -83,7 +86,7 @@ class PackagingController extends AbstractController
                 $packaging->setName($createPackaging->getName());
                 $packaging->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($packaging);
                 $entityManager->flush();
 
@@ -116,7 +119,7 @@ class PackagingController extends AbstractController
             try {
                 $packaging->setName($editPackaging->getName());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Packaging was updated.'));
 
@@ -140,7 +143,7 @@ class PackagingController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_packaging_' . $packaging->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $packaging);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($packaging);
                 $entityManager->flush();
                 $this->addFlash('success', t('Packaging was deleted.'));

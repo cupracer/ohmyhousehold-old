@@ -9,6 +9,7 @@ use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\Transaction\TransferTransactionService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,16 +23,18 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/transaction/transfer')]
 class TransferTransactionController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private TransferTransactionService $transferTransactionService;
 
-    public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack,
-                                TransferTransactionService $transferTransactionService)
+    public function __construct(HouseholdRepository        $householdRepository, RequestStack $requestStack,
+                                TransferTransactionService $transferTransactionService, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->transferTransactionService = $transferTransactionService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_transfer_transaction_index', methods: ['GET'])]
@@ -84,7 +87,7 @@ class TransferTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // explicitly setting to "midnight" might not be necessary for a db date field
                 $transferTransaction->setBookingDate($createTransferTransaction->getBookingDate()->modify('midnight'));
@@ -138,7 +141,7 @@ class TransferTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 $transferTransaction->setBookingDate($editTransferTransaction->getBookingDate());
                 $transferTransaction->setSource($editTransferTransaction->getSource());
@@ -173,7 +176,7 @@ class TransferTransactionController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_transfer_transaction_' . $transferTransaction->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $transferTransaction);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($transferTransaction);
                 $entityManager->flush();
                 $this->addFlash('success', t('Transfer transaction was deleted.'));

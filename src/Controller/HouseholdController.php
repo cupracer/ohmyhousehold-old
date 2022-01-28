@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DTO\UpdateHousehold;
 use App\Entity\Household;
 use App\Form\HouseholdFormType;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,16 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/household')]
 class HouseholdController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
+
+    /**
+     * @param ManagerRegistry $managerRegistry
+     */
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
     #[Route('/show/{id}', name: 'omh_household_show', methods: ['GET'])]
     public function show(Household $household): Response
     {
@@ -40,7 +51,7 @@ class HouseholdController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $household->setTitle($updateHousehold->getTitle());
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->managerRegistry->getManager()->flush();
 
             return $this->redirectToRoute('omh_household_show', ['id' => $household->getId()]);
         }

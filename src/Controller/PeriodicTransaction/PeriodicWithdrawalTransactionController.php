@@ -12,6 +12,7 @@ use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\PeriodicTransaction\PeriodicWithdrawalTransactionService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,16 +26,19 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/periodictransaction/withdrawal')]
 class PeriodicWithdrawalTransactionController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private PeriodicWithdrawalTransactionService $periodicWithdrawalTransactionService;
 
     public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack,
-                                PeriodicWithdrawalTransactionService $periodicWithdrawalTransactionService)
+                                PeriodicWithdrawalTransactionService $periodicWithdrawalTransactionService,
+                                ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->periodicWithdrawalTransactionService = $periodicWithdrawalTransactionService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_periodic_withdrawal_transaction_index', methods: ['GET'])]
@@ -84,7 +88,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required revenue account
                 $expenseAccount = $expenseAccountRepository->findOneByHouseholdAndAccountHolder($household, $createPeriodicWithdrawalTransaction->getDestination());
@@ -157,7 +161,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required revenue account
                 $expenseAccount = $expenseAccountRepository->findOneByHouseholdAndAccountHolder($periodicWithdrawalTransaction->getHousehold(), $editPeriodicWithdrawalTransaction->getDestination());
@@ -208,7 +212,7 @@ class PeriodicWithdrawalTransactionController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_periodic_withdrawal_transaction_' . $periodicWithdrawalTransaction->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $periodicWithdrawalTransaction);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($periodicWithdrawalTransaction);
                 $entityManager->flush();
                 $this->addFlash('success', t('Periodic withdrawal transaction was deleted.'));

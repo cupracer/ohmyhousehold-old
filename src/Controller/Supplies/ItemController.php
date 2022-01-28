@@ -14,6 +14,7 @@ use App\Repository\HouseholdRepository;
 use App\Repository\Supplies\ItemRepository;
 use App\Service\Supplies\ItemService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use IntlDateFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -29,11 +30,13 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/item')]
 class ItemController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'supplies_item_index', methods: ['GET'])]
@@ -103,7 +106,7 @@ class ItemController extends AbstractController
                     $item->setBestBeforeDate($createItem->getBestBeforeDate());
                     $item->setHousehold($household);
 
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->managerRegistry->getManager();
                     $entityManager->persist($item);
                     $entityManager->flush();
 
@@ -141,7 +144,7 @@ class ItemController extends AbstractController
                 $item->setProduct($editItem->getProduct());
                 $item->setBestBeforeDate($editItem->getBestBeforeDate());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Item was updated.'));
 
@@ -165,7 +168,7 @@ class ItemController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_item_' . $item->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $item);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($item);
                 $entityManager->flush();
                 $this->addFlash('success', t('Item was deleted.'));
@@ -188,7 +191,7 @@ class ItemController extends AbstractController
         try {
             $item->setWithdrawalDate(new DateTime());
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->managerRegistry->getManager()->flush();
 
             if($request->isXmlHttpRequest()) {
                 return new JsonResponse([
@@ -221,7 +224,7 @@ class ItemController extends AbstractController
         try {
             $item->setWithdrawalDate(null);
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->managerRegistry->getManager()->flush();
 
             if($request->isXmlHttpRequest()) {
                 return new JsonResponse([
@@ -261,7 +264,7 @@ class ItemController extends AbstractController
             $this->denyAccessUnlessGranted('checkout', $item);
 
             $item->setWithdrawalDate(new DateTime());
-            $this->getDoctrine()->getManager()->flush();
+            $this->managerRegistry->getManager()->flush();
 
             $this->addFlash('success', t('Item was checked out.'));
             return $this->redirectToRoute('supplies_item_checkout_form');
@@ -295,7 +298,7 @@ class ItemController extends AbstractController
                 $this->denyAccessUnlessGranted('checkout', $item);
 
                 $item->setWithdrawalDate(new DateTime());
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Item was checked out.'));
                 return $this->redirectToRoute('supplies_item_checkout_form');

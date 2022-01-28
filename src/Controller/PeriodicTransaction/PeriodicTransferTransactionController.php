@@ -8,6 +8,7 @@ use App\Form\PeriodicTransaction\PeriodicTransferTransactionType;
 use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\PeriodicTransaction\PeriodicTransferTransactionService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,16 +22,19 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/periodictransaction/transfer')]
 class PeriodicTransferTransactionController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private PeriodicTransferTransactionService $periodicTransferTransactionService;
 
     public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack,
-                                PeriodicTransferTransactionService $periodicTransferTransactionService)
+                                PeriodicTransferTransactionService $periodicTransferTransactionService,
+                                ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->periodicTransferTransactionService = $periodicTransferTransactionService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_periodic_transfer_transaction_index', methods: ['GET'])]
@@ -79,7 +83,7 @@ class PeriodicTransferTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // explicitly setting to "midnight" might not be necessary for a db date field
                 $periodicTransferTransaction->setStartDate($createPeriodicTransferTransaction->getStartDate());
@@ -137,7 +141,7 @@ class PeriodicTransferTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 $periodicTransferTransaction->setStartDate($editPeriodicTransferTransaction->getStartDate());
                 $periodicTransferTransaction->setEndDate($editPeriodicTransferTransaction->getEndDate());
@@ -174,7 +178,7 @@ class PeriodicTransferTransactionController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_periodic_transfer_transaction_' . $periodicTransferTransaction->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $periodicTransferTransaction);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($periodicTransferTransaction);
                 $entityManager->flush();
                 $this->addFlash('success', t('Periodic transfer transaction was deleted.'));

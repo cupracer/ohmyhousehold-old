@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\BrandDTO;
 use App\Form\Supplies\BrandType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\BrandService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,13 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/components/brand')]
 class BrandController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'supplies_brand_index', methods: ['GET'])]
@@ -83,7 +86,7 @@ class BrandController extends AbstractController
                 $brand->setName($createBrand->getName());
                 $brand->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($brand);
                 $entityManager->flush();
 
@@ -116,7 +119,7 @@ class BrandController extends AbstractController
             try {
                 $brand->setName($editBrand->getName());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Brand was updated.'));
 
@@ -140,7 +143,7 @@ class BrandController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_brand_' . $brand->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $brand);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($brand);
                 $entityManager->flush();
                 $this->addFlash('success', t('Brand was deleted.'));

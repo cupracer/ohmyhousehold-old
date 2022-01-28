@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\MeasureDTO;
 use App\Form\Supplies\MeasureType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\MeasureService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,13 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/components/measure')]
 class MeasureController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'supplies_measure_index', methods: ['GET'])]
@@ -84,7 +87,7 @@ class MeasureController extends AbstractController
                 $measure->setPhysicalQuantity($createMeasure->getPhysicalQuantity());
                 $measure->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($measure);
                 $entityManager->flush();
 
@@ -119,7 +122,7 @@ class MeasureController extends AbstractController
                 $measure->setName($editMeasure->getName());
                 $measure->setPhysicalQuantity($editMeasure->getPhysicalQuantity());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Measure was updated.'));
 
@@ -143,7 +146,7 @@ class MeasureController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_measure_' . $measure->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $measure);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($measure);
                 $entityManager->flush();
                 $this->addFlash('success', t('Measure was deleted.'));

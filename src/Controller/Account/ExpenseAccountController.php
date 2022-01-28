@@ -4,6 +4,7 @@ namespace App\Controller\Account;
 
 use App\Service\Account\ExpenseAccountService;
 use App\Service\UserSettingsService;
+use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,13 +16,15 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/account/expense')]
 class ExpenseAccountController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private ExpenseAccountService $accountService;
     private UserSettingsService $userSettingsService;
 
-    public function __construct(ExpenseAccountService $accountService, UserSettingsService $userSettingsService)
+    public function __construct(ExpenseAccountService $accountService, UserSettingsService $userSettingsService, ManagerRegistry $managerRegistry)
     {
         $this->accountService = $accountService;
         $this->userSettingsService = $userSettingsService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_expense_account_index', methods: ['GET'])]
@@ -75,7 +78,7 @@ class ExpenseAccountController extends AbstractController
 //                $accountHolder->setName($createAccountHolder->getName());
 //                $accountHolder->setHousehold($currentHousehold);
 //
-//                $entityManager = $this->getDoctrine()->getManager();
+//                $entityManager = $this->managerRegistry->getManager();
 //                $entityManager->persist($accountHolder);
 //                $entityManager->flush();
 //

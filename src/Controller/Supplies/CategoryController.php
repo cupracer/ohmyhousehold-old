@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\CategoryDTO;
 use App\Form\Supplies\CategoryType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\CategoryService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,13 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/components/category')]
 class CategoryController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'supplies_category_index', methods: ['GET'])]
@@ -83,7 +86,7 @@ class CategoryController extends AbstractController
                 $category->setName($createCategory->getName());
                 $category->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($category);
                 $entityManager->flush();
 
@@ -116,7 +119,7 @@ class CategoryController extends AbstractController
             try {
                 $category->setName($editCategory->getName());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Category was updated.'));
 
@@ -140,7 +143,7 @@ class CategoryController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_category_' . $category->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $category);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($category);
                 $entityManager->flush();
                 $this->addFlash('success', t('Category was deleted.'));

@@ -11,6 +11,7 @@ use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\PeriodicTransaction\PeriodicDepositTransactionService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,16 +25,19 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/periodictransaction/deposit')]
 class PeriodicDepositTransactionController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private PeriodicDepositTransactionService $periodicDepositTransactionService;
 
     public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack,
-                                PeriodicDepositTransactionService $periodicDepositTransactionService)
+                                PeriodicDepositTransactionService $periodicDepositTransactionService,
+                                ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->periodicDepositTransactionService = $periodicDepositTransactionService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_periodic_deposit_transaction_index', methods: ['GET'])]
@@ -83,7 +87,7 @@ class PeriodicDepositTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required revenue account
                 $revenueAccount = $revenueAccountRepository->findOneByHouseholdAndAccountHolder($household, $createPeriodicDepositTransaction->getSource());
@@ -156,7 +160,7 @@ class PeriodicDepositTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required revenue account
                 $revenueAccount = $revenueAccountRepository->findOneByHouseholdAndAccountHolder($periodicDepositTransaction->getHousehold(), $editPeriodicDepositTransaction->getSource());
@@ -207,7 +211,7 @@ class PeriodicDepositTransactionController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_periodic_deposit_transaction_' . $periodicDepositTransaction->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $periodicDepositTransaction);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($periodicDepositTransaction);
                 $entityManager->flush();
                 $this->addFlash('success', t('Periodic deposit transaction was deleted.'));

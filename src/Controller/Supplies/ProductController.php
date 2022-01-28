@@ -7,6 +7,7 @@ use App\Entity\Supplies\DTO\ProductDTO;
 use App\Form\Supplies\ProductType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\ProductService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,13 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/product')]
 class ProductController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'supplies_product_index', methods: ['GET'])]
@@ -101,7 +104,7 @@ class ProductController extends AbstractController
                 $product->setMinimumNumber($createProduct->getMinimumNumber());
                 $product->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($product);
                 $entityManager->flush();
 
@@ -150,7 +153,7 @@ class ProductController extends AbstractController
                 $product->setPackaging($editProduct->getPackaging());
                 $product->setMinimumNumber($editProduct->getMinimumNumber());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Product was updated.'));
 
@@ -174,7 +177,7 @@ class ProductController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_product_' . $product->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $product);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($product);
                 $entityManager->flush();
                 $this->addFlash('success', t('Product was deleted.'));

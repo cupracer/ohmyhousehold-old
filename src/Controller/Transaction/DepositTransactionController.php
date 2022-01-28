@@ -11,6 +11,7 @@ use App\Repository\HouseholdRepository;
 use App\Repository\HouseholdUserRepository;
 use App\Service\Transaction\DepositTransactionService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,16 +25,18 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/transaction/deposit')]
 class DepositTransactionController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private DepositTransactionService $depositTransactionService;
 
-    public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack,
-                                DepositTransactionService $depositTransactionService)
+    public function __construct(HouseholdRepository       $householdRepository, RequestStack $requestStack,
+                                DepositTransactionService $depositTransactionService, ManagerRegistry $managerRegistry)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->depositTransactionService = $depositTransactionService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_deposit_transaction_index', methods: ['GET'])]
@@ -86,7 +89,7 @@ class DepositTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required revenue account
                 $revenueAccount = $revenueAccountRepository->findOneByHouseholdAndAccountHolder($household, $createDepositTransaction->getSource());
@@ -155,7 +158,7 @@ class DepositTransactionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 // Find or create the required revenue account
                 $revenueAccount = $revenueAccountRepository->findOneByHouseholdAndAccountHolder($depositTransaction->getHousehold(), $editDepositTransaction->getSource());
@@ -204,7 +207,7 @@ class DepositTransactionController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_deposit_transaction_' . $depositTransaction->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $depositTransaction);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($depositTransaction);
                 $entityManager->flush();
                 $this->addFlash('success', t('Deposit transaction was deleted.'));

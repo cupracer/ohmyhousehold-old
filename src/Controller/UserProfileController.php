@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DTO\UpdateUserProfile;
 use App\Entity\User;
 use App\Form\UserProfileFormType;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,16 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/user/profile')]
 class UserProfileController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
+
+    /**
+     * @param ManagerRegistry $managerRegistry
+     */
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
     #[Route('/edit', name: 'app_user_profile_edit')]
     #[IsGranted("ROLE_USER")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
@@ -39,7 +50,7 @@ class UserProfileController extends AbstractController
             $userProfile->setLocale($updateUserProfile->getLocale());
 
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($userProfile);
                 $entityManager->flush();
                 $this->addFlash("success", t(message: 'Profile has been updated.', domain: 'messages'));
