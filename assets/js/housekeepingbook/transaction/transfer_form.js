@@ -3,6 +3,7 @@ $(document).ready(function () {
         format: 'LT',
     });
     $("#transfer_transaction_private").bootstrapSwitch();
+    $("#transfer_transaction_completed").bootstrapSwitch();
 
     let sourceSelect = $('#transfer_transaction_source');
     sourceSelect.select2({

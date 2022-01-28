@@ -147,7 +147,17 @@ class DepositTransactionType extends AbstractType
                 ],
                 'label' => t('offset'),
             ])
-
+            ->add('completed', CheckboxType::class, [
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'data-on-text' => t('completed'),
+                    'data-off-text' => t('unconfirmed'),
+                    'data-on-color' => 'success',
+                    'data-off-color' => 'warning',
+                    'data-label-text' => t('state'),
+                ]
+            ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $form = $event->getForm();
 

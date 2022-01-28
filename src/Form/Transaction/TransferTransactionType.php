@@ -110,6 +110,17 @@ class TransferTransactionType extends AbstractType
                 ],
                 'label' => t('Offset'),
             ])
+            ->add('completed', CheckboxType::class, [
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'data-on-text' => t('completed'),
+                    'data-off-text' => t('unconfirmed'),
+                    'data-on-color' => 'success',
+                    'data-off-color' => 'warning',
+                    'data-label-text' => t('state'),
+                ]
+            ])
         ;
     }
 

@@ -3,6 +3,7 @@ $(document).ready(function () {
         format: 'LT',
     });
     $("#deposit_transaction_private").bootstrapSwitch();
+    $("#deposit_transaction_completed").bootstrapSwitch();
 
     let bookingCategorySelect = $('#deposit_transaction_bookingCategory');
     bookingCategorySelect.select2({
