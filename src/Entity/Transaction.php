@@ -61,6 +61,11 @@ abstract class Transaction implements JsonSerializable
      */
     private bool $completed;
 
+    public function __construct()
+    {
+        $this->completed = false;
+    }
+
     public function jsonSerialize()
     {
         return [];
