@@ -1,4 +1,4 @@
-import {generateDatatablesEditButton} from "../../theme/datatables";
+import {generateDatatablesEditButton, generateDatatablesEditStateCheckbox} from "../../theme/datatables";
 
 $(document).ready(function () {
     let datatable = $('#transferTransactions');
@@ -16,8 +16,17 @@ $(document).ready(function () {
         info: true,
         autoWidth: false,
         responsive: true,
-        order: [[ 0, "desc" ]],
+        order: [[ 1, "desc" ]],
         columns: [
+            {
+                data: "completed",
+                class: "min",
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row) {
+                    return generateDatatablesEditStateCheckbox(data, row['editStateLink']);
+                },
+            },
             {
                 data: "bookingDate",
                 class: "min",

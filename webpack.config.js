@@ -61,6 +61,8 @@ Encore
 
     .addEntry('housekeepingbook_report_current_period', './assets/js/housekeepingbook/report/currentperiod.js')
 
+    .addEntry('housekeepingbook_transaction_state_update', './assets/js/housekeepingbook/transaction/state_update.js')
+
     .addEntry('supplies_brand_index', './assets/js/supplies/brand_index.js')
     .addEntry('supplies_category_index', './assets/js/supplies/category_index.js')
     .addEntry('supplies_measure_index', './assets/js/supplies/measure_index.js')

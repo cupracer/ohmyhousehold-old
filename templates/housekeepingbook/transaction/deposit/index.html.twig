@@ -24,6 +24,7 @@
                            data-i18n-url="{{ path('app_datatables_locale') }}">
                         <thead>
                         <tr>
+                            <th></th>
                             <th>{{ 'date'|trans }}</th>
                             <th>{{ 'user'|trans }}</th>
                             <th>{{ 'category'|trans }}</th>
@@ -48,4 +49,5 @@
     {{ parent() }}
 
     {{ encore_entry_script_tags('housekeepingbook_deposit_transaction_index') }}
+    {{ encore_entry_script_tags('housekeepingbook_transaction_state_update') }}
 {% endblock javascripts %}
