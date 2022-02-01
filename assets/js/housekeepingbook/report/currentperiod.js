@@ -1,3 +1,5 @@
+import {generateDatatablesEditStateCheckbox} from "../../theme/datatables";
+
 $(document).ready(function () {
     let datatable = $('#transactions');
     datatable.DataTable({
@@ -24,27 +26,36 @@ $(document).ready(function () {
         info: true,
         autoWidth: false,
         responsive: true,
-        order: [[ 1, "asc" ]],
+        order: [[ 2, "asc" ]],
         "columnDefs":
         [
             {
                 "targets": '_all',
                 "createdCell": function (td, cellData, rowData) {
-                    if(rowData[10]) {
+                    if(rowData[11]) {
                         $(td).css('font-style', 'italic');
                     }
 
-                    if(rowData[0] === 'periodicDeposit' || rowData[0] === 'periodicWithdrawal' || rowData[0] === 'periodicTransfer' ) {
+                    if(rowData[1] === 'periodicDeposit' || rowData[1] === 'periodicWithdrawal' || rowData[1] === 'periodicTransfer' ) {
                         $(td).css('color', 'gray');
                     }
 
-                    if(rowData[2] > Math.round(+new Date()/1000)) {
+                    if(rowData[3] > Math.round(+new Date()/1000)) {
                         $(td).css('background-color', 'lightyellow');
                     }
                 },
             },
             {
                 "targets": [ 0, ],
+                "class": "min",
+                "searchable": false,
+                "orderable": false,
+                render: function (data, type, row) {
+                    return generateDatatablesEditStateCheckbox(data, row[12]);
+                },
+            },
+            {
+                "targets": [ 1, ],
                 "orderable": false,
                 "class": "min text-right",
                 "render": function (data, type) {
@@ -85,35 +96,35 @@ $(document).ready(function () {
                 },
             },
             {
-                "targets": [1,],
+                "targets": [2,],
                 "class": "min text-center",
                 "render": function (data, type, row) {
                     if(type ==="display" || type === "filter"){
                         return data;
                     }else {
-                        return row[2];
+                        return row[3];
                     }
                 },
             },
             {
-                "targets": [2, ],
+                "targets": [3, ],
                 "visible": false,
             },
             {
-                "targets": [3, 4, ],
+                "targets": [4, 5, ],
                 "class": "min",
             },
             {
-                "targets": [5, 6, 7, ],
+                "targets": [6, 7, 8, ],
             },
             {
-                "targets": [ 8, ],
+                "targets": [ 9, ],
                 "class": "min text-right",
                 "render": function (data, type, row) {
-                    const floatVal = parseFloat(row[8]);
+                    const floatVal = parseFloat(row[9]);
 
                     if(type ==="display" || type === "filter"){
-                        switch (row[0]) {
+                        switch (row[1]) {
                             case "deposit":
                                 return '<span class="text-green">' + data + '</span>';
                             case "withdrawal":
@@ -135,7 +146,7 @@ $(document).ready(function () {
                 },
             },
             {
-                "targets": [9, 10, ],
+                "targets": [10, 11, 12, ],
                 "visible": false,
             },
         ],

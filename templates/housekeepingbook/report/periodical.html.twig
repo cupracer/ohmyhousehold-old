@@ -100,6 +100,7 @@
                            data-i18n-url="{{ path('app_datatables_locale') }}">
                         <thead>
                         <tr>
+                            <th></th>
                             <th data-priority="0"></th>
                             <th data-priority="1">{{ 'date'|trans }}</th>
                             <th>timestamp</th>
@@ -111,12 +112,14 @@
                             <th data-priority="2">{{ 'amount.financial'|trans }}</th>
                             <th>amount_filter</th>
                             <th>private</th>
+                            <th>editStateLink</th>
                         </tr>
                         </thead>
                         {% if transactions %}
                             <tbody>
                             {% for transaction in transactions %}
                             <tr>
+                                <td>{{ transaction.completed }}</td>
                                 <td>{{ transaction.bookingType }}</td>
                                 <td>{{ transaction.bookingDate }}</td>
                                 <td>{{ transaction.bookingDate_sort }}</td>
@@ -128,6 +131,7 @@
                                 <td>{{ transaction.amount }}</td>
                                 <td>{{ transaction.amount_filter }}</td>
                                 <td>{{ transaction.private }}</td>
+                                <td>{{ transaction.editStateLink }}</td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -146,4 +150,5 @@
     {{ parent() }}
 
     {{ encore_entry_script_tags('housekeepingbook_report_current_period') }}
+    {{ encore_entry_script_tags('housekeepingbook_transaction_state_update') }}
 {% endblock javascripts %}

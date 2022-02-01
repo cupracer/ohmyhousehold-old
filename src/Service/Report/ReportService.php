@@ -24,6 +24,7 @@ use App\Service\MoneyCalculationService;
 use DateTime;
 use IntlDateFormatter;
 use NumberFormatter;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 
 class ReportService extends DatatablesService
@@ -38,6 +39,7 @@ class ReportService extends DatatablesService
     private HouseholdUserRepository $householdUserRepository;
     private Security $security;
     private MoneyCalculationService $moneyCalc;
+    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(AssetAccountRepository $assetAccountRepository,
                                 DepositTransactionRepository         $depositTransactionRepository,
@@ -48,7 +50,8 @@ class ReportService extends DatatablesService
                                 PeriodicTransferTransactionRepository $periodicTransferTransactionRepository,
                                 HouseholdUserRepository              $householdUserRepository,
                                 Security                             $security,
-                                MoneyCalculationService $moneyCalculationService)
+                                MoneyCalculationService $moneyCalculationService,
+                                UrlGeneratorInterface $urlGenerator)
     {
         $this->assetAccountRepository = $assetAccountRepository;
         $this->depositTransactionRepository = $depositTransactionRepository;
@@ -60,6 +63,7 @@ class ReportService extends DatatablesService
         $this->householdUserRepository = $householdUserRepository;
         $this->security = $security;
         $this->moneyCalc = $moneyCalculationService;
+        $this->urlGenerator = $urlGenerator;
     }
 
 
@@ -182,16 +186,22 @@ class ReportService extends DatatablesService
 
         if($transaction instanceof DepositTransaction && !$isPeriodic) {
             $result['bookingType'] = "deposit";
+            $result['editStateLink'] = $this->security->isGranted('edit', $transaction) ? $this->urlGenerator->generate('housekeepingbook_deposit_transaction_edit_state', ['id' => $transaction->getId()]) : null;
         }elseif ($transaction instanceof WithdrawalTransaction && !$isPeriodic) {
             $result['bookingType'] = "withdrawal";
+            $result['editStateLink'] = $this->security->isGranted('edit', $transaction) ? $this->urlGenerator->generate('housekeepingbook_withdrawal_transaction_edit_state', ['id' => $transaction->getId()]) : null;
         }elseif ($transaction instanceof TransferTransaction && !$isPeriodic) {
             $result['bookingType'] = "transfer";
+            $result['editStateLink'] = $this->security->isGranted('edit', $transaction) ? $this->urlGenerator->generate('housekeepingbook_transfer_transaction_edit_state', ['id' => $transaction->getId()]) : null;
         }elseif ($transaction instanceof DepositTransaction && $isPeriodic) {
             $result['bookingType'] = "periodicDeposit";
+            $result['editStateLink'] = null;
         }elseif ($transaction instanceof WithdrawalTransaction && $isPeriodic) {
             $result['bookingType'] = "periodicWithdrawal";
+            $result['editStateLink'] = null;
         }elseif ($transaction instanceof TransferTransaction && $isPeriodic) {
             $result['bookingType'] = "periodicTransfer";
+            $result['editStateLink'] = null;
         }else {
             //TODO: do some error handling
             return null;
@@ -200,6 +210,7 @@ class ReportService extends DatatablesService
         $numberFormatter = numfmt_create($householdUser->getUser()->getUserProfile()->getLocale(), NumberFormatter::CURRENCY);
         $dateFormatter = new IntlDateFormatter($householdUser->getUser()->getUserProfile()->getLocale(), IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
 
+        $result['completed'] = $transaction->isCompleted();
         $result['bookingDate'] = $dateFormatter->format($transaction->getBookingDate());
         $result['bookingDate_obj'] = $transaction->getBookingDate();
         $result['bookingDate_sort'] = $transaction->getBookingDate()->getTimestamp();
