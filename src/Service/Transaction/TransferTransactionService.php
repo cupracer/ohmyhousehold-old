@@ -66,6 +66,8 @@ class TransferTransactionService extends DatatablesService
         /** @var TransferTransaction $row */
         foreach($result['data'] as $row) {
             $rowData = [
+                'id' => $row->getId(),
+                'completed' => $row->isCompleted(),
                 'bookingDate' => $dateFormatter->format($row->getBookingDate()),
                 'user' => $row->getHouseholdUser()->getUser()->getUsername(),
                 'source' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getSource()->getName(),
@@ -75,6 +77,7 @@ class TransferTransactionService extends DatatablesService
                 'private' => $row->getPrivate(),
                 'hidden' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser,
                 'editLink' => $this->security->isGranted('edit', $row) ? $this->urlGenerator->generate('housekeepingbook_transfer_transaction_edit', ['id' => $row->getId()]) : null,
+                'editStateLink' => $this->security->isGranted('edit', $row) ? $this->urlGenerator->generate('housekeepingbook_transfer_transaction_edit_state', ['id' => $row->getId()]) : null,
             ];
 
             $tableData[] = $rowData;
