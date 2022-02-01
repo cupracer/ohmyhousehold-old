@@ -220,4 +220,32 @@ class WithdrawalTransactionController extends AbstractController
 
         return $this->redirectToRoute('housekeepingbook_withdrawal_transaction_index');
     }
+
+    #[Route('/{id}/edit/state', name: 'housekeepingbook_withdrawal_transaction_edit_state', methods: ['POST'])]
+    public function editState(Request $request, WithdrawalTransaction $withdrawalTransaction): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $withdrawalTransaction);
+
+        $state = $request->request->get('state') === 'true';
+
+        try {
+            $withdrawalTransaction->setCompleted($state);
+
+            $entityManager = $this->managerRegistry->getManager();
+            $entityManager->persist($withdrawalTransaction);
+            $entityManager->flush();
+
+            $transactionStateStr = $state ? 'completed' : "unconfirmed";
+
+            $this->addFlash('success', t("Transaction state has been marked as " . $transactionStateStr . "."));
+            return $this->json([
+                'success' => true,
+            ]);
+        }catch (Exception) {
+            $this->addFlash('error', t("Failed to mark transaction state as " . $transactionStateStr . "."));
+            return $this->json([
+                'success' => false,
+            ]);
+        }
+    }
 }
