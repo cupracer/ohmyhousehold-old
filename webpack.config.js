@@ -127,6 +127,17 @@ Encore
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
 
+    // Instead of "autoProvidejQuery()" we could try exposing jQuery with the following.
+    // Please note that this requires "expose-loader" installed via package.json.
+    //
+    // .addLoader({
+    //     test: require.resolve('jquery'),
+    //     loader: 'expose-loader',
+    //     options: {
+    //         exposes: ['$', 'jQuery'],
+    //     },
+    // })
+
     // workaround to import Moment.js
     //      Module build failed: Module not found:
     //      "./node_modules/moment/min/moment.min.js" contains a reference to the file "./locale".
