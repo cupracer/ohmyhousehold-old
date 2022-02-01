@@ -95,4 +95,13 @@ class DefaultController extends AbstractController
 
         return $this->redirect($packages->getUrl('build/datatables/i18n/' . $fileName));
     }
+
+    /**
+     * @Route("/toasts", name="app_toasts", methods={"GET"})
+     * @return Response
+     */
+    public function getToasts(): Response
+    {
+        return $this->render('theme/_toasts.html.twig');
+    }
 }
