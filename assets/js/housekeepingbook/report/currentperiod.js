@@ -3,7 +3,7 @@ import {generateDatatablesEditStateCheckbox} from "../../theme/datatables";
 $(document).ready(function () {
     let datatable = $('#transactions');
     datatable.DataTable({
-        dom: 'fBrtip',
+        dom: 'f<"householdUsers">Brtip',
         buttons: [
             {
                 extend: 'csvHtml5',
@@ -169,5 +169,21 @@ $(document).ready(function () {
         //         (Math.round(pageTotal * 100)/100).toFixed(2)
         //     );
         // }
+        initComplete: function(settings, json) {
+            let householdUsers = $("div.householdUsers");
+            householdUsers.html(datatable.data('householduserHtml'));
+            householdUsers.css('float', 'left').addClass('mr-3');
+
+            $('#periodical_report_member').select2({
+                placeholder: '',
+                theme: 'bootstrap4',
+                allowClear: true,
+            });
+
+            $('#periodical_report_apply').addClass('float-right');
+
+            // $('#transactions_filter').css('float', 'right');
+            $('#transactions_filter').addClass('float-right');
+        },
     });
 });

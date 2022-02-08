@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transaction;
 
+use App\Entity\HouseholdUser;
 use App\Entity\WithdrawalTransaction;
 use App\Entity\Household;
 use DateTime;
@@ -49,11 +50,11 @@ class WithdrawalTransactionRepository extends ServiceEntityRepository
     /**
      * @return WithdrawalTransaction[] Returns an array of WithdrawalTransaction objects
      */
-    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember): array
     {
         $qb = $this->createQueryBuilder('a');
 
-        return $qb
+        $qb
             ->andWhere('a.household = :household')
             ->andWhere(
                 $qb->expr()->andX(
@@ -65,6 +66,16 @@ class WithdrawalTransactionRepository extends ServiceEntityRepository
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
             ->orderBy('LOWER(a.bookingDate)', 'ASC')
+        ;
+
+        if($filterByMember) {
+            $qb
+                ->andWhere('a.householdUser = :householdUser')
+                ->setParameter('householdUser', $filterByMember)
+            ;
+        }
+
+        return $qb
             ->getQuery()
             ->execute()
         ;

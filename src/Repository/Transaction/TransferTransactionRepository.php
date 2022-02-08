@@ -2,6 +2,7 @@
 
 namespace App\Repository\Transaction;
 
+use App\Entity\HouseholdUser;
 use App\Entity\TransferTransaction;
 use App\Entity\Household;
 use DateTime;
@@ -49,11 +50,11 @@ class TransferTransactionRepository extends ServiceEntityRepository
     /**
      * @return TransferTransaction[] Returns an array of TransferTransaction objects
      */
-    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function findAllByHouseholdAndDateRange(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember): array
     {
         $qb = $this->createQueryBuilder('a');
 
-        return $qb
+        $qb
             ->andWhere('a.household = :household')
             ->andWhere(
                 $qb->expr()->andX(
@@ -65,6 +66,25 @@ class TransferTransactionRepository extends ServiceEntityRepository
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
             ->orderBy('LOWER(a.bookingDate)', 'ASC')
+        ;
+
+        if($filterByMember) {
+            $qb
+                ->innerJoin('a.source', 's')
+                ->innerJoin('a.destination', 'd')
+//                ->andWhere(
+//                    $qb->expr()->orX(
+////                        $qb->expr()->eq('a.householdUser', ':householdUser'),
+//                        $qb->expr()->isMemberOf(':householdUser', 's.owners'),
+//                        $qb->expr()->isMemberOf(':householdUser', 'd.owners'),
+//                    ),
+//                )
+                ->andWhere('a.householdUser = :householdUser')
+                ->setParameter('householdUser', $filterByMember)
+            ;
+        }
+
+        return $qb
             ->getQuery()
             ->execute()
         ;

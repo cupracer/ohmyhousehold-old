@@ -97,7 +97,8 @@
             <div class="card">
                 <div class="card-body">
                     <table id="transactions" class="table table-hover dataTable" role="grid"
-                           data-i18n-url="{{ path('app_datatables_locale') }}">
+                           data-i18n-url="{{ path('app_datatables_locale') }}"
+                           data-householduser-html="{{ form(periodicalReportForm)|e }}">
                         <thead>
                         <tr>
                             <th></th>

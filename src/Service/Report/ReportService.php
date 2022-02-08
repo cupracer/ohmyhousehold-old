@@ -67,7 +67,7 @@ class ReportService extends DatatablesService
     }
 
 
-    public function getDataAsArray(Household $household, int $year, int $month): array
+    public function getDataAsArray(Household $household, int $year, int $month, ?HouseholdUser $filterByMember): array
     {
         $requestedDate = DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
         //TODO check if data is valid
@@ -90,9 +90,9 @@ class ReportService extends DatatablesService
             'expectedSavings' => "0",
         ];
 
-        $assetAccounts = $this->getAssetAccounts($household, $currentPeriodStart, $currentPeriodEnd);
-        $transactions = $this->getTransactions($household, $currentPeriodStart, $currentPeriodEnd);
-        $periodicTransactions = $this->getPeriodicTransactions($household, $currentPeriodStart, $currentPeriodEnd);
+        $assetAccounts = $this->getAssetAccounts($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
+        $transactions = $this->getTransactions($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
+        $periodicTransactions = $this->getPeriodicTransactions($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
 
         /** @var AssetAccount $assetAccount */
         foreach($assetAccounts as $assetAccount) {
@@ -258,28 +258,29 @@ class ReportService extends DatatablesService
      *
      * Get AssetAccounts that have their initial balance date within the specified range.
      */
-    public function getAssetAccounts(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function getAssetAccounts(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember): array
     {
-        return $this->assetAccountRepository->findAllByHouseholdAndInitialBalanceDateInRange($household, $startDate, $endDate);
+        return $this->assetAccountRepository->findAllByHouseholdAndInitialBalanceDateInRange($household, $startDate, $endDate, $filterByMember);
     }
 
 
-    public function getTransactions(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function getTransactions(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember): array
     {
         $tableData = [];
 
-        $tableData = array_merge($tableData, $this->depositTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
-        $tableData = array_merge($tableData, $this->withdrawalTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
+        $tableData = array_merge($tableData, $this->depositTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate, $filterByMember));
+        $tableData = array_merge($tableData, $this->withdrawalTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate, $filterByMember));
 
-        return array_merge($tableData, $this->transferTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate));
+        //TODO: filter for account owner
+        return array_merge($tableData, $this->transferTransactionRepository->findAllByHouseholdAndDateRange($household, $startDate, $endDate, $filterByMember));
     }
 
 
-    public function getPeriodicTransactions(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function getPeriodicTransactions(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember): array
     {
         $tableData = [];
 
-        $periodicDepositTransactions = $this->periodicDepositTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate);
+        $periodicDepositTransactions = $this->periodicDepositTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate, $filterByMember);
 
         foreach ($periodicDepositTransactions as $row) {
 
@@ -328,7 +329,7 @@ class ReportService extends DatatablesService
             }
         }
 
-        $periodicWithdrawalTransactions = $this->periodicWithdrawalTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate);
+        $periodicWithdrawalTransactions = $this->periodicWithdrawalTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate, $filterByMember);
 
         foreach ($periodicWithdrawalTransactions as $row) {
             /** @var DateTime $bookingDate */
@@ -376,7 +377,8 @@ class ReportService extends DatatablesService
             }
         }
 
-        $periodicTransferTransactions = $this->periodicTransferTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate);
+        //TODO: filter for account owner
+        $periodicTransferTransactions = $this->periodicTransferTransactionRepository->findAllByHouseholdAndDateRangeWithoutTransaction($household, $startDate, $endDate, $filterByMember);
 
         foreach ($periodicTransferTransactions as $row) {
             /** @var DateTime $bookingDate */

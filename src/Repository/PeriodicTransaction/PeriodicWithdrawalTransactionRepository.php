@@ -2,6 +2,7 @@
 
 namespace App\Repository\PeriodicTransaction;
 
+use App\Entity\HouseholdUser;
 use App\Entity\PeriodicWithdrawalTransaction;
 use App\Entity\Household;
 use DateTime;
@@ -88,11 +89,11 @@ class PeriodicWithdrawalTransactionRepository extends ServiceEntityRepository
     /**
      * @return PeriodicWithdrawalTransaction[] Returns an array of PeriodicWithdrawalTransaction objects
      */
-    public function findAllByHouseholdAndDateRangeWithoutTransaction(Household $household, DateTime $startDate, DateTime $endDate): array
+    public function findAllByHouseholdAndDateRangeWithoutTransaction(Household $household, DateTime $startDate, DateTime $endDate, ?HouseholdUser $filterByMember = null): array
     {
         $qb = $this->createQueryBuilder('a');
 
-        $rows = $qb
+        $qb
             ->andWhere('a.household = :household')
             ->andWhere(
                 $qb->expr()->lte("DATE_ADD(a.startDate, a.bookingPeriodOffset, 'MONTH')", ':endDate'),
@@ -115,6 +116,16 @@ class PeriodicWithdrawalTransactionRepository extends ServiceEntityRepository
             ->setParameter('household', $household)
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
+        ;
+
+        if($filterByMember) {
+            $qb
+                ->andWhere('a.householdUser = :householdUser')
+                ->setParameter('householdUser', $filterByMember)
+            ;
+        }
+
+        $rows = $qb
             ->getQuery()
             ->execute()
             ;
