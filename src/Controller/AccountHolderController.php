@@ -12,8 +12,8 @@ use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -22,19 +22,21 @@ use function Symfony\Component\Translation\t;
 class AccountHolderController extends AbstractController
 {
     private ManagerRegistry $managerRegistry;
+    private RequestStack $requestStack;
 
     /**
      * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(ManagerRegistry $managerRegistry)
+    public function __construct(ManagerRegistry $managerRegistry, RequestStack $requestStack)
     {
         $this->managerRegistry = $managerRegistry;
+        $this->requestStack = $requestStack;
     }
 
     #[Route('/', name: 'housekeepingbook_accountholder_index', methods: ['GET'])]
-    public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function index(HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->render('housekeepingbook/accountholder/index.html.twig', [
             'pageTitle' => t('Account holders'),
@@ -43,9 +45,9 @@ class AccountHolderController extends AbstractController
     }
 
     #[Route('/datatables', name: 'housekeepingbook_accountholder_datatables', methods: ['GET'])]
-    public function getAsDatatables(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsDatatables(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $accountHolderService->getAccountHoldersAsDatatablesArray($request, $currentHousehold)
@@ -53,9 +55,9 @@ class AccountHolderController extends AbstractController
     }
 
     #[Route('/select2', name: 'housekeepingbook_accountholder_select2', methods: ['GET'])]
-    public function getAsSelect2(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsSelect2(Request $request, AccountHolderService $accountHolderService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $accountHolderService->getAccountHoldersAsSelect2Array($request, $currentHousehold)
@@ -65,14 +67,13 @@ class AccountHolderController extends AbstractController
     #[Route('/new', name: 'housekeepingbook_accountholder_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        SessionInterface $session,
         HouseholdRepository $householdRepository
     ): Response
     {
         $household = null;
 
-        if($session->has('current_household')) {
-            $household = $householdRepository->find($session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $this->denyAccessUnlessGranted('createAccountHolder', $household);

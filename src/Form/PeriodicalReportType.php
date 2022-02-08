@@ -10,28 +10,28 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use function Symfony\Component\Translation\t;
 
 class PeriodicalReportType extends AbstractType
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private Household $household;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         HouseholdRepository $householdRepository)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if($this->session->has('current_household')) {
-            $this->household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $this->household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $builder
