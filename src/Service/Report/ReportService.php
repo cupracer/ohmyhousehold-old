@@ -427,4 +427,73 @@ class ReportService extends DatatablesService
 
         return $tableData;
     }
+
+
+    public function getDeposit(Household $household, int $year, int $month, ?HouseholdUser $filterByMember): string
+    {
+        $deposit = '0';
+
+        $requestedDate = DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
+        //TODO check if data is valid
+
+        $currentPeriodStart = (clone $requestedDate)->modify('first day of this month')->modify('midnight');
+        $currentPeriodEnd = (clone $requestedDate)->modify('first day of next month')->modify('midnight')->modify('-1 second');
+
+        $assetAccounts = $this->getAssetAccounts($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
+        $transactions = $this->getTransactions($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
+
+        /** @var AssetAccount $assetAccount */
+        foreach($assetAccounts as $assetAccount) {
+            if(in_array($assetAccount->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID, AssetAccount::TYPE_PORTFOLIO])) {
+                $deposit = $this->moneyCalc->add($deposit, $assetAccount->getInitialBalance());
+            }
+        }
+
+        foreach($transactions as $transaction) {
+            if($transaction instanceof  DepositTransaction && $transaction->getBookingDate() <= (new DateTime())->modify('midnight')) {
+                $deposit = $this->moneyCalc->add($deposit, $transaction->getAmount());
+            }
+        }
+
+        return $deposit;
+    }
+
+
+    public function getUpcomingDeposit(Household $household, int $year, int $month, ?HouseholdUser $filterByMember): string
+    {
+        $upcomingDeposit = "0";
+
+        $requestedDate = DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
+        //TODO check if data is valid
+
+        $currentPeriodStart = (clone $requestedDate)->modify('first day of this month')->modify('midnight');
+        $currentPeriodEnd = (clone $requestedDate)->modify('first day of next month')->modify('midnight')->modify('-1 second');
+
+        $assetAccounts = $this->getAssetAccounts($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
+        $transactions = $this->getTransactions($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
+        $periodicTransactions = $this->getPeriodicTransactions($household, $currentPeriodStart, $currentPeriodEnd, $filterByMember);
+
+        /** @var AssetAccount $assetAccount */
+        foreach($assetAccounts as $assetAccount) {
+            if(in_array($assetAccount->getAccountType(), [AssetAccount::TYPE_CURRENT, AssetAccount::TYPE_PREPAID, AssetAccount::TYPE_PORTFOLIO])) {
+                $upcomingDeposit = $this->moneyCalc->add($upcomingDeposit, $assetAccount->getInitialBalance());
+            }
+        }
+
+        //TODO: initial Balance von Savings in Report berücksichtigen?
+
+        foreach($transactions as $transaction) {
+            if($transaction instanceof DepositTransaction && $transaction->getBookingDate() > (new DateTime())->modify('midnight')) {
+                $upcomingDeposit = $this->moneyCalc->add($upcomingDeposit, $transaction->getAmount());
+            }
+        }
+
+        foreach($periodicTransactions as $transaction) {
+            if($transaction instanceof DepositTransaction) {
+                $upcomingDeposit = $this->moneyCalc->add($upcomingDeposit, $transaction->getAmount());
+            }
+        }
+
+        return $upcomingDeposit;
+    }
 }

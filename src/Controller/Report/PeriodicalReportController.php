@@ -12,6 +12,7 @@ use DateTime;
 use IntlDateFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,6 +95,32 @@ class PeriodicalReportController extends AbstractController
             'expectedBalance' => $data['expectedBalance'],
             'savings' => $data['savings'],
             'expectedSavings' => $data['expectedSavings'],
+        ]);
+    }
+
+    #[Route('/deposit/{year}/{month}', name: 'housekeepingbook_report_periodical_deposit', requirements: ['year' => '\d{4}', 'month' => '\d{1,2}'], methods: ['GET',])]
+    public function deposit(int $year, int $month, ReportService $reportService, HouseholdUserRepository $householdUserRepository): Response
+    {
+        $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $periodicalReport = new PeriodicalReportDTO();
+
+        if($this->requestStack->getSession()->has('housekeepingbook_periodical_report_member_id')) {
+            $id = $householdUserRepository->find($this->requestStack->getSession()->get('housekeepingbook_periodical_report_member_id'));
+            if($id) {
+                $periodicalReport->setMember($householdUserRepository->find($id));
+            }
+        }
+
+        $deposit = $reportService->getDeposit($currentHousehold, $year, $month, $periodicalReport->getMember());
+        $upcomingDeposit = $reportService->getUpcomingDeposit($currentHousehold, $year, $month, $periodicalReport->getMember());
+
+        return new JsonResponse([
+            'deposit' => $deposit,
+            'upcomingDeposit' => $upcomingDeposit,
         ]);
     }
 }
