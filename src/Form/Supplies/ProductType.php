@@ -225,6 +225,9 @@ class ProductType extends AbstractType
         /** @var Product $product */
         $product = $payload;
 
+        /** @var Supply $supply */
+        $supply = $context->getRoot()->get('supply')->getData();
+
         $household = null;
 
         if($this->requestStack->getSession()->has('current_household')) {
@@ -236,14 +239,19 @@ class ProductType extends AbstractType
             $context->addViolation(t('Could not determine currently used household.'));
         }
 
-        // search for existing items with the same attribute value
-        $result = $this->productRepository->findBy(['name' => $value, 'household' => $household]);
+        // A supply is mandatory here as well
+        if(!$supply) {
+            $context->addViolation(t('Could not determine a selected supply.'));
+        }
+
+        // search for existing product items with the same attribute values
+        $result = $this->productRepository->findBy(['name' => $value, 'supply' => $supply, 'household' => $household]);
 
         // If this form is meant to create a new item, it's sufficient to check for a non-empty result,
         // but if it's an update, we also need to check whether the original item
         // is in the result array to exclude this hit.
         if((!$product && $result) || ($product && $result && !in_array($product, $result))) {
-            $context->addViolation('This name is already in use.');
+            $context->addViolation('This name is already in use for the selected supply.');
         }
     }
 }
