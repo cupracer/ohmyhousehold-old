@@ -228,6 +228,9 @@ class ProductType extends AbstractType
         /** @var Supply $supply */
         $supply = $context->getRoot()->get('supply')->getData();
 
+        /** @var Brand $brand */
+        $brand = $context->getRoot()->get('brand')->getData();
+
         $household = null;
 
         if($this->requestStack->getSession()->has('current_household')) {
@@ -244,14 +247,19 @@ class ProductType extends AbstractType
             $context->addViolation(t('Could not determine a selected supply.'));
         }
 
+        // A brand is mandatory here as well
+        if(!$brand) {
+            $context->addViolation(t('Could not determine a selected brand.'));
+        }
+
         // search for existing product items with the same attribute values
-        $result = $this->productRepository->findBy(['name' => $value, 'supply' => $supply, 'household' => $household]);
+        $result = $this->productRepository->findBy(['name' => $value, 'supply' => $supply, 'brand' => $brand, 'household' => $household]);
 
         // If this form is meant to create a new item, it's sufficient to check for a non-empty result,
         // but if it's an update, we also need to check whether the original item
         // is in the result array to exclude this hit.
         if((!$product && $result) || ($product && $result && !in_array($product, $result))) {
-            $context->addViolation('This name is already in use for the selected supply.');
+            $context->addViolation('This name is already in use for the selected supply + brand.');
         }
     }
 }

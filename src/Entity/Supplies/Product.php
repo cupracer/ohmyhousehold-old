@@ -15,9 +15,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="supplies_product")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(
- *     fields={"name", "supply", "household"},
+ *     fields={"name", "supply", "brand", "household"},
  *     errorPath="name",
- *     message="This name is already in use for the selected supply in this household."
+ *     message="This name is already in use for the selected supply + brand in this household."
  *     )
  * @UniqueEntity(
  *     fields={"ean", "household"},
