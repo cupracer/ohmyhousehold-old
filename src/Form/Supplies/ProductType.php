@@ -227,8 +227,8 @@ class ProductType extends AbstractType
 
         $household = null;
 
-        if($this->session->has('current_household')) {
-            $household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         // A household is mandatory here
