@@ -231,35 +231,69 @@ class ProductType extends AbstractType
         /** @var Brand $brand */
         $brand = $context->getRoot()->get('brand')->getData();
 
+        // "measure", "quantity", "packaging",
+
+        /** @var Measure $measure */
+        $measure = $context->getRoot()->get('measure')->getData();
+
+        /** @var string $quantity */
+        $quantity = $context->getRoot()->get('quantity')->getData();
+
+        /** @var Packaging $packaging */
+        $packaging = $context->getRoot()->get('packaging')->getData();
+
         $household = null;
 
         if($this->requestStack->getSession()->has('current_household')) {
             $household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
-        // A household is mandatory here
+        // A household is mandatory
         if(!$household) {
             $context->addViolation(t('Could not determine currently used household.'));
         }
 
-        // A supply is mandatory here as well
+        // A supply is mandatory
         if(!$supply) {
             $context->addViolation(t('Could not determine a selected supply.'));
         }
 
-        // A brand is mandatory here as well
+        // A brand is mandatory
         if(!$brand) {
             $context->addViolation(t('Could not determine a selected brand.'));
         }
 
+        // A measure is mandatory
+        if(!$measure) {
+            $context->addViolation(t('Could not determine a selected measure.'));
+        }
+
+        // A quantity is mandatory
+        if(!$quantity) {
+            $context->addViolation(t('Could not determine a selected quantity.'));
+        }
+
+        // A packaging is mandatory
+        if(!$packaging) {
+            $context->addViolation(t('Could not determine a selected packaging.'));
+        }
+
         // search for existing product items with the same attribute values
-        $result = $this->productRepository->findBy(['name' => $value, 'supply' => $supply, 'brand' => $brand, 'household' => $household]);
+        $result = $this->productRepository->findBy([
+            'name' => $value,
+            'supply' => $supply,
+            'brand' => $brand,
+            'measure' => $measure,
+            'quantity' => $quantity,
+            'packaging' => $packaging,
+            'household' => $household,
+        ]);
 
         // If this form is meant to create a new item, it's sufficient to check for a non-empty result,
         // but if it's an update, we also need to check whether the original item
         // is in the result array to exclude this hit.
         if((!$product && $result) || ($product && $result && !in_array($product, $result))) {
-            $context->addViolation('This name is already in use for the selected supply + brand.');
+            $context->addViolation('This name is already in use for the selected attributes.');
         }
     }
 }
