@@ -71,13 +71,39 @@
         </li>
     {% endif %}
     {% if is_granted('ROLE_HOUSEKEEPINGBOOK') %}
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ path('housekeepingbook_report_periodical_current') }}" class="nav-link">{{ 'housekeeping_book'|trans|title }}</a>
+        <li class="nav-item dropdown dropdown-hover">
+            <a class="nav-link" href="{{ path('housekeepingbook_report_periodical_current') }}">
+                {{ 'housekeeping_book'|trans|title }}
+            </a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow" style="left: 0px; right: inherit;">
+                {% if is_granted('createDepositTransaction', current_household) %}
+                    <li><a href="{{ path('housekeepingbook_deposit_transaction_new') }}" class="dropdown-item">{{ 'add_deposit_transaction'|trans }}</a></li>
+                {% endif %}
+                {% if is_granted('createWithdrawalTransaction', current_household) %}
+                    <li><a href="{{ path('housekeepingbook_withdrawal_transaction_new') }}" class="dropdown-item">{{ 'add_withdrawal_transaction'|trans }}</a></li>
+                {% endif %}
+                {% if is_granted('createTransferTransaction', current_household) %}
+                    <li><a href="{{ path('housekeepingbook_transfer_transaction_new') }}" class="dropdown-item">{{ 'add_transfer_transaction'|trans }}</a></li>
+                {% endif %}
+            </ul>
         </li>
+
+
     {% endif %}
     {% if is_granted('ROLE_SUPPLIES') %}
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ path('supplies_item_checkout_form') }}" class="nav-link">{{ 'supplies_checkout'|trans|title }}</a>
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="#" id="dropdown-language" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ 'supply_management'|trans|title }}
+            </a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow" style="left: 0px; right: inherit;">
+                {% if is_granted('checkoutSuppliesItem', current_household) %}
+                    <li><a href="{{ path('supplies_item_checkout_form') }}" class="dropdown-item">{{ 'supplies_checkout'|trans }}</a></li>
+                {% endif %}
+                {% if is_granted('createSuppliesItem', current_household) %}
+                    <li><a href="{{ path('supplies_item_new') }}" class="dropdown-item">{{ 'add_supply_items'|trans }}</a></li>
+                {% endif %}
+            </ul>
         </li>
     {% endif %}
 {% endblock navbar_left_items %}

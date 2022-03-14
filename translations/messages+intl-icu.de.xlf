@@ -449,6 +449,14 @@
         <source>{total} running low supplies</source>
         <target>{total} zur Neige gehende Vorräte</target>
       </trans-unit>
+      <trans-unit id="add_transfer_transaction">
+        <source>add_transfer_transaction</source>
+        <target>Transfer hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="add_supply_items">
+        <source>add_supply_items</source>
+        <target>Vorräte hinzufügen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
