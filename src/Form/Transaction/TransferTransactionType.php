@@ -16,14 +16,14 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use function Symfony\Component\Translation\t;
 
 class TransferTransactionType extends AbstractType
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
 
     private HouseholdRepository $householdRepository;
     private HouseholdUserRepository $householdUserRepository;
@@ -33,14 +33,14 @@ class TransferTransactionType extends AbstractType
     private Security $security;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         HouseholdRepository $householdRepository,
         HouseholdUserRepository $householdUserRepository,
         AssetAccountRepository $assetAccountRepository,
         Security $security
     )
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->householdUserRepository = $householdUserRepository;
         $this->assetAccountRepository = $assetAccountRepository;
@@ -50,8 +50,8 @@ class TransferTransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if($this->session->has('current_household')) {
-            $this->household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $this->household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
             $this->householdUser = $this->householdUserRepository->findOneByUserAndHousehold(
                 $this->security->getUser(), $this->household);
         }
@@ -109,6 +109,17 @@ class TransferTransactionType extends AbstractType
                     'class' => 'form-control text-center',
                 ],
                 'label' => t('Offset'),
+            ])
+            ->add('completed', CheckboxType::class, [
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'data-on-text' => t('completed'),
+                    'data-off-text' => t('unconfirmed'),
+                    'data-on-color' => 'success',
+                    'data-off-color' => 'warning',
+                    'data-label-text' => t('state'),
+                ]
             ])
         ;
     }

@@ -7,12 +7,13 @@ use App\Entity\Supplies\DTO\MeasureDTO;
 use App\Form\Supplies\MeasureType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\MeasureService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -20,10 +21,19 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/components/measure')]
 class MeasureController extends AbstractController
 {
-    #[Route('/', name: 'supplies_measure_index', methods: ['GET'])]
-    public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
+    private ManagerRegistry $managerRegistry;
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
+    }
+
+    #[Route('/', name: 'supplies_measure_index', methods: ['GET'])]
+    public function index(HouseholdRepository $householdRepository): Response
+    {
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->render('supplies/measure/index.html.twig', [
             'pageTitle' => t('Measures'),
@@ -32,9 +42,9 @@ class MeasureController extends AbstractController
     }
 
     #[Route('/datatables', name: 'supplies_measure_datatables', methods: ['GET'])]
-    public function getAsDatatables(Request $request, MeasureService $measureService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsDatatables(Request $request, MeasureService $measureService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $measureService->getMeasuresAsDatatablesArray($request, $currentHousehold)
@@ -54,14 +64,13 @@ class MeasureController extends AbstractController
     #[Route('/new', name: 'supplies_measure_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        SessionInterface $session,
         HouseholdRepository $householdRepository
     ): Response
     {
         $household = null;
 
-        if($session->has('current_household')) {
-            $household = $householdRepository->find($session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $this->denyAccessUnlessGranted('createSuppliesMeasure', $household);
@@ -78,7 +87,7 @@ class MeasureController extends AbstractController
                 $measure->setPhysicalQuantity($createMeasure->getPhysicalQuantity());
                 $measure->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($measure);
                 $entityManager->flush();
 
@@ -113,7 +122,7 @@ class MeasureController extends AbstractController
                 $measure->setName($editMeasure->getName());
                 $measure->setPhysicalQuantity($editMeasure->getPhysicalQuantity());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Measure was updated.'));
 
@@ -137,7 +146,7 @@ class MeasureController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_measure_' . $measure->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $measure);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($measure);
                 $entityManager->flush();
                 $this->addFlash('success', t('Measure was deleted.'));

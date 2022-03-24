@@ -5,17 +5,17 @@ namespace App\EventSubscriber;
 use App\Entity\User;
 use App\Repository\HouseholdRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 
 class HouseholdSubscriber implements EventSubscriberInterface
 {
-    private $session;
+    private RequestStack $requestStack;
     private $householdRepository;
 
-    public function __construct(SessionInterface $session, HouseholdRepository $householdRepository)
+    public function __construct(RequestStack $requestStack, HouseholdRepository $householdRepository)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
     }
 
@@ -42,7 +42,7 @@ class HouseholdSubscriber implements EventSubscriberInterface
             }
         }
 
-        $this->session->set('current_household', $householdId);
+        $this->requestStack->getSession()->set('current_household', $householdId);
     }
 
     public static function getSubscribedEvents()

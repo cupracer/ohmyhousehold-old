@@ -7,6 +7,7 @@ use App\Entity\DTO\AccountHolderDTO;
 use App\Form\AccountHolderType;
 use App\Repository\HouseholdRepository;
 use App\Service\AccountHolderService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,16 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/accountholder')]
 class AccountHolderController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
+
+    /**
+     * @param ManagerRegistry $managerRegistry
+     */
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
     #[Route('/', name: 'housekeepingbook_accountholder_index', methods: ['GET'])]
     public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
@@ -77,7 +88,7 @@ class AccountHolderController extends AbstractController
                 $accountHolder->setName($createAccountHolder->getName());
                 $accountHolder->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($accountHolder);
                 $entityManager->flush();
 
@@ -110,7 +121,7 @@ class AccountHolderController extends AbstractController
             try {
                 $accountHolder->setName($editAccountHolder->getName());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Account holder was updated.'));
 
@@ -134,7 +145,7 @@ class AccountHolderController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_account_holder_' . $accountHolder->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $accountHolder);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($accountHolder);
                 $entityManager->flush();
                 $this->addFlash('success', t('Account holder was deleted.'));

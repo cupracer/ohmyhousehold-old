@@ -7,12 +7,13 @@ use App\Entity\Supplies\DTO\ProductDTO;
 use App\Form\Supplies\ProductType;
 use App\Repository\HouseholdRepository;
 use App\Service\Supplies\ProductService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -20,10 +21,19 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/supplies/product')]
 class ProductController extends AbstractController
 {
-    #[Route('/', name: 'supplies_product_index', methods: ['GET'])]
-    public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
+    private ManagerRegistry $managerRegistry;
+    private RequestStack $requestStack;
+
+    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
+    }
+
+    #[Route('/', name: 'supplies_product_index', methods: ['GET'])]
+    public function index(HouseholdRepository $householdRepository): Response
+    {
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->render('supplies/product/index.html.twig', [
             'pageTitle' => t('Products'),
@@ -32,9 +42,9 @@ class ProductController extends AbstractController
     }
 
     #[Route('/datatables', name: 'supplies_product_datatables', methods: ['GET'])]
-    public function getAsDatatables(Request $request, ProductService $productService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsDatatables(Request $request, ProductService $productService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $productService->getProductsAsDatatablesArray($request, $currentHousehold, false)
@@ -42,9 +52,9 @@ class ProductController extends AbstractController
     }
 
     #[Route('/select2', name: 'supplies_product_select2', methods: ['GET'])]
-    public function getAsSelect2(Request $request, ProductService $productService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getAsSelect2(Request $request, ProductService $productService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $productService->getProductsAsSelect2Array($request, $currentHousehold, false)
@@ -52,9 +62,9 @@ class ProductController extends AbstractController
     }
 
     #[Route('/in-use/select2', name: 'supplies_product_inuse_select2', methods: ['GET'])]
-    public function getInUseAsSelect2(Request $request, ProductService $productService, HouseholdRepository $householdRepository, SessionInterface $session): Response
+    public function getInUseAsSelect2(Request $request, ProductService $productService, HouseholdRepository $householdRepository): Response
     {
-        $currentHousehold = $householdRepository->find($session->get('current_household'));
+        $currentHousehold = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
 
         return $this->json(
             $productService->getProductsAsSelect2Array($request, $currentHousehold, true)
@@ -64,14 +74,13 @@ class ProductController extends AbstractController
     #[Route('/new', name: 'supplies_product_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
-        SessionInterface $session,
         HouseholdRepository $householdRepository
     ): Response
     {
         $household = null;
 
-        if($session->has('current_household')) {
-            $household = $householdRepository->find($session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $this->denyAccessUnlessGranted('createSuppliesProduct', $household);
@@ -95,7 +104,7 @@ class ProductController extends AbstractController
                 $product->setMinimumNumber($createProduct->getMinimumNumber());
                 $product->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($product);
                 $entityManager->flush();
 
@@ -144,7 +153,7 @@ class ProductController extends AbstractController
                 $product->setPackaging($editProduct->getPackaging());
                 $product->setMinimumNumber($editProduct->getMinimumNumber());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Product was updated.'));
 
@@ -168,7 +177,7 @@ class ProductController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_product_' . $product->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete' , $product);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($product);
                 $entityManager->flush();
                 $this->addFlash('success', t('Product was deleted.'));

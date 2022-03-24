@@ -7,6 +7,7 @@ use App\Entity\DTO\BookingCategoryDTO;
 use App\Form\BookingCategoryType;
 use App\Repository\HouseholdRepository;
 use App\Service\BookingCategoryService;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,16 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/bookingcategory')]
 class BookingCategoryController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
+
+    /**
+     * @param ManagerRegistry $managerRegistry
+     */
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
     #[Route('/', name: 'housekeepingbook_bookingcategory_index', methods: ['GET'])]
     public function index(HouseholdRepository $householdRepository, SessionInterface $session): Response
     {
@@ -77,7 +88,7 @@ class BookingCategoryController extends AbstractController
                 $bookingCategory->setName($createBookingCategory->getName());
                 $bookingCategory->setHousehold($household);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($bookingCategory);
                 $entityManager->flush();
 
@@ -110,7 +121,7 @@ class BookingCategoryController extends AbstractController
             try {
                 $bookingCategory->setName($editBookingCategory->getName());
 
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
 
                 $this->addFlash('success', t('Booking category was updated.'));
 
@@ -134,7 +145,7 @@ class BookingCategoryController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_booking_category_' . $bookingCategory->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $bookingCategory);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($bookingCategory);
                 $entityManager->flush();
                 $this->addFlash('success', t('Booking category was deleted.'));

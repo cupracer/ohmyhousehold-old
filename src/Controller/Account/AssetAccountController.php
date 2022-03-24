@@ -8,6 +8,7 @@ use App\Form\Account\AssetAccountType;
 use App\Service\Account\AssetAccountService;
 use App\Service\UserSettingsService;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,13 +21,15 @@ use function Symfony\Component\Translation\t;
 #[Route('/{_locale<%app.supported_locales%>}/housekeepingbook/account/asset')]
 class AssetAccountController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
     private AssetAccountService $accountService;
     private UserSettingsService $userSettingsService;
 
-    public function __construct(AssetAccountService $accountService, UserSettingsService $userSettingsService)
+    public function __construct(AssetAccountService $accountService, UserSettingsService $userSettingsService, ManagerRegistry $managerRegistry)
     {
         $this->accountService = $accountService;
         $this->userSettingsService = $userSettingsService;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'housekeepingbook_asset_account_index', methods: ['GET'])]
@@ -84,7 +87,7 @@ class AssetAccountController extends AbstractController
                     $account->addOwner($owner);
                 }
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->persist($account);
                 $entityManager->flush();
 
@@ -122,7 +125,7 @@ class AssetAccountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
 
                 $assetAccount->setName($editAssetAccount->getName());
                 $assetAccount->setAccountType($editAssetAccount->getAccountType());
@@ -161,7 +164,7 @@ class AssetAccountController extends AbstractController
         try {
             if ($this->isCsrfTokenValid('delete_asset_account_' . $assetAccount->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $assetAccount);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($assetAccount);
                 $entityManager->flush();
                 $this->addFlash('success', t('Asset account was deleted.'));

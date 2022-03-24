@@ -2,11 +2,11 @@
     {% for label, messages in app.flashes %}
     {% for message in messages %}
     $(document).Toasts('create', {
-        title: '{{ label }}',
+        {#title: '{{ label }}',#}
         class: 'bg-{{ label }}',
         body: '{{ message }}',
         autohide: true,
-        delay: 4000,
+        delay: 3000,
         close: true,
         icon: 'fas fa-exclamation-triangle',
         position: 'topRight',

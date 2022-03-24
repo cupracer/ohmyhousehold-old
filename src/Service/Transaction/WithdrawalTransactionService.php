@@ -37,7 +37,7 @@ class WithdrawalTransactionService extends DatatablesService
         $draw = $request->query->getInt('draw', 1);
         $start = $request->query->getInt('start');
         $length = $request->query->getInt('length', 10);
-        $searchParam = (array) $request->query->get('search');
+        $searchParam = (array) $request->query->all('search');
 
         if(array_key_exists('value', $searchParam)) {
             $search = $searchParam['value'];
@@ -47,8 +47,8 @@ class WithdrawalTransactionService extends DatatablesService
 
         $orderingData = $this->getOrderingData(
             ['bookingDate', 'user', 'bookingCategory', 'source', 'destination', 'description', 'amount',],
-            (array) $request->query->get('columns'),
-            (array) $request->query->get('order')
+            (array) $request->query->all('columns'),
+            (array) $request->query->all('order')
         );
 
         $result = $this->withdrawalTransactionRepository->getFilteredDataByHousehold(
@@ -66,6 +66,8 @@ class WithdrawalTransactionService extends DatatablesService
         /** @var WithdrawalTransaction $row */
         foreach($result['data'] as $row) {
             $rowData = [
+                'id' => $row->getId(),
+                'completed' => $row->isCompleted(),
                 'bookingDate' => $dateFormatter->format($row->getBookingDate()),
                 'user' => $row->getHouseholdUser()->getUser()->getUsername(),
                 'bookingCategory' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser ? 'hidden' : $row->getBookingCategory()->getName(),
@@ -76,6 +78,7 @@ class WithdrawalTransactionService extends DatatablesService
                 'private' => $row->getPrivate(),
                 'hidden' => $row->getPrivate() && $row->getHouseholdUser() !== $householdUser,
                 'editLink' => $this->security->isGranted('edit', $row) ? $this->urlGenerator->generate('housekeepingbook_withdrawal_transaction_edit', ['id' => $row->getId()]) : null,
+                'editStateLink' => $this->security->isGranted('edit', $row) ? $this->urlGenerator->generate('housekeepingbook_withdrawal_transaction_edit_state', ['id' => $row->getId()]) : null,
             ];
 
             $tableData[] = $rowData;

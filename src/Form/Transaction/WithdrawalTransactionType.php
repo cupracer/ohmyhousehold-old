@@ -25,7 +25,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -33,7 +33,7 @@ use function Symfony\Component\Translation\t;
 
 class WithdrawalTransactionType extends AbstractType
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
 
     private HouseholdRepository $householdRepository;
     private HouseholdUserRepository $householdUserRepository;
@@ -47,7 +47,7 @@ class WithdrawalTransactionType extends AbstractType
     private Security $security;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         HouseholdRepository $householdRepository,
         HouseholdUserRepository $householdUserRepository,
         BookingCategoryRepository $bookingCategoryRepository,
@@ -58,7 +58,7 @@ class WithdrawalTransactionType extends AbstractType
         Security $security
     )
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->householdUserRepository = $householdUserRepository;
         $this->bookingCategoryRepository = $bookingCategoryRepository;
@@ -73,8 +73,8 @@ class WithdrawalTransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if($this->session->has('current_household')) {
-            $this->household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $this->household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
             $this->householdUser = $this->householdUserRepository->findOneByUserAndHousehold(
                 $this->security->getUser(), $this->household);
         }
@@ -148,7 +148,17 @@ class WithdrawalTransactionType extends AbstractType
                 ],
                 'label' => t('offset'),
             ])
-
+            ->add('completed', CheckboxType::class, [
+                'required' => false,
+                'label' => false,
+                'attr' => [
+                    'data-on-text' => t('completed'),
+                    'data-off-text' => t('unconfirmed'),
+                    'data-on-color' => 'success',
+                    'data-off-color' => 'warning',
+                    'data-label-text' => t('state'),
+                ]
+            ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $form = $event->getForm();
 

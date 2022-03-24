@@ -3,6 +3,7 @@ $(document).ready(function () {
         format: 'LT',
     });
     $("#withdrawal_transaction_private").bootstrapSwitch();
+    $("#withdrawal_transaction_completed").bootstrapSwitch();
 
     let bookingCategorySelect = $('#withdrawal_transaction_bookingCategory');
     bookingCategorySelect.select2({

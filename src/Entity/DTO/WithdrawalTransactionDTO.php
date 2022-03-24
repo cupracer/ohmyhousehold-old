@@ -44,6 +44,8 @@ class WithdrawalTransactionDTO
 
     private int $bookingPeriodOffset;
 
+    private bool $completed;
+
     public function __construct()
     {
         $this->bookingPeriodOffset = 0;
@@ -190,6 +192,24 @@ class WithdrawalTransactionDTO
     public function setBookingPeriodOffset(int $bookingPeriodOffset): WithdrawalTransactionDTO
     {
         $this->bookingPeriodOffset = $bookingPeriodOffset;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param bool $completed
+     * @return WithdrawalTransactionDTO
+     */
+    public function setCompleted(bool $completed): WithdrawalTransactionDTO
+    {
+        $this->completed = $completed;
         return $this;
     }
 }

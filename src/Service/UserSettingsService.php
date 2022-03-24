@@ -4,18 +4,18 @@ namespace App\Service;
 
 use App\Entity\Household;
 use App\Repository\HouseholdRepository;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserSettingsService
 {
     private HouseholdRepository $householdRepository;
-    private SessionInterface $session;
+    private RequestStack $requestStack;
 
-    public function __construct(HouseholdRepository $householdRepository, SessionInterface $session)
+    public function __construct(HouseholdRepository $householdRepository, RequestStack $requestStack)
     {
         $this->householdRepository = $householdRepository;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     //TODO: Use this method everywhere if possible
@@ -23,8 +23,8 @@ class UserSettingsService
     {
         $currentHousehold = null;
 
-        if($this->session->has('current_household')) {
-            $currentHousehold = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $currentHousehold = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         if(!$currentHousehold) {
@@ -32,7 +32,7 @@ class UserSettingsService
 
             if($households) {
                 $currentHousehold = $households[0];
-                $this->session->set('current_household', $currentHousehold->getId());
+                $this->requestStack->getSession()->set('current_household', $currentHousehold->getId());
             }
         }
 

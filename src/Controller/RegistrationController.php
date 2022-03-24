@@ -10,28 +10,32 @@ use App\Entity\UserProfile;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 #[Route('/{_locale<%app.supported_locales%>}/user/register')]
 class RegistrationController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
+
     private string $superAdminEmail;
     private $emailVerifier;
 
-    public function __construct(string $superAdminEmail, EmailVerifier $emailVerifier)
+    public function __construct(string $superAdminEmail, EmailVerifier $emailVerifier, ManagerRegistry $managerRegistry)
     {
         $this->superAdminEmail = $superAdminEmail;
         $this->emailVerifier = $emailVerifier;
+        $this->managerRegistry = $managerRegistry;
     }
 
     #[Route('/', name: 'app_user_register')]
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
     {
         $registerUserRequest = new RegisterUser();
         $form = $this->createForm(RegistrationFormType::class, $registerUserRequest);
@@ -44,7 +48,7 @@ class RegistrationController extends AbstractController
 
             // encode the plain password
             $user->setPassword(
-                $passwordEncoder->encodePassword(
+                $passwordEncoder->hashPassword(
                     $user,
                     $registerUserRequest->getPlainPassword()
                 )
@@ -73,7 +77,7 @@ class RegistrationController extends AbstractController
             $householdUser->setHousehold($household);
             $householdUser->setIsAdmin(true);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->managerRegistry->getManager();
             $entityManager->persist($userProfile);
             $entityManager->persist($user);
             $entityManager->persist($household);

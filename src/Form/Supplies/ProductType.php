@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Callback;
@@ -32,7 +32,7 @@ use function Symfony\Component\Translation\t;
 
 class ProductType extends AbstractType
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private ProductRepository $productRepository;
     private SupplyRepository $supplyRepository;
@@ -44,7 +44,7 @@ class ProductType extends AbstractType
     private Household $household;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         HouseholdRepository $householdRepository,
         ProductRepository $productRepository,
         SupplyRepository $supplyRepository,
@@ -53,7 +53,7 @@ class ProductType extends AbstractType
         PackagingRepository $packagingRepository,
         UrlGeneratorInterface $router)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->productRepository = $productRepository;
         $this->supplyRepository = $supplyRepository;
@@ -65,8 +65,8 @@ class ProductType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if($this->session->has('current_household')) {
-            $this->household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $this->household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $builder
@@ -225,25 +225,75 @@ class ProductType extends AbstractType
         /** @var Product $product */
         $product = $payload;
 
+        /** @var Supply $supply */
+        $supply = $context->getRoot()->get('supply')->getData();
+
+        /** @var Brand $brand */
+        $brand = $context->getRoot()->get('brand')->getData();
+
+        // "measure", "quantity", "packaging",
+
+        /** @var Measure $measure */
+        $measure = $context->getRoot()->get('measure')->getData();
+
+        /** @var string $quantity */
+        $quantity = $context->getRoot()->get('quantity')->getData();
+
+        /** @var Packaging $packaging */
+        $packaging = $context->getRoot()->get('packaging')->getData();
+
         $household = null;
 
-        if($this->session->has('current_household')) {
-            $household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
-        // A household is mandatory here
+        // A household is mandatory
         if(!$household) {
             $context->addViolation(t('Could not determine currently used household.'));
         }
 
-        // search for existing items with the same attribute value
-        $result = $this->productRepository->findBy(['name' => $value, 'household' => $household]);
+        // A supply is mandatory
+        if(!$supply) {
+            $context->addViolation(t('Could not determine a selected supply.'));
+        }
+
+        // A brand is mandatory
+        if(!$brand) {
+            $context->addViolation(t('Could not determine a selected brand.'));
+        }
+
+        // A measure is mandatory
+        if(!$measure) {
+            $context->addViolation(t('Could not determine a selected measure.'));
+        }
+
+        // A quantity is mandatory
+        if(!$quantity) {
+            $context->addViolation(t('Could not determine a selected quantity.'));
+        }
+
+        // A packaging is mandatory
+        if(!$packaging) {
+            $context->addViolation(t('Could not determine a selected packaging.'));
+        }
+
+        // search for existing product items with the same attribute values
+        $result = $this->productRepository->findBy([
+            'name' => $value,
+            'supply' => $supply,
+            'brand' => $brand,
+            'measure' => $measure,
+            'quantity' => $quantity,
+            'packaging' => $packaging,
+            'household' => $household,
+        ]);
 
         // If this form is meant to create a new item, it's sufficient to check for a non-empty result,
         // but if it's an update, we also need to check whether the original item
         // is in the result array to exclude this hit.
         if((!$product && $result) || ($product && $result && !in_array($product, $result))) {
-            $context->addViolation('This name is already in use.');
+            $context->addViolation('This name is already in use for the selected attributes.');
         }
     }
 }

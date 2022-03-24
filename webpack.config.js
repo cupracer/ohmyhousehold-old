@@ -61,6 +61,8 @@ Encore
 
     .addEntry('housekeepingbook_report_current_period', './assets/js/housekeepingbook/report/currentperiod.js')
 
+    .addEntry('housekeepingbook_transaction_state_update', './assets/js/housekeepingbook/transaction/state_update.js')
+
     .addEntry('supplies_brand_index', './assets/js/supplies/brand_index.js')
     .addEntry('supplies_category_index', './assets/js/supplies/category_index.js')
     .addEntry('supplies_measure_index', './assets/js/supplies/measure_index.js')
@@ -126,6 +128,17 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
+
+    // Instead of "autoProvidejQuery()" we could try exposing jQuery with the following.
+    // Please note that this requires "expose-loader" installed via package.json.
+    //
+    // .addLoader({
+    //     test: require.resolve('jquery'),
+    //     loader: 'expose-loader',
+    //     options: {
+    //         exposes: ['$', 'jQuery'],
+    //     },
+    // })
 
     // workaround to import Moment.js
     //      Module build failed: Module not found:

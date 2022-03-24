@@ -30,3 +30,14 @@ export function generateDatatablesEditButton(url) {
 
     return output;
 }
+
+export function generateDatatablesEditStateCheckbox(completed, url) {
+    if(!url) {
+        return '';
+    }
+
+    let checkedStr = completed === true || completed === "1" ? 'checked="checked"' : '';
+
+    return '<input type="checkbox" class="checkbox_transaction_state" ' +
+        checkedStr +' data-json-url="' + url + '">';
+}

@@ -9,27 +9,27 @@ use App\Repository\HouseholdRepository;
 use App\Repository\Supplies\ItemRepository;
 use App\Repository\Supplies\SupplyRepository;
 use DateTime;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 
 class NotificationService
 {
     private ItemRepository $itemRepository;
     private HouseholdRepository $householdRepository;
-    private SessionInterface $session;
+    private RequestStack $requestStack;
     private SupplyRepository $supplyRepository;
     private Household $household;
 
 
-    public function __construct(ItemRepository $itemRepository, HouseholdRepository $householdRepository, SessionInterface $session, SupplyRepository $supplyRepository)
+    public function __construct(ItemRepository $itemRepository, HouseholdRepository $householdRepository, RequestStack $requestStack, SupplyRepository $supplyRepository)
     {
         $this->itemRepository = $itemRepository;
         $this->householdRepository = $householdRepository;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->supplyRepository = $supplyRepository;
 
-        if($this->session->has('current_household')) {
-            $this->household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $this->household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
     }
 

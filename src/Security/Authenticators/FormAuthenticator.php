@@ -7,9 +7,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -19,7 +18,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,14 +26,14 @@ class FormAuthenticator extends AbstractAuthenticator implements AuthenticationE
     public const LOGIN_ROUTE = 'app_user_login';
 
     private EntityManagerInterface $entityManager;
-    private Session $session;
+    private RequestStack $requestStack;
     private UrlGeneratorInterface $router;
     private TranslatorInterface $translator;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UrlGeneratorInterface $router, TranslatorInterface $translator)
+    public function __construct(EntityManagerInterface $entityManager, RequestStack $requestStack, UrlGeneratorInterface $router, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->router = $router;
         $this->translator = $translator;
     }
@@ -51,7 +49,7 @@ class FormAuthenticator extends AbstractAuthenticator implements AuthenticationE
         }
 
         // add a custom flash message and redirect to the login page
-        $this->session->getFlashBag()->add('info', 'You have to login in order to access this page.');
+        $this->requestStack->getSession()->getFlashBag()->add('info', 'You have to login in order to access this page.');
 
         return new RedirectResponse($this->router->generate('app_user_login'));
     }
@@ -67,7 +65,7 @@ class FormAuthenticator extends AbstractAuthenticator implements AuthenticationE
             && $request->isMethod('POST');
     }
 
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $credentials = [
             'username' => strtolower($request->request->get('username')),
@@ -119,7 +117,7 @@ class FormAuthenticator extends AbstractAuthenticator implements AuthenticationE
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $error = strtr($exception->getMessageKey(), $exception->getMessageData());
-        $this->session->getFlashBag()->add('error', $error);
+        $this->requestStack->getSession()->getFlashBag()->add('error', $error);
 
 //        $data = [
 //            // you may want to customize or obfuscate the message first

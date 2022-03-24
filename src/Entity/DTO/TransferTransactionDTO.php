@@ -36,6 +36,8 @@ class TransferTransactionDTO
 
     private int $bookingPeriodOffset;
 
+    private bool $completed;
+
     public function __construct()
     {
         $this->bookingPeriodOffset = 0;
@@ -164,6 +166,24 @@ class TransferTransactionDTO
     public function setBookingPeriodOffset(int $bookingPeriodOffset): TransferTransactionDTO
     {
         $this->bookingPeriodOffset = $bookingPeriodOffset;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param bool $completed
+     * @return TransferTransactionDTO
+     */
+    public function setCompleted(bool $completed): TransferTransactionDTO
+    {
+        $this->completed = $completed;
         return $this;
     }
 }

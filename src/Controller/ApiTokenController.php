@@ -6,6 +6,7 @@ use App\Entity\ApiToken;
 use App\Entity\DTO\CreateApiToken;
 use App\Entity\User;
 use App\Form\CreateApiTokenType;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/{_locale<%app.supported_locales%>}/user/apitoken')]
 class ApiTokenController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
+
+    /**
+     * @param ManagerRegistry $managerRegistry
+     */
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
     #[IsGranted("ROLE_API")]
     #[IsGranted("IS_AUTHENTICATED_FULLY")]
     #[Route('/new', name: 'app_user_apitoken_new', methods: ['GET', 'POST'])]
@@ -38,7 +49,7 @@ class ApiTokenController extends AbstractController
             $apiToken->setToken(sha1($token));
             $apiToken->setHashAlgorithm('sha1');
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->managerRegistry->getManager();
             $entityManager->persist($apiToken);
             $entityManager->flush();
 
@@ -64,7 +75,7 @@ class ApiTokenController extends AbstractController
             if ($this->isCsrfTokenValid('delete' . $apiToken->getId(), $request->request->get('_token'))) {
                 $this->denyAccessUnlessGranted('delete', $apiToken);
 
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $entityManager->remove($apiToken);
                 $entityManager->flush();
                 $this->addFlash("success", "Selected API token was deleted.");

@@ -14,7 +14,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -22,7 +22,7 @@ use function Symfony\Component\Translation\t;
 
 class SupplyType extends AbstractType
 {
-    private SessionInterface $session;
+    private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private SupplyRepository $supplyRepository;
     private CategoryRepository $categoryRepository;
@@ -30,12 +30,12 @@ class SupplyType extends AbstractType
     private Household $household;
 
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         HouseholdRepository $householdRepository,
         SupplyRepository $supplyRepository,
         CategoryRepository $categoryRepository)
     {
-        $this->session = $session;
+        $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->supplyRepository = $supplyRepository;
         $this->categoryRepository = $categoryRepository;
@@ -43,8 +43,8 @@ class SupplyType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if($this->session->has('current_household')) {
-            $this->household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $this->household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         $builder
@@ -97,8 +97,8 @@ class SupplyType extends AbstractType
 
         $household = null;
 
-        if($this->session->has('current_household')) {
-            $household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         // A household is mandatory here

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\ReferrerService;
+use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Asset\Packages;
@@ -16,6 +17,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DefaultController extends AbstractController
 {
+    private ManagerRegistry $managerRegistry;
+
+    /**
+     * @param ManagerRegistry $managerRegistry
+     */
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
     #[Route('/', name: 'start')]
     public function homepageNoLocale(SessionInterface $session): Response
     {
@@ -40,7 +51,7 @@ class DefaultController extends AbstractController
 
         if($user) {
             $user->getUserProfile()->setLocale($request->getSession()->get('_locale'));
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->managerRegistry->getManager();
             $em->persist($user);
             $em->flush();
         }
@@ -83,5 +94,14 @@ class DefaultController extends AbstractController
         };
 
         return $this->redirect($packages->getUrl('build/datatables/i18n/' . $fileName));
+    }
+
+    /**
+     * @Route("/toasts", name="app_toasts", methods={"GET"})
+     * @return Response
+     */
+    public function getToasts(): Response
+    {
+        return $this->render('theme/_toasts.html.twig');
     }
 }
