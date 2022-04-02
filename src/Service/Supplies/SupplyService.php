@@ -51,7 +51,7 @@ class SupplyService extends DatatablesService
             $rowData = [
                 'id' => $supply->getId(),
                 'name' => $supply->getName(),
-                'category' => $supply->getCategory()->getName(),
+                'category' => $supply->getCategory() ? $supply->getCategory()->getName() : '',
                 'minimumNumber' => $supply->getMinimumNumber(),
                 'usageCount' => $row['numUsage'],
                 'orderValue' => $row['orderValue'],
