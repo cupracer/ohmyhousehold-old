@@ -28,6 +28,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use function Symfony\Component\Translation\t;
 
 class ProductType extends AbstractType
@@ -40,6 +41,7 @@ class ProductType extends AbstractType
     private MeasureRepository $measureRepository;
     private PackagingRepository $packagingRepository;
     private UrlGeneratorInterface $router;
+    private TranslatorInterface $translator;
 
     private Household $household;
 
@@ -51,7 +53,8 @@ class ProductType extends AbstractType
         BrandRepository $brandRepository,
         MeasureRepository $measureRepository,
         PackagingRepository $packagingRepository,
-        UrlGeneratorInterface $router)
+        UrlGeneratorInterface $router,
+        TranslatorInterface $translator)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
@@ -61,6 +64,7 @@ class ProductType extends AbstractType
         $this->measureRepository = $measureRepository;
         $this->packagingRepository = $packagingRepository;
         $this->router = $router;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -107,7 +111,10 @@ class ProductType extends AbstractType
             ->add('measure', EntityType::class, [
                 'placeholder' => '',
                 'class' => Measure::class,
-                'choices' => $this->measureRepository->findAllGrantedByHousehold($this->household),
+                'choices' => $this->measureRepository->findAll(),
+                'choice_label' => function(?Measure $measure) {
+                    return $measure ? $this->translator->trans($measure->getName()) : '';
+                },
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],
@@ -230,8 +237,6 @@ class ProductType extends AbstractType
 
         /** @var Brand $brand */
         $brand = $context->getRoot()->get('brand')->getData();
-
-        // "measure", "quantity", "packaging",
 
         /** @var Measure $measure */
         $measure = $context->getRoot()->get('measure')->getData();

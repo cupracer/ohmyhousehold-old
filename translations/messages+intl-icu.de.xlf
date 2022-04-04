@@ -457,6 +457,46 @@
         <source>add_supply_items</source>
         <target>Vorräte hinzufügen</target>
       </trans-unit>
+      <trans-unit id="measure_milliliter_name">
+        <source>measure_milliliter_name</source>
+        <target>Milliliter</target>
+      </trans-unit>
+      <trans-unit id="measure_milliliter_unit">
+        <source>measure_milliliter_unit</source>
+        <target>ml</target>
+      </trans-unit>
+      <trans-unit id="measure_liter_name">
+        <source>measure_liter_name</source>
+        <target>Liter</target>
+      </trans-unit>
+      <trans-unit id="measure_liter_unit">
+        <source>measure_liter_unit</source>
+        <target>L</target>
+      </trans-unit>
+      <trans-unit id="measure_gram_name">
+        <source>measure_gram_name</source>
+        <target>Gramm</target>
+      </trans-unit>
+      <trans-unit id="measure_gram_unit">
+        <source>measure_gram_unit</source>
+        <target>g</target>
+      </trans-unit>
+      <trans-unit id="measure_kilogram_name">
+        <source>measure_kilogram_name</source>
+        <target>Kilogramm</target>
+      </trans-unit>
+      <trans-unit id="measure_kilogram_unit">
+        <source>measure_kilogram_unit</source>
+        <target>kg</target>
+      </trans-unit>
+      <trans-unit id="measure_piece_name">
+        <source>measure_piece_name</source>
+        <target>Stück</target>
+      </trans-unit>
+      <trans-unit id="measure_piece_unit">
+        <source>measure_piece_unit</source>
+        <target>Stk</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

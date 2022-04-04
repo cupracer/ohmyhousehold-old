@@ -376,36 +376,6 @@ class Household
     /**
      * @return Collection
      */
-    public function getSupplyMeasures(): Collection
-    {
-        return $this->supplyMeasures;
-    }
-
-    public function addSupplyMeasure(SupplyMeasure $supplyMeasure): self
-    {
-        if (!$this->supplyMeasures->contains($supplyMeasure)) {
-            $this->supplyMeasures[] = $supplyMeasure;
-            $supplyMeasure->setHousehold($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSupplyMeasure(SupplyMeasure $supplyMeasure): self
-    {
-        if ($this->supplyMeasures->removeElement($supplyMeasure)) {
-            // set the owning side to null (unless already changed)
-            if ($supplyMeasure->getHousehold() === $this) {
-                $supplyMeasure->setHousehold(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection
-     */
     public function getSupplyProducts(): Collection
     {
         return $this->supplyProducts;
