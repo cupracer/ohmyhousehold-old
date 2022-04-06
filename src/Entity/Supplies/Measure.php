@@ -3,7 +3,6 @@
 namespace App\Entity\Supplies;
 
 use App\Repository\Supplies\MeasureRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,11 +29,6 @@ class Measure
      * @var string
      */
     private $unit;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
-    private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -86,26 +80,6 @@ class Measure
     {
         $this->unit = $unit;
         return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreatedAtValue()
-    {
-        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getPhysicalQuantity(): ?string
