@@ -4,6 +4,8 @@ namespace App\Form\Supplies;
 
 use App\Entity\Household;
 use App\Entity\Supplies\Brand;
+use App\Entity\Supplies\DTO\BrandDTO;
+use App\Entity\Supplies\DTO\SupplyDTO;
 use App\Entity\Supplies\Measure;
 use App\Entity\Supplies\Packaging;
 use App\Entity\Supplies\Product;
@@ -15,12 +17,14 @@ use App\Repository\Supplies\MeasureRepository;
 use App\Repository\Supplies\PackagingRepository;
 use App\Repository\Supplies\ProductRepository;
 use App\Repository\Supplies\SupplyRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,6 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use function Symfony\Component\Translation\t;
 
@@ -42,6 +47,8 @@ class ProductType extends AbstractType
     private PackagingRepository $packagingRepository;
     private UrlGeneratorInterface $router;
     private TranslatorInterface $translator;
+    private ValidatorInterface $validator;
+    private EntityManagerInterface $entityManager;
 
     private Household $household;
 
@@ -54,7 +61,9 @@ class ProductType extends AbstractType
         MeasureRepository $measureRepository,
         PackagingRepository $packagingRepository,
         UrlGeneratorInterface $router,
-        TranslatorInterface $translator)
+        TranslatorInterface $translator,
+        ValidatorInterface $validator,
+        EntityManagerInterface $entityManager)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
@@ -65,6 +74,8 @@ class ProductType extends AbstractType
         $this->packagingRepository = $packagingRepository;
         $this->router = $router;
         $this->translator = $translator;
+        $this->validator = $validator;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -183,13 +194,67 @@ class ProductType extends AbstractType
                 ;
             })
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-                $data = $event->getData();
+                $productDTOdata = $event->getData();
                 $form = $event->getForm();
 
-                // TODO: Is it safe enough to use intval() on the id?
+                if (!$productDTOdata) {
+                    return;
+                }
 
-                $supplyId = array_key_exists('supply', $data) ? $data['supply'] : null;
-                $brandId = array_key_exists('brand', $data) ? $data['brand'] : null;
+                // create new Supply entity if form value is not numeric:
+
+                if($productDTOdata['supply'] &&
+                    !is_numeric($productDTOdata['supply'])
+                ) {
+                    $supplyDTO = new SupplyDTO();
+                    $supplyDTO->setName($productDTOdata['supply']);
+
+                    $errors = $this->validator->validate($supplyDTO);
+
+                    if (count($errors) > 0) {
+                        foreach($errors as $error) {
+                            $form->get('supply')->addError(new FormError($error));
+                        }
+                    }else {
+                        $supply = new Supply();
+                        $supply->setName($supplyDTO->getName());
+                        $supply->setHousehold($this->household);
+                        $this->entityManager->persist($supply);
+                        $this->entityManager->flush();
+                        $productDTOdata['supply'] = $supply->getId();
+                        $event->setData($productDTOdata);
+                    }
+                }
+
+                // create new Brand entity if form value is not numeric:
+
+                if($productDTOdata['brand'] &&
+                    !is_numeric($productDTOdata['brand'])
+                ) {
+                    $brandDTO = new BrandDTO();
+                    $brandDTO->setName($productDTOdata['brand']);
+
+                    $errors = $this->validator->validate($brandDTO);
+
+                    if (count($errors) > 0) {
+                        foreach($errors as $error) {
+                            $form->get('brand')->addError(new FormError($error));
+                        }
+                    }else {
+                        $brand = new Brand();
+                        $brand->setName($brandDTO->getName());
+                        $brand->setHousehold($this->household);
+                        $this->entityManager->persist($brand);
+                        $this->entityManager->flush();
+                        $productDTOdata['brand'] = $brand->getId();
+                        $event->setData($productDTOdata);
+                    }
+                }
+
+                $supplyId = array_key_exists('supply', $productDTOdata) ? $productDTOdata['supply'] : null;
+                $brandId = array_key_exists('brand', $productDTOdata) ? $productDTOdata['brand'] : null;
+
+                // TODO: Is it safe enough to use intval() on the id?
 
                 $form
                     ->add('supply', EntityType::class, [

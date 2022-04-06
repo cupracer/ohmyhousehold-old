@@ -3,6 +3,7 @@ $(document).ready(function () {
     supplySelect.select2({
         theme: 'bootstrap4',
         placeholder: '',
+        tags: true,
         ajax: {
             dataType: 'json',
             url: supplySelect.data('json-url'),
@@ -13,6 +14,7 @@ $(document).ready(function () {
     brandSelect.select2({
         theme: 'bootstrap4',
         placeholder: '',
+        tags: true,
         ajax: {
             dataType: 'json',
             url: brandSelect.data('json-url'),
