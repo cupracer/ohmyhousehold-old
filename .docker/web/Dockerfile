@@ -104,13 +104,6 @@ CMD [ "/start.sh" ]
 EXPOSE 80
 EXPOSE 443
 
-ENV APP_ENV="" \
-    APP_SECRET="" \
-    SITE_URI="" \
-    SSL_SUBJECT="" \
+ENV SSL_SUBJECT="" \
     DATABASE_URL="" \
-    MAILER_DSN="" \
-    SUPER_ADMIN_EMAIL="" \
-    MAILER_SENDER_ADDRESS="" \
-    MAILER_SENDER_NAME=""
-
+    SUPER_ADMIN_EMAIL=""
