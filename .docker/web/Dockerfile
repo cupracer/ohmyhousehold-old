@@ -58,9 +58,9 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && chmod 755 /usr/local/bin/composer \
     && mkdir /var/www/.composer \
     && chown www-data: /var/www/.composer \
-    && su www-data --shell=/bin/bash -c "COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --no-dev --optimize-autoloader --no-scripts" \
+    && su www-data --shell=/bin/bash -c "COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --no-progress --no-dev --no-scripts" \
     && su www-data --shell=/bin/bash -c "composer config extra.symfony.allow-contrib true"  \
-    && su www-data --shell=/bin/bash -c "composer require symfony/apache-pack"
+    && su www-data --shell=/bin/bash -c "composer require --no-interaction --no-progress --no-scripts symfony/apache-pack"
 # TODO: fix --no-scripts   ???
 
 
