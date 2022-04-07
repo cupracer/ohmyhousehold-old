@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=MeasureRepository::class)
  * @ORM\Table(name="supplies_measure")
- * @ORM\HasLifecycleCallbacks()
  */
 class Measure
 {

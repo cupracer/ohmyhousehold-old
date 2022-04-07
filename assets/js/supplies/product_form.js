@@ -25,10 +25,20 @@ $(document).ready(function () {
     measureSelect.select2({
         theme: 'bootstrap4',
         placeholder: '',
+        sorter: function(data) {
+            return data.sort(function(a, b) {
+                return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+            });
+        },
     });
     let packagingSelect = $('#product_packaging');
     packagingSelect.select2({
         theme: 'bootstrap4',
         placeholder: '',
+        sorter: function(data) {
+            return data.sort(function(a, b) {
+                return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+            });
+        },
     });
 });

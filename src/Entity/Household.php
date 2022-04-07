@@ -5,8 +5,6 @@ namespace App\Entity;
 use App\Entity\Supplies\Brand as SupplyBrand;
 use App\Entity\Supplies\Category as SupplyCategory;
 use App\Entity\Supplies\Item;
-use App\Entity\Supplies\Measure as SupplyMeasure;
-use App\Entity\Supplies\Packaging as SupplyPackaging;
 use App\Entity\Supplies\Product as SupplyProduct;
 use App\Entity\Supplies\Supply;
 use App\Repository\HouseholdRepository;
@@ -85,16 +83,6 @@ class Household
     private $supplies;
 
     /**
-     * @ORM\OneToMany(targetEntity=SupplyPackaging::class, mappedBy="household")
-     */
-    private $supplyPackagings;
-
-    /**
-     * @ORM\OneToMany(targetEntity=SupplyMeasure::class, mappedBy="household")
-     */
-    private $supplyMeasures;
-
-    /**
      * @ORM\OneToMany(targetEntity=SupplyProduct::class, mappedBy="household")
      */
     private $supplyProducts;
@@ -115,8 +103,6 @@ class Household
         $this->brands = new ArrayCollection();
         $this->supplyCategories = new ArrayCollection();
         $this->supplies = new ArrayCollection();
-        $this->supplyPackagings = new ArrayCollection();
-        $this->supplyMeasures = new ArrayCollection();
         $this->supplyProducts = new ArrayCollection();
         $this->supplyItems = new ArrayCollection();
     }
@@ -337,36 +323,6 @@ class Household
             // set the owning side to null (unless already changed)
             if ($supply->getHousehold() === $this) {
                 $supply->setHousehold(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getSupplyPackagings(): Collection
-    {
-        return $this->supplyPackagings;
-    }
-
-    public function addSupplyPackaging(SupplyPackaging $supplyPackaging): self
-    {
-        if (!$this->supplyPackagings->contains($supplyPackaging)) {
-            $this->supplyPackagings[] = $supplyPackaging;
-            $supplyPackaging->setHousehold($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSupplyPackaging(SupplyPackaging $supplyPackaging): self
-    {
-        if ($this->supplyPackagings->removeElement($supplyPackaging)) {
-            // set the owning side to null (unless already changed)
-            if ($supplyPackaging->getHousehold() === $this) {
-                $supplyPackaging->setHousehold(null);
             }
         }
 

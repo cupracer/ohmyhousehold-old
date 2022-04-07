@@ -2,12 +2,9 @@
 
 namespace App\Repository\Supplies;
 
-use App\Entity\Household;
 use App\Entity\Supplies\Measure;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Measure|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,13 +13,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class MeasureRepository extends ServiceEntityRepository
 {
-    private Security $security;
-
-    public function __construct(ManagerRegistry $registry, Security $security)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Measure::class);
-
-        $this->security = $security;
     }
 
     /**
@@ -30,13 +23,11 @@ class MeasureRepository extends ServiceEntityRepository
      */
     public function findAll(): array
     {
-        $measures = $this->createQueryBuilder('m')
+        return $this->createQueryBuilder('m')
             ->orderBy('LOWER(m.name)', 'ASC')
             ->getQuery()
             ->execute()
         ;
-
-        return $measures;
     }
 
     // /**
