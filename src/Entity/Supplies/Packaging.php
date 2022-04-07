@@ -2,23 +2,14 @@
 
 namespace App\Entity\Supplies;
 
-use App\Entity\Household;
 use App\Repository\Supplies\PackagingRepository;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=PackagingRepository::class)
  * @ORM\Table(name="supplies_packaging")
- * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(
- *     fields={"name", "household"},
- *     errorPath="name",
- *     message="This name is already in use in this household."
- *     )
  */
 class Packaging
 {
@@ -30,20 +21,9 @@ class Packaging
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="supplyPackagings")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $household;
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="packaging")
@@ -65,6 +45,13 @@ class Packaging
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getName(): ?string
     {
         return $this->name;
@@ -73,38 +60,6 @@ class Packaging
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreatedAtValue()
-    {
-        $this->createdAt = new DateTimeImmutable();
-    }
-
-    public function getHousehold(): ?Household
-    {
-        return $this->household;
-    }
-
-    public function setHousehold(?Household $household): self
-    {
-        $this->household = $household;
 
         return $this;
     }

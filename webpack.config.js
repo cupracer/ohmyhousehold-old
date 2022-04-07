@@ -65,7 +65,6 @@ Encore
 
     .addEntry('supplies_brand_index', './assets/js/supplies/brand_index.js')
     .addEntry('supplies_category_index', './assets/js/supplies/category_index.js')
-    .addEntry('supplies_packaging_index', './assets/js/supplies/packaging_index.js')
 
     .addEntry('supplies_supply_index', './assets/js/supplies/supply_index.js')
     .addEntry('supplies_supply_form', './assets/js/supplies/supply_form.js')

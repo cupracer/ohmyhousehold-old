@@ -297,14 +297,6 @@
         <source>brands.noun</source>
         <target>Marken</target>
       </trans-unit>
-      <trans-unit id="25">
-        <source>packagings</source>
-        <target>Verpackungen</target>
-      </trans-unit>
-      <trans-unit id="26">
-        <source>measures.noun</source>
-        <target>Maßeinheiten</target>
-      </trans-unit>
       <trans-unit id="27">
         <source>supplies.noun</source>
         <target>Vorräte</target>
@@ -496,6 +488,58 @@
       <trans-unit id="measure_piece_unit">
         <source>measure_piece_unit</source>
         <target>Stk</target>
+      </trans-unit>
+      <trans-unit id="packaging_tin_can">
+        <source>packaging_tin_can</source>
+        <target>Konservendose</target>
+      </trans-unit>
+      <trans-unit id="packaging_canning_jar">
+        <source>packaging_canning_jar</source>
+        <target>Konservenglas</target>
+      </trans-unit>
+      <trans-unit id="packaging_glass">
+        <source>packaging_glass</source>
+        <target>Glas</target>
+      </trans-unit>
+      <trans-unit id="packaging_plastic_bag">
+        <source>packaging_plastic_bag</source>
+        <target>Kunststoffbeutel</target>
+      </trans-unit>
+      <trans-unit id="packaging_glass_bottle">
+        <source>packaging_glass_bottle</source>
+        <target>Glasflasche</target>
+      </trans-unit>
+      <trans-unit id="packaging_plastic_bottle">
+        <source>packaging_plastic_bottle</source>
+        <target>Kunststoffflasche</target>
+      </trans-unit>
+      <trans-unit id="packaging_tube">
+        <source>packaging_tube</source>
+        <target>Tube</target>
+      </trans-unit>
+      <trans-unit id="packaging_aluminum">
+        <source>packaging_aluminum</source>
+        <target>Aluminium</target>
+      </trans-unit>
+      <trans-unit id="packaging_net">
+        <source>packaging_net</source>
+        <target>Netz</target>
+      </trans-unit>
+      <trans-unit id="packaging_cardboard">
+        <source>packaging_cardboard</source>
+        <target>Karton</target>
+      </trans-unit>
+      <trans-unit id="packaging_paper">
+        <source>packaging_paper</source>
+        <target>Papier</target>
+      </trans-unit>
+      <trans-unit id="packaging_tetra_pak">
+        <source>packaging_tetra_pak</source>
+        <target>Tetra Pak</target>
+      </trans-unit>
+      <trans-unit id="packaging_pastic_can">
+        <source>packaging_plastic_can</source>
+        <target>Kunststoffdose</target>
       </trans-unit>
     </body>
   </file>

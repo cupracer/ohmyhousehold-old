@@ -20,6 +20,7 @@ use App\Repository\Supplies\SupplyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -123,8 +124,9 @@ class ProductType extends AbstractType
                 'placeholder' => '',
                 'class' => Measure::class,
                 'choices' => $this->measureRepository->findAll(),
-                'choice_label' => function(?Measure $measure) {
-                    return $measure ? $this->translator->trans($measure->getName()) : '';
+                'choice_label' => function(Measure $measure) {
+                    return $this->translator->trans($measure->getName()) . ' (' .
+                        $this->translator->trans($measure->getUnit()) . ')';
                 },
                 'attr' => [
                     'class' => 'form-control select2field',
@@ -144,7 +146,10 @@ class ProductType extends AbstractType
             ->add('packaging', EntityType::class, [
                 'placeholder' => '',
                 'class' => Packaging::class,
-                'choices' => $this->packagingRepository->findAllGrantedByHousehold($this->household),
+                'choices' => $this->packagingRepository->findAll(),
+                'choice_label' => function(Packaging $packaging) {
+                    return $this->translator->trans($packaging->getName());
+                },
                 'attr' => [
                     'class' => 'form-control select2field',
                 ],
