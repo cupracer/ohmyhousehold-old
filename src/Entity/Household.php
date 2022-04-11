@@ -6,6 +6,7 @@ use App\Entity\Supplies\Brand as SupplyBrand;
 use App\Entity\Supplies\Category as SupplyCategory;
 use App\Entity\Supplies\Item;
 use App\Entity\Supplies\Product as SupplyProduct;
+use App\Entity\Supplies\StorageLocation;
 use App\Entity\Supplies\Supply;
 use App\Repository\HouseholdRepository;
 use DateTime;
@@ -92,6 +93,11 @@ class Household
      */
     private $supplyItems;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StorageLocation::class, mappedBy="household")
+     */
+    private $supplyStorageLocations;
+
     public function __construct()
     {
         $this->householdUsers = new ArrayCollection();
@@ -105,6 +111,7 @@ class Household
         $this->supplies = new ArrayCollection();
         $this->supplyProducts = new ArrayCollection();
         $this->supplyItems = new ArrayCollection();
+        $this->supplyStorageLocations = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -383,6 +390,36 @@ class Household
             // set the owning side to null (unless already changed)
             if ($supplyItem->getHousehold() === $this) {
                 $supplyItem->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StorageLocation[]
+     */
+    public function getSupplyStorageLocations(): Collection
+    {
+        return $this->supplyStorageLocations;
+    }
+
+    public function addSupplyStorageLocation(StorageLocation $supplyStorageLocation): self
+    {
+        if (!$this->supplyStorageLocations->contains($supplyStorageLocation)) {
+            $this->supplyStorageLocations[] = $supplyStorageLocation;
+            $supplyStorageLocation->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplyStorageLocation(StorageLocation $supplyStorageLocation): self
+    {
+        if ($this->supplyStorageLocations->removeElement($supplyStorageLocation)) {
+            // set the owning side to null (unless already changed)
+            if ($supplyStorageLocation->getHousehold() === $this) {
+                $supplyStorageLocation->setHousehold(null);
             }
         }
 
