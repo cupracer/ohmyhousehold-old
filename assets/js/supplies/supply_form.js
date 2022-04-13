@@ -3,5 +3,6 @@ $(document).ready(function () {
     categorySelect.select2({
         theme: 'bootstrap4',
         placeholder: '',
+        allowClear: true,
     });
 });
