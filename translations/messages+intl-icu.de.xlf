@@ -541,6 +541,18 @@
         <source>packaging_plastic_can</source>
         <target>Kunststoffdose</target>
       </trans-unit>
+      <trans-unit id="packaging_foil">
+        <source>packaging_foil</source>
+        <target>Folie</target>
+      </trans-unit>
+      <trans-unit id="measure_meter_name">
+        <source>measure_meter_name</source>
+        <target>Meter</target>
+      </trans-unit>
+      <trans-unit id="measure_meter_unit">
+        <source>measure_meter_unit</source>
+        <target>m</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
