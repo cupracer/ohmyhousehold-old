@@ -21,6 +21,7 @@
         "nesbot/carbon": "^2",
         "phpdocumentor/reflection-docblock": "^5",
         "sensio/framework-extra-bundle": "^6",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "6.0.*",
         "symfony/console": "6.0.*",
         "symfony/dotenv": "6.0.*",
@@ -110,7 +111,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "6.0.*"
         }
     }
