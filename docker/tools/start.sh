@@ -43,8 +43,11 @@ fi
 #test -z $APP_MAILER_DEV_RECIPIENT || echo "APP_MAILER_DEV_RECIPIENT='${APP_MAILER_DEV_RECIPIENT}'" >> /var/www/html/.env.local
 #test -z $APP_DATATABLES_USE_FIXED_COLUMNS || echo "APP_DATATABLES_USE_FIXED_COLUMNS='${APP_DATATABLES_USE_FIXED_COLUMNS}'" >> /var/www/html/.env.local
 
-su www-data --shell=/bin/bash -c "XDEBUG_MODE=off php bin/console --no-interaction --env=${APP_ENV} doctrine:schema:update -f" && \
-    su www-data --shell=/bin/bash -c "XDEBUG_MODE=off php bin/console --env=${APP_ENV} cache:clear"
+if [ "${APP_ENV}" == "prod" ]; then
+  su www-data --shell=/bin/bash -c "XDEBUG_MODE=off php bin/console --no-interaction --env=${APP_ENV} doctrine:schema:update -f"
+fi
+
+su www-data --shell=/bin/bash -c "XDEBUG_MODE=off php bin/console --env=${APP_ENV} cache:clear"
 
 RC=$?
 
