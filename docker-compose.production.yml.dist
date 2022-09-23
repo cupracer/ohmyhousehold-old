@@ -21,7 +21,8 @@ services:
       APP_SECRET: secret
       # DATABASE_URL: sqlite:///%kernel.project_dir%/var/data.db
       DATABASE_URL: mysql://app:secret@db/app
-      APP_BASEURL: http://127.0.0.1:80
+      SITE_URI: http://127.0.0.1:80
+      SITE_NAME: "Oh my Household!"
       MAILER_DSN: 'null://null'
       SUPER_ADMIN_EMAIL: admin@example.com
       # SSL_SUBJECT: /C=XY/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=somehost.somedomain
