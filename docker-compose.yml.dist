@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+
+  db:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secret}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secret}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
