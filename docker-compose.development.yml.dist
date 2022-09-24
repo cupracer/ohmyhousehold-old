@@ -1,0 +1,50 @@
+version: '3.4'
+
+services:
+
+  db:
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#      - mysql_backup_data:/backup
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/tools/Dockerfile
+      target: webserver
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: dev
+      APP_SECRET: secret
+      # DATABASE_URL: sqlite:///%kernel.project_dir%/var/data.db
+      DATABASE_URL: mysql://app:secret@db/app
+      SITE_URI: http://127.0.0.1:8000/
+      SITE_NAME: "Oh my Household!"
+      MAILER_DSN: 'null://null'
+      SUPER_ADMIN_EMAIL: admin@example.com
+      # SSL_SUBJECT: /C=XY/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=somehost.somedomain
+      SSL_SUBJECT:
+      APP_MAILER_SENDER_ADDRESS: changeme@example.com
+      APP_MAILER_SENDER_NAME: ChangeMe
+      APP_MAILER_DEV_RECIPIENT:
+      APP_DATATABLES_USE_FIXED_COLUMNS: 0
+    ports:
+      - "${WEB_HTTP_PORT:-8000}:80"
+      - "${WEB_HTTPS_PORT:-8443}:443"
+    depends_on:
+      - db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
+
+#volumes:
+#  mysql_data:
+#  mysql_backup_data:
+

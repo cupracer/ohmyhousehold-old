@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use function Symfony\Component\Translation\t;
 
 #[IsGranted("ROLE_SUPPLIES")]
@@ -32,11 +33,16 @@ class ItemController extends AbstractController
 {
     private ManagerRegistry $managerRegistry;
     private RequestStack $requestStack;
+    private TranslatorInterface $translator;
 
-    public function __construct(RequestStack $requestStack, ManagerRegistry $managerRegistry)
+    public function __construct(
+        RequestStack $requestStack,
+        ManagerRegistry $managerRegistry,
+        TranslatorInterface $translator)
     {
         $this->requestStack = $requestStack;
         $this->managerRegistry = $managerRegistry;
+        $this->translator = $translator;
     }
 
     #[Route('/', name: 'supplies_item_index', methods: ['GET'])]
@@ -319,7 +325,7 @@ class ItemController extends AbstractController
                 $productData = [
                     'name' => $checkoutItem->getProduct()->getSupply()->getName() . ($checkoutItem->getProduct()->getName() ? ' - ' . $checkoutItem->getProduct()->getName() : ''),
                     'brand' => $checkoutItem->getProduct()->getBrand(),
-                    'amount' => 1 * $checkoutItem->getProduct()->getQuantity() . $checkoutItem->getProduct()->getMeasure()->getName(),
+                    'amount' => 1 * $checkoutItem->getProduct()->getQuantity() . ' ' . $this->translator->trans($checkoutItem->getProduct()->getMeasure()->getUnit()),
                 ];
 
                 return $this->render('supplies/item/form_checkout_list.html.twig', [

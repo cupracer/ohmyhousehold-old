@@ -61,6 +61,7 @@ class SupplyType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'placeholder' => '',
+                'required' => false,
                 'class' => Category::class,
                 'choices' => $this->categoryRepository->findAllGrantedByHousehold($this->household),
                 'attr' => [
@@ -97,8 +98,8 @@ class SupplyType extends AbstractType
 
         $household = null;
 
-        if($this->session->has('current_household')) {
-            $household = $this->householdRepository->find($this->session->get('current_household'));
+        if($this->requestStack->getSession()->has('current_household')) {
+            $household = $this->householdRepository->find($this->requestStack->getSession()->get('current_household'));
         }
 
         // A household is mandatory here

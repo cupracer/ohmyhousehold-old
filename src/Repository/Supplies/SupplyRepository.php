@@ -40,7 +40,7 @@ class SupplyRepository extends ServiceEntityRepository
             ->andWhere('s.household = :household')
             ->innerJoin('s.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
-            ->innerJoin('s.category', 'c')
+            ->leftJoin('s.category', 'c')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $user)
@@ -80,7 +80,7 @@ class SupplyRepository extends ServiceEntityRepository
             ->andWhere('s.household = :household')
             ->innerJoin('s.household', 'hh')
             ->innerJoin('hh.householdUsers', 'hhu')
-            ->innerJoin('s.category', 'c')
+            ->leftJoin('s.category', 'c')
             ->andWhere('hhu.user = :user')
             ->setParameter('household', $household)
             ->setParameter('user', $this->security->getUser());

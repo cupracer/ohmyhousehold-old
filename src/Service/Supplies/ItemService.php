@@ -11,18 +11,25 @@ use IntlDateFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ItemService extends DatatablesService
 {
     private ItemRepository $itemRepository;
     private UrlGeneratorInterface $urlGenerator;
     private Security $security;
+    private TranslatorInterface $translator;
 
-    public function __construct(ItemRepository $itemRepository, UrlGeneratorInterface $urlGenerator, Security $security)
+    public function __construct(
+        ItemRepository $itemRepository,
+        UrlGeneratorInterface $urlGenerator,
+        Security $security,
+        TranslatorInterface $translator)
     {
         $this->itemRepository = $itemRepository;
         $this->urlGenerator = $urlGenerator;
         $this->security = $security;
+        $this->translator = $translator;
     }
 
     public function getItemsAsDatatablesArray(Request $request, Household $household): array
@@ -59,8 +66,8 @@ class ItemService extends DatatablesService
                 'id' => $row->getId(),
                 'product' => $row->getProduct()->getSupply()->getName() . ($row->getProduct()->getName() ? ' - ' . $row->getProduct()->getName() : ''),
                 'brand' => $row->getProduct()->getBrand()->getName(),
-                'category' => $row->getProduct()->getSupply()->getCategory()->getName(),
-                'amount' => 1*$row->getProduct()->getQuantity() . $row->getProduct()->getMeasure()->getName(),
+                'category' => $row->getProduct()->getSupply()->getCategory()?->getName(),
+                'amount' => 1*$row->getProduct()->getQuantity() . ' ' . $this->translator->trans($row->getProduct()->getMeasure()->getUnit()),
                 'purchaseDate' => $row->getPurchaseDate() ? $dateFormatter->format($row->getPurchaseDate()) : null,
                 'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
                 'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt()),

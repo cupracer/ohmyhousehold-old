@@ -1,0 +1,7 @@
+/docker/tools/Dockerfile
+/var
+/.dockerignore
+/.env.local
+/.env.dev
+/.git*
+/docker-compose.*
