@@ -16,7 +16,6 @@ class SupplyDTO
     /**
      * @var Category
      */
-    #[Assert\NotBlank]
     private $category;
 
     /**

@@ -61,6 +61,7 @@ class SupplyType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'placeholder' => '',
+                'required' => false,
                 'class' => Category::class,
                 'choices' => $this->categoryRepository->findAllGrantedByHousehold($this->household),
                 'attr' => [

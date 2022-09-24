@@ -139,20 +139,6 @@
                     <p>{{ 'categories'|trans|title }}</p>
                 </a>
             </li>
-
-            <li class="nav-item">
-                <a href="{{ path('supplies_packaging_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_packaging_index') %}active{% endif %}">
-                    <i class="nav-icon fas fa-box-open"></i>
-                    <p>{{ 'packagings'|trans|title }}</p>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="{{ path('supplies_measure_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_measure_index') %}active{% endif %}">
-                    <i class="nav-icon fas fa-weight"></i>
-                    <p>{{ 'measures.noun'|trans|title }}</p>
-                </a>
-            </li>
         </ul>
     </li>
 

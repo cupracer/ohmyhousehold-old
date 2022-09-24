@@ -52,7 +52,7 @@ class Supply
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="supplies")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category;
 

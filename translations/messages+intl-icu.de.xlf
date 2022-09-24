@@ -297,14 +297,6 @@
         <source>brands.noun</source>
         <target>Marken</target>
       </trans-unit>
-      <trans-unit id="25">
-        <source>packagings</source>
-        <target>Verpackungen</target>
-      </trans-unit>
-      <trans-unit id="26">
-        <source>measures.noun</source>
-        <target>Maßeinheiten</target>
-      </trans-unit>
       <trans-unit id="27">
         <source>supplies.noun</source>
         <target>Vorräte</target>
@@ -460,6 +452,110 @@
       <trans-unit id="add_supply_items">
         <source>add_supply_items</source>
         <target>Vorräte hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="measure_milliliter_name">
+        <source>measure_milliliter_name</source>
+        <target>Milliliter</target>
+      </trans-unit>
+      <trans-unit id="measure_milliliter_unit">
+        <source>measure_milliliter_unit</source>
+        <target>ml</target>
+      </trans-unit>
+      <trans-unit id="measure_liter_name">
+        <source>measure_liter_name</source>
+        <target>Liter</target>
+      </trans-unit>
+      <trans-unit id="measure_liter_unit">
+        <source>measure_liter_unit</source>
+        <target>L</target>
+      </trans-unit>
+      <trans-unit id="measure_gram_name">
+        <source>measure_gram_name</source>
+        <target>Gramm</target>
+      </trans-unit>
+      <trans-unit id="measure_gram_unit">
+        <source>measure_gram_unit</source>
+        <target>g</target>
+      </trans-unit>
+      <trans-unit id="measure_kilogram_name">
+        <source>measure_kilogram_name</source>
+        <target>Kilogramm</target>
+      </trans-unit>
+      <trans-unit id="measure_kilogram_unit">
+        <source>measure_kilogram_unit</source>
+        <target>kg</target>
+      </trans-unit>
+      <trans-unit id="measure_piece_name">
+        <source>measure_piece_name</source>
+        <target>Stück</target>
+      </trans-unit>
+      <trans-unit id="measure_piece_unit">
+        <source>measure_piece_unit</source>
+        <target>Stk</target>
+      </trans-unit>
+      <trans-unit id="packaging_tin_can">
+        <source>packaging_tin_can</source>
+        <target>Konservendose</target>
+      </trans-unit>
+      <trans-unit id="packaging_canning_jar">
+        <source>packaging_canning_jar</source>
+        <target>Konservenglas</target>
+      </trans-unit>
+      <trans-unit id="packaging_glass">
+        <source>packaging_glass</source>
+        <target>Glas</target>
+      </trans-unit>
+      <trans-unit id="packaging_plastic_bag">
+        <source>packaging_plastic_bag</source>
+        <target>Kunststoffbeutel</target>
+      </trans-unit>
+      <trans-unit id="packaging_glass_bottle">
+        <source>packaging_glass_bottle</source>
+        <target>Glasflasche</target>
+      </trans-unit>
+      <trans-unit id="packaging_plastic_bottle">
+        <source>packaging_plastic_bottle</source>
+        <target>Kunststoffflasche</target>
+      </trans-unit>
+      <trans-unit id="packaging_tube">
+        <source>packaging_tube</source>
+        <target>Tube</target>
+      </trans-unit>
+      <trans-unit id="packaging_aluminum">
+        <source>packaging_aluminum</source>
+        <target>Aluminium</target>
+      </trans-unit>
+      <trans-unit id="packaging_net">
+        <source>packaging_net</source>
+        <target>Netz</target>
+      </trans-unit>
+      <trans-unit id="packaging_cardboard">
+        <source>packaging_cardboard</source>
+        <target>Karton</target>
+      </trans-unit>
+      <trans-unit id="packaging_paper">
+        <source>packaging_paper</source>
+        <target>Papier</target>
+      </trans-unit>
+      <trans-unit id="packaging_tetra_pak">
+        <source>packaging_tetra_pak</source>
+        <target>Tetra Pak</target>
+      </trans-unit>
+      <trans-unit id="packaging_pastic_can">
+        <source>packaging_plastic_can</source>
+        <target>Kunststoffdose</target>
+      </trans-unit>
+      <trans-unit id="packaging_foil">
+        <source>packaging_foil</source>
+        <target>Folie</target>
+      </trans-unit>
+      <trans-unit id="measure_meter_name">
+        <source>measure_meter_name</source>
+        <target>Meter</target>
+      </trans-unit>
+      <trans-unit id="measure_meter_unit">
+        <source>measure_meter_unit</source>
+        <target>m</target>
       </trans-unit>
     </body>
   </file>

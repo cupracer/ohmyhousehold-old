@@ -104,4 +104,13 @@ class DefaultController extends AbstractController
     {
         return $this->render('theme/_toasts.html.twig');
     }
+
+    /**
+     * @Route("/ping", name="app_ping", methods={"GET"})
+     * @return Response
+     */
+    public function ping(): Response
+    {
+        return new Response('pong', Response::HTTP_OK, ['content-type' => 'text/plain']);
+    }
 }

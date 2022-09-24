@@ -9,16 +9,22 @@ use App\Service\DatatablesService;
 use IntlDateFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductService extends DatatablesService
 {
     private ProductRepository $productRepository;
     private UrlGeneratorInterface $urlGenerator;
+    private TranslatorInterface $translator;
 
-    public function __construct(ProductRepository $productRepository, UrlGeneratorInterface $urlGenerator)
+    public function __construct(
+        ProductRepository $productRepository,
+        UrlGeneratorInterface $urlGenerator,
+        TranslatorInterface $translator)
     {
         $this->productRepository = $productRepository;
         $this->urlGenerator = $urlGenerator;
+        $this->translator = $translator;
     }
 
     public function getProductsAsDatatablesArray(Request $request, Household $household, bool $inUseOnly): array
@@ -53,9 +59,9 @@ class ProductService extends DatatablesService
                 'name' => $product->getSupply()->getName() . ($product->getName() ? ' - ' . $product->getName() : ''),
                 'brand' => $product->getBrand()->getName(),
                 'ean' => $product->getEan(),
-                'category' => $product->getSupply()->getCategory()->getName(),
-                'packaging' => $product->getPackaging()?->getName(),
-                'amount' => 1*$product->getQuantity() . $product->getMeasure()->getName(),
+                'category' => $product->getSupply()->getCategory()?->getName(),
+                'packaging' => $product->getPackaging() ? $this->translator->trans($product->getPackaging()->getName()) : null,
+                'amount' => 1*$product->getQuantity() . ' ' . $this->translator->trans($product->getMeasure()->getUnit()),
                 'minimumNumber' => $product->getMinimumNumber(),
                 'usageCount' => $row['numUsage'],
                 'orderValue' => $row['orderValue'],
@@ -103,7 +109,7 @@ class ProductService extends DatatablesService
                 'text' => $product->getSupply()->getName() .
                     ($product->getName() ? ' - ' . $product->getName() : '') .
                     ' - ' . $product->getBrand()->getName() .
-                    ' - ' . 1*$product->getQuantity() . $product->getMeasure()->getName(),
+                    ' - ' . 1*$product->getQuantity() . ' ' .$this->translator->trans($product->getMeasure()->getUnit()),
             ];
 
             $tableData[] = $rowData;

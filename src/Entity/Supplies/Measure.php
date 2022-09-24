@@ -2,26 +2,12 @@
 
 namespace App\Entity\Supplies;
 
-use App\Entity\Household;
 use App\Repository\Supplies\MeasureRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=MeasureRepository::class)
  * @ORM\Table(name="supplies_measure")
- * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity(
- *     fields={"name", "household"},
- *     errorPath="name",
- *     message="This name is already in use in this household."
- *     )
- * @UniqueEntity(
- *     fields={"name", "physicalQuantity"},
- *     errorPath="name",
- *     message="This name already exists for the chosen physical quantity."
- *     )
  */
 class Measure
 {
@@ -33,20 +19,15 @@ class Measure
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @var string
      */
-    private $createdAt;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Household::class, inversedBy="supplyMeasures")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $household;
+    private $unit;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -56,6 +37,13 @@ class Measure
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getId(): ?int
@@ -75,35 +63,21 @@ class Measure
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    /**
+     * @return string
+     */
+    public function getUnit(): string
     {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
+        return $this->unit;
     }
 
     /**
-     * @ORM\PrePersist
+     * @param string $unit
+     * @return Measure
      */
-    public function setCreatedAtValue()
+    public function setUnit(string $unit): Measure
     {
-        $this->createdAt = new DateTimeImmutable();
-    }
-
-    public function getHousehold(): ?Household
-    {
-        return $this->household;
-    }
-
-    public function setHousehold(?Household $household): self
-    {
-        $this->household = $household;
-
+        $this->unit = $unit;
         return $this;
     }
 
