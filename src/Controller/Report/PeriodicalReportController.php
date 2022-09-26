@@ -98,6 +98,7 @@ class PeriodicalReportController extends AbstractController
         ]);
     }
 
+    //TODO: Work in progress - what is this? A try to use async requests?
     #[Route('/deposit/{year}/{month}', name: 'housekeepingbook_report_periodical_deposit', requirements: ['year' => '\d{4}', 'month' => '\d{1,2}'], methods: ['GET',])]
     public function deposit(int $year, int $month, ReportService $reportService, HouseholdUserRepository $householdUserRepository): Response
     {
