@@ -297,6 +297,14 @@
         <source>brands.noun</source>
         <target>Marken</target>
       </trans-unit>
+      <trans-unit id="25">
+        <source>packagings</source>
+        <target>Verpackungen</target>
+      </trans-unit>
+      <trans-unit id="26">
+        <source>measures.noun</source>
+        <target>Maßeinheiten</target>
+      </trans-unit>
       <trans-unit id="27">
         <source>supplies.noun</source>
         <target>Vorräte</target>
@@ -441,10 +449,6 @@
         <source>{total} running low supplies</source>
         <target>{total} zur Neige gehende Vorräte</target>
       </trans-unit>
-      <trans-unit id="apply.button">
-        <source>apply.button</source>
-        <target>Anwenden</target>
-      </trans-unit>
       <trans-unit id="add_transfer_transaction">
         <source>add_transfer_transaction</source>
         <target>Transfer hinzufügen</target>
@@ -556,6 +560,10 @@
       <trans-unit id="measure_meter_unit">
         <source>measure_meter_unit</source>
         <target>m</target>
+      </trans-unit>
+      <trans-unit id="apply.button">
+        <source>apply.button</source>
+        <target>Anwenden</target>
       </trans-unit>
     </body>
   </file>

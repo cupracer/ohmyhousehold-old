@@ -12,9 +12,10 @@ use DateTime;
 use IntlDateFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\Translation\t;
 
@@ -23,10 +24,12 @@ use function Symfony\Component\Translation\t;
 class PeriodicalReportController extends AbstractController
 {
     private UserSettingsService $userSettingsService;
+    private RequestStack $requestStack;
 
-    public function __construct(UserSettingsService $userSettingsService)
+    public function __construct(UserSettingsService $userSettingsService, RequestStack $requestStack)
     {
         $this->userSettingsService = $userSettingsService;
+        $this->requestStack = $requestStack;
     }
 
 
@@ -42,7 +45,7 @@ class PeriodicalReportController extends AbstractController
     }
 
     #[Route('/{year}/{month}', name: 'housekeepingbook_report_periodical_index', requirements: ['year' => '\d{4}', 'month' => '\d{1,2}'], methods: ['GET', 'POST'])]
-    public function index(int $year, int $month, Request $request, SessionInterface $session, ReportService $reportService, HouseholdUserRepository $householdUserRepository): Response
+    public function index(int $year, int $month, Request $request, ReportService $reportService, HouseholdUserRepository $householdUserRepository): Response
     {
         $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
 
@@ -51,8 +54,8 @@ class PeriodicalReportController extends AbstractController
 
         $periodicalReport = new PeriodicalReportDTO();
 
-        if($session->has('housekeepingbook_periodical_report_member_id')) {
-            $id = $householdUserRepository->find($session->get('housekeepingbook_periodical_report_member_id'));
+        if($this->requestStack->getSession()->has('housekeepingbook_periodical_report_member_id')) {
+            $id = $householdUserRepository->find($this->requestStack->getSession()->get('housekeepingbook_periodical_report_member_id'));
             if($id) {
                 $periodicalReport->setMember($householdUserRepository->find($id));
             }
@@ -63,9 +66,9 @@ class PeriodicalReportController extends AbstractController
 
         if ($periodicalReportForm->isSubmitted() && $periodicalReportForm->isValid()) {
             if($periodicalReport->getMember()) {
-                $session->set('housekeepingbook_periodical_report_member_id', $periodicalReport->getMember()->getId());
+                $this->requestStack->getSession()->set('housekeepingbook_periodical_report_member_id', $periodicalReport->getMember()->getId());
             }else {
-                $session->remove('housekeepingbook_periodical_report_member_id');
+                $this->requestStack->getSession()->remove('housekeepingbook_periodical_report_member_id');
             }
         }
 
@@ -92,6 +95,32 @@ class PeriodicalReportController extends AbstractController
             'expectedBalance' => $data['expectedBalance'],
             'savings' => $data['savings'],
             'expectedSavings' => $data['expectedSavings'],
+        ]);
+    }
+
+    #[Route('/deposit/{year}/{month}', name: 'housekeepingbook_report_periodical_deposit', requirements: ['year' => '\d{4}', 'month' => '\d{1,2}'], methods: ['GET',])]
+    public function deposit(int $year, int $month, ReportService $reportService, HouseholdUserRepository $householdUserRepository): Response
+    {
+        $currentHousehold = $this->userSettingsService->getCurrentHousehold($this->getUser());
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $periodicalReport = new PeriodicalReportDTO();
+
+        if($this->requestStack->getSession()->has('housekeepingbook_periodical_report_member_id')) {
+            $id = $householdUserRepository->find($this->requestStack->getSession()->get('housekeepingbook_periodical_report_member_id'));
+            if($id) {
+                $periodicalReport->setMember($householdUserRepository->find($id));
+            }
+        }
+
+        $deposit = $reportService->getDeposit($currentHousehold, $year, $month, $periodicalReport->getMember());
+        $upcomingDeposit = $reportService->getUpcomingDeposit($currentHousehold, $year, $month, $periodicalReport->getMember());
+
+        return new JsonResponse([
+            'deposit' => $deposit,
+            'upcomingDeposit' => $upcomingDeposit,
         ]);
     }
 }

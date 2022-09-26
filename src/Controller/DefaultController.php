@@ -10,28 +10,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DefaultController extends AbstractController
 {
     private ManagerRegistry $managerRegistry;
+    private RequestStack $requestStack;
 
     /**
      * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(ManagerRegistry $managerRegistry)
+    public function __construct(ManagerRegistry $managerRegistry, RequestStack $requestStack)
     {
         $this->managerRegistry = $managerRegistry;
+        $this->requestStack = $requestStack;
     }
 
     #[Route('/', name: 'start')]
-    public function homepageNoLocale(SessionInterface $session): Response
+    public function homepageNoLocale(): Response
     {
-        if($session->get('_locale')) {
-            return $this->redirectToRoute('homepage', ['_locale' => $session->get('_locale')]);
+        if($this->requestStack->getSession()->get('_locale')) {
+            return $this->redirectToRoute('homepage', ['_locale' => $this->requestStack->getSession()->get('_locale')]);
         }else {
             return $this->redirectToRoute('homepage', ['_locale' => 'en']);
         }
