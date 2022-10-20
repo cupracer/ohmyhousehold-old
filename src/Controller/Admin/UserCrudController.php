@@ -33,11 +33,7 @@ class UserCrudController extends AbstractCrudController
                 ->allowMultipleChoices()
                 ->renderExpanded(),
             TextField::new('password'),
-            BooleanField::new('isVerified'),
-            DateTimeField::new('createdAt')
-                ->setFormTypeOption('disabled', true),
-            DateTimeField::new('updatedAt')
-                ->setFormTypeOption('disabled', true),
+            BooleanField::new('isVerified')
         ];
     }
 }
