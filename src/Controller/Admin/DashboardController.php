@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ApiToken;
+use App\Entity\Supplies\StorageLocation;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -45,7 +46,7 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linktoRoute('Back to website', 'fas fa-home', 'start');
         yield MenuItem::linkToCrud('Users', 'fas fa-user', User::class);
-        yield MenuItem::linkToCrud('User profiles', 'fas fa-user', UserProfile::class);
-        yield MenuItem::linkToCrud('API tokens', 'fas fa-user', ApiToken::class);
+        yield MenuItem::linkToCrud('User profiles', 'fas fa-address-card', UserProfile::class);
+        yield MenuItem::linkToCrud('API tokens', 'fas fa-robot', ApiToken::class);
     }
 }
