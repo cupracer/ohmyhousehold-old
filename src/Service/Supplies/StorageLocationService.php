@@ -49,7 +49,7 @@ class StorageLocationService extends DatatablesService
             $rowData = [
                 'id' => $row->getId(),
                 'name' => $row->getName(),
-//                'usageCount' => $this->getUsageCount($row),
+                'usageCount' => $this->getUsageCount($row),
             ];
 
             $rowData['editLink'] = $this->urlGenerator->generate(
@@ -103,11 +103,12 @@ class StorageLocationService extends DatatablesService
         ];
     }
 
-//    /**
-//     * @param StorageLocation $storageLocation
-//     * @return int
-//     */
-//    protected function getUsageCount(StorageLocation $storageLocation): int {
-//        return count($storageLocation->getProducts());
-//    }
+    /**
+     * @param StorageLocation $storageLocation
+     * @return int
+     */
+    protected function getUsageCount(StorageLocation $storageLocation): int {
+        //TODO: This also includes items which have already been checked out. Should we exclude them?
+        return count($storageLocation->getSupplyItems());
+    }
 }

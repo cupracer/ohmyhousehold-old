@@ -22,12 +22,12 @@ $(document).ready(function () {
                 data: "name",
                 defaultContent: "-",
             },
-            // {
-            //     data: "usageCount",
-            //     defaultContent: "-",
-            //     class: "min text-right",
-            //     orderable: false,
-            // },
+            {
+                data: "usageCount",
+                defaultContent: "-",
+                class: "min text-right",
+                orderable: false,
+            },
             {
                 class: "min",
                 searchable: false,
