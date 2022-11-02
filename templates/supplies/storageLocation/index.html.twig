@@ -1,0 +1,46 @@
+{% extends 'theme/base-datatables.html.twig' %}
+
+{% block page_header_buttons %}
+    {% if is_granted('createSuppliesStorageLocation', household) %}
+        <a href="{{ path('supplies_storagelocation_new') }}" class="btn btn-outline-primary btn-sm btn-icon-split ml-3">
+            <span class="icon text-primary mr-1">
+              <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">{{ 'Add storage location...'|trans }}</span>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'Storage locations'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    <table id="storageLocations" class="table table-hover table-striped dataTable" role="grid"
+                        data-json-url="{{ path('supplies_storagelocation_datatables') }}"
+                           data-i18n-url="{{ path('app_datatables_locale') }}">
+                        <thead>
+                        <tr>
+                            <th>{{ 'Name'|trans }}</th>
+{#                            <th>{{ '# used'|trans }}</th>#}
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {{ encore_entry_script_tags('supplies_storagelocation_index') }}
+{% endblock javascripts %}

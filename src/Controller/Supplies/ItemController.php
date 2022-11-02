@@ -111,6 +111,7 @@ class ItemController extends AbstractController
                     $item->setProduct($createItem->getProduct());
                     $item->setBestBeforeDate($createItem->getBestBeforeDate());
                     $item->setHousehold($household);
+                    $item->setStorageLocation($createItem->getStorageLocation());
 
                     $entityManager = $this->managerRegistry->getManager();
                     $entityManager->persist($item);
@@ -140,6 +141,7 @@ class ItemController extends AbstractController
         $editItem->setPurchaseDate($item->getPurchaseDate());
         $editItem->setProduct($item->getProduct());
         $editItem->setBestBeforeDate($item->getBestBeforeDate());
+        $editItem->setStorageLocation($item->getStorageLocation());
 
         $form = $this->createForm(ItemEditType::class, $editItem, ['item' => $item]);
         $form->handleRequest($request);
@@ -149,6 +151,7 @@ class ItemController extends AbstractController
                 $item->setPurchaseDate($editItem->getPurchaseDate());
                 $item->setProduct($editItem->getProduct());
                 $item->setBestBeforeDate($editItem->getBestBeforeDate());
+                $item->setStorageLocation($editItem->getStorageLocation());
 
                 $this->managerRegistry->getManager()->flush();
 

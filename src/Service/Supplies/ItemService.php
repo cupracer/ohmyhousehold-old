@@ -68,6 +68,7 @@ class ItemService extends DatatablesService
                 'brand' => $row->getProduct()->getBrand()->getName(),
                 'category' => $row->getProduct()->getSupply()->getCategory()?->getName(),
                 'amount' => 1*$row->getProduct()->getQuantity() . ' ' . $this->translator->trans($row->getProduct()->getMeasure()->getUnit()),
+                'storageLocation' => $row->getStorageLocation() ? $row->getStorageLocation()->getName() : null,
                 'purchaseDate' => $row->getPurchaseDate() ? $dateFormatter->format($row->getPurchaseDate()) : null,
                 'bestBeforeDate' => $row->getBestBeforeDate() ? $dateFormatter->format($row->getBestBeforeDate()) : null,
                 'createdAt' => IntlDateFormatter::formatObject($row->getCreatedAt()),

@@ -3,6 +3,7 @@
 namespace App\Entity\Supplies\DTO;
 
 use App\Entity\Supplies\Product;
+use App\Entity\Supplies\StorageLocation;
 use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -32,6 +33,11 @@ class ItemDTO
      */
     #[Assert\Type(type: 'integer')]
     private $quantity;
+
+    /**
+     * @var StorageLocation
+     */
+    private $storageLocation;
 
     public function __construct()
     {
@@ -107,6 +113,24 @@ class ItemDTO
     public function setQuantity(int $quantity): ItemDTO
     {
         $this->quantity = $quantity;
+        return $this;
+    }
+
+    /**
+     * @return StorageLocation|null
+     */
+    public function getStorageLocation(): ?StorageLocation
+    {
+        return $this->storageLocation;
+    }
+
+    /**
+     * @param StorageLocation|null $storageLocation
+     * @return ItemDTO
+     */
+    public function setStorageLocation(?StorageLocation $storageLocation): ItemDTO
+    {
+        $this->storageLocation = $storageLocation;
         return $this;
     }
 }

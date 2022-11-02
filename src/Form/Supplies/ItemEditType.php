@@ -5,8 +5,10 @@ namespace App\Form\Supplies;
 use App\Entity\Household;
 use App\Entity\Supplies\DTO\ItemEditDTO;
 use App\Entity\Supplies\Product;
+use App\Entity\Supplies\StorageLocation;
 use App\Repository\HouseholdRepository;
 use App\Repository\Supplies\ProductRepository;
+use App\Repository\Supplies\StorageLocationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -23,6 +25,7 @@ class ItemEditType extends AbstractType
     private RequestStack $requestStack;
     private HouseholdRepository $householdRepository;
     private ProductRepository $productRepository;
+    private StorageLocationRepository $storageLocationRepository;
     private UrlGeneratorInterface $router;
 
     private Household $household;
@@ -31,11 +34,13 @@ class ItemEditType extends AbstractType
         RequestStack $requestStack,
         HouseholdRepository $householdRepository,
         ProductRepository $productRepository,
+        StorageLocationRepository $storageLocationRepository,
         UrlGeneratorInterface $router)
     {
         $this->requestStack = $requestStack;
         $this->householdRepository = $householdRepository;
         $this->productRepository = $productRepository;
+        $this->storageLocationRepository = $storageLocationRepository;
         $this->router = $router;
     }
 
@@ -114,6 +119,48 @@ class ItemEditType extends AbstractType
                 ],
                 'required' => false,
             ])
+
+            // The StorageLocation field is used with Select2 to load options dynamically via Ajax.
+            // As Symfony would load all StorageLocations a seconds time, we generate it via EventListeners.
+            // PRE_SET_DATA uses an empty array,
+            // PRE_SUMIT picks the selected ID and tries to load the StorageLocation from the database.
+            // Validation: If a result is returned, the object is fine, if not, the selection is wrong.
+
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                /** @var ItemEditDTO $data */
+                $data = $event->getData();
+                $form = $event->getForm();
+
+                $storageLocationId = $data->getStorageLocation()?->getId();
+
+                $form->add('storageLocation', EntityType::class, [
+                    'placeholder' => '',
+                    'class' => StorageLocation::class,
+                    'choices' => $this->storageLocationRepository->findGrantedByHouseholdAndId($this->household, intval($storageLocationId)),
+                    'attr' => [
+                        'class' => 'form-control select2field',
+                        'data-json-url' => $this->router->generate('supplies_storagelocation_select2'),
+                    ],
+                ]);
+            })
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+                $form = $event->getForm();
+
+                // TODO: Is it safe enough to use intval() on the product id?
+
+                $storageLocationId = array_key_exists('storageLocation', $data) ? $data['storageLocation'] : null;
+
+                $form->add('storageLocation', EntityType::class, [
+                    'placeholder' => '',
+                    'class' => StorageLocation::class,
+                    'choices' => $this->storageLocationRepository->findGrantedByHouseholdAndId($this->household, intval($storageLocationId)),
+                    'attr' => [
+                        'class' => 'form-control select2field',
+                        'data-json-url' => $this->router->generate('supplies_storagelocation_select2'),
+                    ],
+                ]);
+            })
         ;
     }
 

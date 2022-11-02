@@ -44,6 +44,7 @@ class ItemRepository extends ServiceEntityRepository
             ->innerJoin('hh.householdUsers', 'hhu')
             ->innerJoin('i.product', 'p')
             ->innerJoin('p.supply', 's')
+            ->innerJoin('i.storageLocation', 'l')
             ->andWhere('hhu.user = :user')
             ->andWhere($query->expr()->isNull('i.withdrawalDate'))
             ->setParameter('household', $household)

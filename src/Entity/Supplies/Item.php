@@ -54,6 +54,13 @@ class Item
      */
     private $createdAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=StorageLocation::class, inversedBy="items")
+     * @ORM\JoinColumn(nullable=true)
+     * TODO: set nullable=false
+     */
+    private ?StorageLocation $storageLocation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,5 +144,16 @@ class Item
     public function setCreatedAtValue()
     {
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function getStorageLocation(): ?StorageLocation
+    {
+        return $this->storageLocation;
+    }
+
+    public function setStorageLocation(?StorageLocation $storageLocation): self
+    {
+        $this->storageLocation = $storageLocation;
+        return $this;
     }
 }

@@ -139,6 +139,13 @@
                     <p>{{ 'categories'|trans|title }}</p>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a href="{{ path('supplies_storagelocation_index') }}" class="nav-link {% if app.request.pathInfo starts with path('supplies_storagelocation_index') %}active{% endif %}">
+                    <i class="nav-icon fas fa-map-marked"></i>
+                    <p>{{ 'Storage locations'|trans|title }}</p>
+                </a>
+            </li>
         </ul>
     </li>
 

@@ -553,6 +553,14 @@
         <source>measure_meter_unit</source>
         <target>m</target>
       </trans-unit>
+      <trans-unit id="storage_locations">
+        <source>Storage locations</source>
+        <target>Lagerorte</target>
+      </trans-unit>
+      <trans-unit id="location">
+        <source>location</source>
+        <target>Ort</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

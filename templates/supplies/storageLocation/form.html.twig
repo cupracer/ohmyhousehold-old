@@ -12,44 +12,16 @@
                 <div class="card-body">
                     {{ form_start(form) }}
                     <div class="row">
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(form.purchaseDate) }}
-                                {{ form_widget(form.purchaseDate) }}
-                            </div>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="form-group">
-                                {{ form_label(form.storageLocation) }}
-                                {{ form_widget(form.storageLocation) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
-                                {{ form_label(form.product) }}
-                                {{ form_widget(form.product) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(form.bestBeforeDate) }}
-                                {{ form_widget(form.bestBeforeDate) }}
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(form.quantity) }}
-                                {{ form_widget(form.quantity) }}
+                                {{ form_label(form.name) }}
+                                {{ form_widget(form.name) }}
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg text-right">
-                            <a href="{{ path('supplies_item_index') }}" class="btn btn-outline-warning btn-icon-split">
+                            <a href="{{ path('supplies_storagelocation_index') }}" class="btn btn-outline-warning btn-icon-split">
                                         <span class="icon text-warning mr-1">
                                             <i class="far fa-times-circle"></i>
                                         </span>
@@ -67,6 +39,20 @@
                     {{ form_end(form) }}
                 </div>
                 <!-- /.card-body -->
+                {% if storageLocation is defined and is_granted('delete', storageLocation) %}
+                    <div class="card-footer">
+                        <form method="post" action="{{ path('supplies_storagelocation_delete', {'id': storageLocation.id}) }}" onsubmit="return confirm('{{ 'Are you sure you want to delete this item?'|trans }}');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_storagelocation_' ~ storageLocation.id) }}">
+                            <button class="btn btn-xs text-danger btn-delete">
+                                            <span class="icon mr-1">
+                                                <i class="far fa-trash-alt"></i>
+                                            </span>
+                                <span class="text">{{ 'delete'|trans|u.title }}</span>
+                            </button>
+                        </form>
+                    </div>
+                    <!-- /.card-footer -->
+                {% endif %}
             </div>
             <!-- /.card -->
         </div>
@@ -74,9 +60,3 @@
     </div>
     <!-- /.row -->
 {% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-
-    {{ encore_entry_script_tags('supplies_item_form_new') }}
-{% endblock javascripts %}

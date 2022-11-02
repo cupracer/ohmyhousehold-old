@@ -41,6 +41,11 @@ $(document).ready(function () {
                 class: "min text-right",
             },
             {
+                data: "storageLocation",
+                defaultContent: "-",
+                class: "min",
+            },
+            {
                 data: "purchaseDate",
                 defaultContent: "-",
                 class: "min text-center",
