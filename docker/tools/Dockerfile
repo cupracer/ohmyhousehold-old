@@ -1,4 +1,4 @@
-FROM php:8.0-apache AS tools
+FROM php:8.1-apache AS tools
 
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
 
